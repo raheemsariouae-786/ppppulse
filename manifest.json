@@ -22,3 +22,11 @@
     }
   ]
 }
+{
+  "name": "PPP Ultra Admin",
+  "short_name": "PPP Admin",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff0000"
+}
