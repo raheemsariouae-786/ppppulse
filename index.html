@@ -259,6 +259,7 @@ input,select{font-family:inherit}
     <button class="ftab" onclick="switchPage('dir',this)">📋 ڈائریکٹری</button>
     <button class="ftab" onclick="switchPage('tmk',this)">📍 ٹنڈو م خان</button>
     <button class="ftab" onclick="switchPage('d33',this)">🗺️ 33 اضلاع</button>
+    <button class="ftab" onclick="switchPage('mna',this)">🗳️ MNA/MPA</button>
     <button class="ftab" id="adminTab" style="display:none" onclick="switchPage('admin',this)">⚙️ Admin</button>
   </div>
 
@@ -334,6 +335,23 @@ input,select{font-family:inherit}
       </div>
     </div>
 
+
+    <!-- ═══ MNA/MPA PAGE ═══ -->
+    <div class="page" id="page-mna">
+      <div class="dir-wrap">
+        <div class="search-box">
+          <span class="si">🔍</span>
+          <input type="text" id="mnaSrch" placeholder="MNA، MPA یا حلقہ تلاش کریں…" oninput="fMNA2()">
+        </div>
+        <div class="pill-row">
+          <button class="chip on" onclick="filterMnaType('all',this)">سب</button>
+          <button class="chip" onclick="filterMnaType('MNA',this)">MNAs</button>
+          <button class="chip" onclick="filterMnaType('MPA',this)">MPAs</button>
+        </div>
+        <div id="mnaG2"></div>
+      </div>
+    </div>
+
     <!-- ═══ 33 DISTRICTS ═══ -->
     <div class="page" id="page-d33">
       <div style="padding:8px 10px;font-size:10px;color:var(--mut);text-align:right">
@@ -369,8 +387,8 @@ input,select{font-family:inherit}
       <span class="bn-ic" style="background:linear-gradient(135deg,var(--red),var(--dred));border-radius:8px;padding:4px;font-size:18px">➕</span>
       <span class="bn-lb">شامل کریں</span>
     </button>
-    <button class="bnav" onclick="goNav('tmk',this)">
-      <span class="bn-ic">📍</span><span class="bn-lb">ٹنڈو م خان</span>
+    <button class="bnav" onclick="goNav('mna',this)">
+      <span class="bn-ic">🗳️</span><span class="bn-lb">MNA/MPA</span>
     </button>
   </div>
 
@@ -605,7 +623,67 @@ function buildLeaderCard(l,idx,withTwitter){
 function buildDirCard(d){
   var tw=d.t?'<a class="sbtn sbtn-tw" href="https://twitter.com/'+d.t+'" target="_blank" rel="noopener">🐦 Twitter</a>':'<span class="sbtn sbtn-grey">Twitter N/A</span>';
   var pm=d.mayor==='جلد آئے گا'?' pending':'';
-  return '<div class="dcard"><div class="dcard-h"><span class="em2">'+d.e+'</span><div><h3>'+d.d+'</h3><div class="dv">'+d.dv+'</div></div></div><div class="dcard-b"><div class="drow"><span class="lbl">MNA:</span><span class="val">'+d.mna+'</span></div><div class="drow"><span class="lbl">MPA:</span><span class="val">'+d.mpa+'</span></div><div class="drow"><span class="lbl">میئر:</span><span class="val'+pm+'">'+d.mayor+'</span></div></div><div class="social-row">'+tw+'</div></div>';
+  var wa='<a class="sbtn sbtn-wa" href="https://wa.me/923112221014?text='+encodeURIComponent('PPP Pulse: '+d.d+' کے بارے میں معلومات چاہیے')+'" target="_blank" rel="noopener">📱 رابطہ</a>';
+return '<div class="dcard"><div class="dcard-h"><span class="em2">'+d.e+'</span><div><h3>'+d.d+'</h3><div class="dv">'+d.dv+'</div></div></div><div class="dcard-b"><div class="drow"><span class="lbl">MNA:</span><span class="val">'+d.mna+'</span></div><div class="drow"><span class="lbl">MPA:</span><span class="val">'+d.mpa+'</span></div><div class="drow"><span class="lbl">میئر:</span><span class="val'+pm+'">'+d.mayor+'</span></div></div><div class="social-row">'+tw+wa+'</div></div>';
+}
+
+
+/* ════ MNA/MPA DATA — مکمل فہرست ════ */
+var MNA_LIST=[
+  /* قومی اسمبلی */
+  {n:"بلاول بھٹو زرداری",  t:"MNA", h:"NA-194 لاڑکانہ",          tw:"@BBhuttoZardari", i:"🌹"},
+  {n:"آصفہ بھٹو زرداری",   t:"MNA", h:"NA-237 کراچی مشرقی",      tw:"@AseefaBZ",       i:"💫"},
+  {n:"آصف علی زرداری",     t:"MNA", h:"NA-207 شہید بے نظیرآباد", tw:"@AAliZardari",    i:"🇵🇰"},
+  {n:"خورشید احمد شاہ",    t:"MNA", h:"NA-206 سکھر",              tw:"@KhurshidShah_",  i:"⚡"},
+  {n:"سید نوید قمر",       t:"MNA", h:"NA-221 ٹنڈو محمد خان",     tw:"",                i:"🗳️"},
+  {n:"میر اعجاز جکھرانی",  t:"MNA", h:"NA-196 جیکب آباد",         tw:"",                i:"🗳️"},
+  {n:"سردار خالد لنڈ",     t:"MNA", h:"NA-198 گھوٹکی",            tw:"",                i:"🗳️"},
+  {n:"نعمان اسلام شیخ",   t:"MNA", h:"NA-207 سکھر",              tw:"",                i:"🗳️"},
+  {n:"پیر حسن علی شاہ",   t:"MNA", h:"NA-218 میرپورخاص",         tw:"",                i:"🗳️"},
+  {n:"میر غلام علی ٹالپور",t:"MNA", h:"NA-222 بدین",              tw:"",                i:"🗳️"},
+  {n:"صادق علی میمن",     t:"MNA", h:"NA-225 ٹھٹہ",              tw:"",                i:"🗳️"},
+  /* صوبائی اسمبلی */
+  {n:"مراد علی شاہ",       t:"MPA", h:"PS-34 نوشہرو فیروز",       tw:"@MuradAliShahPPP",i:"🏛️"},
+  {n:"ناصر حسین شاہ",      t:"MPA", h:"PS-25 سکھر",               tw:"@SyedNasirHShah", i:"🌿"},
+  {n:"شرجیل انعام میمن",   t:"MPA", h:"PS-61 حیدرآباد",           tw:"@sharjeelinam",   i:"📢"},
+  {n:"ضیاء لنجار",         t:"MPA", h:"PS-31 نوشہرو فیروز",       tw:"@ZiaLanjar",      i:"🔴"},
+  {n:"سعید غنی",           t:"MPA", h:"PS-105 کراچی مشرقی",       tw:"@SaeedGhani1",    i:"🔧"},
+  {n:"فریال تالپور",       t:"MPA", h:"PS-10 لاڑکانہ",             tw:"",                i:"🌸"},
+  {n:"جام خان شورو",       t:"MPA", h:"PS-60 حیدرآباد",           tw:"@jamkhanshoro",   i:"💧"},
+  {n:"ساجد جوکھیو",        t:"MPA", h:"PS-85 ملیر",                tw:"",                i:"🗳️"},
+  {n:"نثار خہرو",          t:"MPA", h:"PS-15 قمبر",                tw:"",                i:"🗳️"},
+  {n:"سلمان مراد",         t:"MPA", h:"PS-91 کراچی مغربی",        tw:"@SalmanAMurad",   i:"🎯"},
+  {n:"امداد علی پتافی",    t:"MPA", h:"PS-49 عمرکوٹ",             tw:"",                i:"🗳️"},
+  {n:"جام تماچی اوڈیسر",   t:"MPA", h:"PS-74 سجاول",              tw:"",                i:"🗳️"},
+  {n:"اویس قادر شاہ",      t:"MPA", h:"PS-23 سکھر",               tw:"",                i:"🗳️"},
+  {n:"جام مدد علی",        t:"MPA", h:"PS-68 بدین",               tw:"",                i:"🗳️"},
+];
+
+var _mnaTypeFilter='all';
+
+function buildMnaCard(m){
+  var tw=m.tw?'<a class="sbtn sbtn-tw" href="https://twitter.com/'+m.tw.replace("@","")+'" target="_blank" rel="noopener">🐦 Twitter</a>':'<span class="sbtn sbtn-grey">Twitter N/A</span>';
+  return '<div class="dcard"><div class="dcard-h"><span class="em2">'+m.i+'</span><div><h3>'+m.n+'</h3><div class="dv">'+m.t+' — '+m.h+'</div></div></div><div class="social-row">'+tw+'</div></div>';
+}
+
+function renderMnaGrid(){
+  var q=(document.getElementById('mnaSrch')||{}).value;q=q?q.trim().toLowerCase():'';
+  var filtered=MNA_LIST.filter(function(m){
+    if(_mnaTypeFilter!=='all'&&m.t!==_mnaTypeFilter)return false;
+    if(!q)return true;
+    return [m.n,m.t,m.h,m.tw].join(' ').toLowerCase().includes(q);
+  });
+  var g=document.getElementById('mnaG2');
+  if(g) g.innerHTML=filtered.length?filtered.map(buildMnaCard).join(''):'<div style="text-align:center;padding:30px;color:var(--mut)"><span style="font-size:28px">🔍</span><br>کوئی نتیجہ نہیں ملا</div>';
+}
+
+function fMNA2(){renderMnaGrid();}
+
+function filterMnaType(type,el){
+  _mnaTypeFilter=type;
+  document.querySelectorAll('#page-mna .chip').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');
+  renderMnaGrid();
 }
 
 /* ════ INIT ════ */
@@ -633,9 +711,11 @@ function initAll(){
 
   /* 33 Districts */
   document.getElementById('distGrid').innerHTML=DIST.map(function(d){
-    return '<div class="dist-tile" onclick="goDist(\''+d.d+'\')"><span class="ic">'+d.e+'</span><span class="nm">'+d.d+'</span></div>';
+    return '<div class="dist-tile" onclick="goDistSmart(\''+d.d+'\',\''+d.e+'\')"><span class="ic">'+d.e+'</span><span class="nm">'+d.d+'</span></div>';
   }).join('');
 
+  /* MNA/MPA */
+  renderMnaGrid();
   /* Twitter */
   twL();
 }
@@ -670,7 +750,30 @@ function rDir(){
 function sLv(l,el){cL=l;document.querySelectorAll('#lvlF .chip').forEach(function(b){b.classList.remove('on');});el.classList.add('on');rDir();}
 function fDir(){cS=document.getElementById('srchI').value.trim();rDir();}
 function fByD(n,el){document.getElementById('srchI').value=n;document.querySelectorAll('#dPills .chip').forEach(function(b){b.classList.remove('on');});el.classList.add('on');cS=n;rDir();}
-function goDist(n){cS=n;document.getElementById('srchI').value=n;switchPage('dir',document.querySelectorAll('.ftab')[2]);setTimeout(rDir,100);}
+
+function goDistSmart(name, icon){
+  /* ٹنڈو محمد خان → TMK tab */
+  if(name.includes("ٹنڈو محمد") || name.includes("تنڈو محمد")){
+    var tabs=document.querySelectorAll('.ftab');
+    var tmkTab=null;
+    tabs.forEach(function(t){if(t.textContent.includes("ٹنڈو"))tmkTab=t;});
+    if(tmkTab){switchPage('tmk',tmkTab);return;}
+  }
+  /* باقی → Directory with filter */
+  goDist(name);
+}
+
+function goDist(n){
+  cS=n;
+  var si=document.getElementById('srchI');
+  if(si)si.value=n;
+  /* Find dir tab and click it */
+  var tabs=document.querySelectorAll('.ftab');
+  var dirTab=null;
+  tabs.forEach(function(t){if(t.textContent.includes('ڈائریکٹری'))dirTab=t;});
+  if(dirTab)switchPage('dir',dirTab);
+  setTimeout(rDir,150);
+}
 function dRep(id){if(!isA()||!confirm('حذف کریں؟'))return;sDB('reps',gDB('reps').filter(function(r){return r.id!==id;}));rDir();}
 
 /* ════ ADD ════ */
@@ -728,11 +831,12 @@ function switchPage(id,el){
   if(id==='leaders'||id==='home')setTimeout(twL,500);
   if(id==='admin')rPend();
   if(id==='dir')rDir();
+  if(id==='mna')renderMnaGrid();
 }
 function goNav(id,el){
   document.querySelectorAll('.bnav').forEach(function(b){b.classList.remove('on');});
   el.classList.add('on');
-  var tabIdx={'home':0,'leaders':1,'dir':2,'tmk':4};
+  var tabIdx={'home':0,'leaders':1,'dir':2,'mna':3,'tmk':4,'d33':5};
   var tabs=document.querySelectorAll('.ftab');
   if(tabIdx[id]!==undefined){tabs.forEach(function(t){t.classList.remove('on');});tabs[tabIdx[id]].classList.add('on');}
   switchPage(id,null);
