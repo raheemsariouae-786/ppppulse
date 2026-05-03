@@ -1,32 +1,19 @@
 {
-  "name": "PPP Pulse Portal",
+  "name": "PPP Pulse — پیپلز پارٹی سندھ",
   "short_name": "PPP Pulse",
-  "description": "پاکستان پیپلز پارٹی سندھ سوشل میڈیا پورٹل",
+  "description": "پاکستان پیپلز پارٹی سندھ — عوامی خدمت پورٹل",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d0d0d",
-  "theme_color": "#cc0000",
+  "background_color": "#080808",
+  "theme_color": "#8b0000",
   "orientation": "portrait",
   "lang": "ur",
   "dir": "rtl",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
-}
-{
-  "name": "PPP Ultra Admin",
-  "short_name": "PPP Admin",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ff0000"
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ],
+  "categories": ["social", "news", "politics"],
+  "screenshots": [],
+  "prefer_related_applications": false
 }
