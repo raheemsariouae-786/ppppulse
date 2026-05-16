@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Next Level Member Portal</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #0f172a;
+    color: white;
+}
+.login-box, .app {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+.login-box {
+    margin-top: 100px;
+    background: #1e293b;
+    border-radius: 10px;
+    padding: 30px;
+}
+input {
+    width: 95%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: none;
+    display: block;
+}
+button {
+    padding: 12px 20px;
+    border-radius: 5px;
+    border: none;
+    background: #22c55e;
+    color: white;
+    cursor: pointer;
+    margin: 5px 0;
+}
+button:hover { background: #16a34a; }
+.btn-delete { background: #ef4444; }
+.btn-delete:hover { background: #dc2626; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    color: black;
+}
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+}
+th { background: #1e293b; color: white; }
+h2 { text-align: center; }
+.card {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.count {
+    background: #22c55e;
+    padding: 8px 15px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="login-box" id="loginBox">
+    <h2>🔐 Admin Login</h2>
+    <input type="text" id="user" placeholder="Username">
+    <input type="password" id="pass" placeholder="Password">
+    <button onclick="login()" style="width:100%">Login</button>
+</div>
+
+<!-- APP -->
+<div class="app" id="app" style="display:none;">
+
+    <h2>⭐ Next Level Member Portal</h2>
+
+    <!-- MEMBER ADD FORM -->
+    <div class="card">
+        <h3 style="margin-top:0">➕ Add New Member</h3>
+        <input id="inp_name"   placeholder="Member Name (ممبر کا نام)">
+        <input id="inp_ps"     placeholder="PS Number (پی ایس نمبر)">
+        <input id="inp_uc"     placeholder="UC Number (یو سی نمبر)">
+        <input id="inp_serial" placeholder="Serial No (سیریل نمبر)">
+        <button onclick="addMember()" style="width:100%">✅ Add Member</button>
+    </div>
+
+    <!-- SEARCH + EXPORT -->
+    <div class="card">
+        <input id="search" onkeyup="render()" placeholder="🔍 Search by Name / PS / UC">
+        <button onclick="exportCSV()">📥 Export Excel (CSV)</button>
+        <button onclick="clearAll()" class="btn-delete">🗑️ Clear All Members</button>
+    </div>
+
+    <!-- MEMBER COUNT -->
+    <div class="count" id="countBox">Total Members: 0</div>
+
+    <!-- TABLE -->
+    <table>
+        <thead>
+        <tr>
+            <th>Serial</th>
+            <th>Name</th>
+            <th>PS</th>
+            <th>UC</th>
+            <th>QR Code</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+</div>
+
+<script>
+
+// ===== DATA =====
+let members = JSON.parse(localStorage.getItem("members_v2")) || [];
+
+// ===== LOGIN =====
+function login(){
+    let u = document.getElementById("user").value.trim();
+    let p = document.getElementById("pass").value.trim();
+
+    if(u === "admin" && p === "1234"){
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("app").style.display = "block";
+        render();
+    } else {
+        alert("❌ Wrong Username or Password!");
+    }
+}
+
+// Enter key on login
+document.getElementById("pass").addEventListener("keypress", function(e){
+    if(e.key === "Enter") login();
+});
+
+// ===== ADD MEMBER =====
+function addMember(){
+    // ✅ FIX: document.getElementById() se value lena zaroori hai
+    let inp_name   = document.getElementById("inp_name").value.trim();
+    let inp_ps     = document.getElementById("inp_ps").value.trim();
+    let inp_uc     = document.getElementById("inp_uc").value.trim();
+    let inp_serial = document.getElementById("inp_serial").value.trim();
+
+    if(!inp_name || !inp_ps || !inp_uc || !inp_serial){
+        alert("⚠️ Please fill all fields! تمام خانے بھریں!");
+        return;
+    }
+
+    // Duplicate serial check
+    let exists = members.find(m => m.serial === inp_serial);
+    if(exists){
+        alert("⚠️ This Serial No already exists! یہ سیریل نمبر پہلے سے موجود ہے!");
+        return;
+    }
+
+    members.push({
+        name:   inp_name,
+        ps:     inp_ps,
+        uc:     inp_uc,
+        serial: inp_serial
+    });
+
+    localStorage.setItem("members_v2", JSON.stringify(members));
+
+    // Clear fields
+    document.getElementById("inp_name").value   = "";
+    document.getElementById("inp_ps").value     = "";
+    document.getElementById("inp_uc").value     = "";
+    document.getElementById("inp_serial").value = "";
+
+    alert("✅ Member Added! ممبر شامل ہو گیا!");
+    render();
+}
+
+// ===== DELETE =====
+function deleteMember(i){
+    if(confirm("Are you sure? کیا آپ واقعی حذف کرنا چاہتے ہیں؟")){
+        members.splice(i,1);
+        localStorage.setItem("members_v2", JSON.stringify(members));
+        render();
+    }
+}
+
+// ===== CLEAR ALL =====
+function clearAll(){
+    if(confirm("⚠️ Delete ALL members? کیا تمام ممبر حذف کریں؟")){
+        members = [];
+        localStorage.setItem("members_v2", JSON.stringify(members));
+        render();
+    }
+}
+
+// ===== RENDER TABLE =====
+function render(){
+    let tbody  = document.getElementById("tableBody");
+    let filter = document.getElementById("search") ? document.getElementById("search").value.toLowerCase() : "";
+
+    tbody.innerHTML = "";
+    let count = 0;
+
+    members.forEach((m, i) => {
+        if((m.name + m.ps + m.uc + m.serial).toLowerCase().includes(filter)){
+            count++;
+            let qrId = "qr_" + i;
+            let row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${m.serial}</td>
+                <td>${m.name}</td>
+                <td>${m.ps}</td>
+                <td>${m.uc}</td>
+                <td><div id="${qrId}" style="width:80px;height:80px;margin:auto;"></div></td>
+                <td><button class="btn-delete" onclick="deleteMember(${i})">🗑️ Delete</button></td>
+            `;
+            tbody.appendChild(row);
+
+            // ✅ QR generate after row is in DOM
+            setTimeout(function(){
+                let el = document.getElementById(qrId);
+                if(el && el.innerHTML === ""){
+                    new QRCode(el, {
+                        text: m.name + " | PS:" + m.ps + " | UC:" + m.uc + " | Serial:" + m.serial,
+                        width: 80,
+                        height: 80
+                    });
+                }
+            }, 100);
+        }
+    });
+
+    // Update count
+    let countBox = document.getElementById("countBox");
+    if(countBox) countBox.innerText = "Total Members: " + count;
+}
+
+// ===== EXPORT CSV =====
+function exportCSV(){
+    if(members.length === 0){
+        alert("No members to export!");
+        return;
+    }
+    let csv = "Serial,Name,PS,UC\n";
+    members.forEach(m => {
+        csv += `"${m.serial}","${m.name}","${m.ps}","${m.uc}"\n`;
+    });
+    let blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+    let a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "NextLevel_Members.csv";
+    a.click();
+}
+
+</script>
+</body>
+</html>
