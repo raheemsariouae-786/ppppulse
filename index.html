@@ -3,21 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
-
-<!-- ✅ PWA Theme Colors - مکمل اپ گریڈ -->
 <meta name="theme-color" content="#8b0000">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#cc0000">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#8b0000">
 <meta name="msapplication-TileColor" content="#cc0000">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-capable" content="yes">
-
 <meta name="description" content="PPP Pulse — پاکستان پیپلز پارٹی سندھ | مکمل عوامی پورٹل">
 <title>PPP Pulse 🌹 | پیپلز پارٹی سندھ</title>
 <link rel="manifest" href="manifest.json">
+<!-- Firebase SDK — اختیاری Cloud Sync | صرف config بھریں تو فعال ہوگا -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-/* PPP PULSE v9.1 — FIXED + PWA UPGRADED */
+/* PPP PULSE v9.0 — FINAL FIXED */
 :root{
   --red:#cc0000;--dred:#8b0000;--blk:#080808;
   --card:#111;--card2:#1a1a1a;--lgrn:#1a7a1a;--grn:#1a5c1a;
@@ -31,7 +31,9 @@ body{font-family:'Noto Nastaliq Urdu',serif;color:var(--cream)}
 a{color:var(--gold);text-decoration:none}
 button{cursor:pointer;font-family:inherit;border:none;outline:none;background:none}
 input,select{font-family:inherit;outline:none}
+
 #app{display:flex;flex-direction:column;height:100%;height:100dvh;width:100%}
+
 /* TOP BAR */
 #topbar{
   background:linear-gradient(180deg,rgba(8,8,8,.98),rgba(8,8,8,.85));
@@ -45,26 +47,33 @@ input,select{font-family:inherit;outline:none}
 .top-btns{display:flex;gap:8px;align-items:center}
 #loginBtn{background:var(--red);color:#fff;border:1px solid var(--gold);padding:6px 12px;border-radius:25px;font-size:11px;font-weight:600}
 #offBadge{display:none;background:#8b4500;color:#fff;font-size:9px;padding:3px 8px;border-radius:20px}
+
 /* TABS */
 #feedTabs{display:flex;overflow-x:auto;scrollbar-width:none;padding:0 10px;gap:2px;flex-shrink:0}
 #feedTabs::-webkit-scrollbar{display:none}
 .ftab{padding:8px 12px;font-size:11px;color:var(--mut);border-bottom:2px solid transparent;white-space:nowrap;font-weight:600}
 .ftab.on{color:var(--cream);border-bottom-color:var(--red)}
+
 /* TICKER */
 .ticker{background:var(--dred);height:28px;overflow:hidden;display:flex;align-items:center;flex-shrink:0}
 .tt{display:flex;animation:tk 65s linear infinite;white-space:nowrap;direction:ltr}
 .tt span{padding:0 24px;font-size:10px;font-weight:500}
 @keyframes tk{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
 /* MAIN SCROLL */
 #mainArea{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+
+/* ✅ CRITICAL: pages hidden by default */
 .page{display:none;min-height:100%;padding-bottom:80px}
-.page.on{display:block}
+.page{display:none}.page.on{display:block}
+
 /* STATS */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px}
 .stat-box{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:10px 4px;text-align:center;cursor:pointer;transition:.1s}
 .stat-box:active{transform:scale(.95);background:rgba(204,0,0,.2)}
 .stat-box strong{display:block;font-family:Georgia,serif;font-size:18px;color:var(--gold)}
 .stat-box span{font-size:9px;color:var(--mut)}
+
 /* FEED CARDS */
 .feed-wrap{padding:8px 10px}
 .fcard{background:var(--card);border-radius:18px;margin-bottom:12px;border:1px solid var(--bdr);overflow:hidden}
@@ -74,6 +83,7 @@ input,select{font-family:inherit;outline:none}
 .fcard-info h3{font-size:13px;color:var(--cream)}
 .fcard-info .role{font-size:10px;color:var(--gold);margin-top:2px}
 .fcard-info .lvl{font-size:8px;color:var(--mut);margin-top:2px}
+
 /* TWITTER */
 .tw-embed{background:#000;min-height:260px;position:relative;overflow:hidden}
 .tw-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;z-index:2;transition:opacity .5s;gap:10px;padding:16px}
@@ -81,6 +91,7 @@ input,select{font-family:inherit;outline:none}
 .spinner{width:22px;height:22px;border:3px solid rgba(29,155,240,.2);border-top-color:#1d9bf0;border-radius:50%;animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 .tw-link{background:#1d9bf0;color:#fff;padding:6px 14px;border-radius:20px;font-size:10px;font-family:sans-serif;text-decoration:none}
+
 /* SOCIAL BUTTONS */
 .social-row{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px;border-top:1px solid rgba(255,255,255,.06)}
 .sbtn{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:25px;font-size:10px;font-weight:600;color:#fff;text-decoration:none;font-family:sans-serif;transition:.1s}
@@ -89,6 +100,7 @@ input,select{font-family:inherit;outline:none}
 .sbtn-tt{background:linear-gradient(135deg,#ff0050,#00f2ea)}
 .sbtn-wa{background:#25d366}.sbtn-yt{background:#f00}
 .sbtn-grey{background:#333;color:#aaa}
+
 /* DIRECTORY */
 .dir-wrap{padding:10px}
 .search-box{position:relative;margin-bottom:10px}
@@ -99,6 +111,7 @@ input,select{font-family:inherit;outline:none}
 .pill-row::-webkit-scrollbar{display:none}
 .chip{background:var(--card2);border:1px solid var(--bdr);border-radius:25px;padding:5px 12px;font-size:10px;color:var(--mut);cursor:pointer;white-space:nowrap;flex-shrink:0}
 .chip.on{background:rgba(204,0,0,.2);border-color:var(--red);color:var(--gold)}
+
 /* DIR CARDS */
 .dcard{background:var(--card);border:1px solid var(--bdr);border-radius:16px;margin-bottom:10px;overflow:hidden}
 .dcard::before{content:'';display:block;height:3px;background:linear-gradient(to right,var(--red),#222,var(--lgrn))}
@@ -112,6 +125,7 @@ input,select{font-family:inherit;outline:none}
 .drow .lbl{font-size:9px;color:var(--mut);flex-shrink:0}
 .drow .val{font-size:10px;color:var(--cream);text-align:right}
 .val.pnd{color:rgba(201,168,76,.4);font-style:italic}
+
 /* TMK */
 .tmk-section{padding:10px}
 .tmk-card{background:var(--card);border-radius:16px;margin-bottom:12px;border:1px solid var(--bdr);overflow:hidden}
@@ -122,12 +136,14 @@ input,select{font-family:inherit;outline:none}
 .tmk-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
 .tmk-row:last-child{border-bottom:none}
 .tmk-name{font-size:11px}.tmk-role{font-size:9px;color:var(--gold);text-align:left}
+
 /* 33 DISTRICTS */
 .dist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:7px;padding:10px}
 .dist-tile{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:10px 4px;text-align:center;cursor:pointer;transition:.1s}
 .dist-tile:active{transform:scale(.94);background:rgba(204,0,0,.2)}
 .dist-tile .ic{font-size:22px;display:block;margin-bottom:3px}
 .dist-tile .nm{font-size:9px;color:var(--mut)}
+
 /* FORMS */
 .form-page{padding:12px}
 .form-title{color:var(--gold);font-size:15px;margin-bottom:12px;text-align:center}
@@ -142,6 +158,7 @@ input,select{font-family:inherit;outline:none}
 .info-box{background:rgba(201,168,76,.08);border:1px solid var(--bdr);border-radius:14px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:var(--mut)}
 .info-box.ok{background:rgba(26,122,26,.1);border-color:var(--lgrn);color:#bef264}
 .info-box.w{background:rgba(255,100,0,.08);border-color:rgba(255,100,0,.3);color:#fcd34d}
+
 /* PENDING */
 .pcard{background:var(--card2);border-radius:14px;padding:12px;margin-bottom:10px;border:1px solid var(--bdr)}
 .pcard strong{color:var(--gold);font-size:12px}
@@ -149,11 +166,13 @@ input,select{font-family:inherit;outline:none}
 .p-btns{display:flex;gap:10px;margin-top:8px}
 .p-approve{background:var(--grn);color:#fff;border-radius:20px;padding:6px 14px;font-size:11px;cursor:pointer;font-family:inherit;flex:1}
 .p-reject{background:#333;color:#aaa;border-radius:20px;padding:6px 14px;font-size:11px;cursor:pointer;font-family:inherit;flex:1}
+
 /* CATEGORY FILTER */
 .cat-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:8px 10px 4px;flex-shrink:0}
 .cat-row::-webkit-scrollbar{display:none}
 .cat-chip{background:var(--card2);border:1px solid var(--bdr);border-radius:20px;padding:5px 12px;font-size:10px;color:var(--mut);cursor:pointer;white-space:nowrap;flex-shrink:0}
 .cat-chip.on{background:rgba(204,0,0,.2);border-color:var(--red);color:var(--gold)}
+
 /* BOTTOM NAV */
 #botNav{display:flex;background:rgba(8,8,8,.97);border-top:1px solid var(--bdr);padding:6px 0 calc(var(--sb) + 5px);flex-shrink:0;backdrop-filter:blur(20px)}
 .bnav{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;cursor:pointer}
@@ -162,6 +181,7 @@ input,select{font-family:inherit;outline:none}
 .bnav.on .bn-lb{color:var(--gold)}
 .bnav.on .bn-ic{filter:drop-shadow(0 0 5px var(--gold))}
 .add-ic{background:var(--red);border-radius:8px;padding:3px 9px;font-size:17px}
+
 /* MODALS */
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:500;align-items:flex-end}
 .ov.open{display:flex}
@@ -171,10 +191,27 @@ input,select{font-family:inherit;outline:none}
 .tab-row{display:flex;border-radius:35px;overflow:hidden;margin-bottom:14px;background:#222}
 .tab-btn{flex:1;padding:9px;background:none;color:#ccc;font-size:12px;cursor:pointer;font-family:inherit}
 .tab-btn.on{background:var(--red);color:#fff}
+
 /* INSTALL BANNER */
 #installBanner{display:none;background:linear-gradient(135deg,var(--dred),#2c0a0a);border:1px solid var(--gold);border-radius:16px;margin:8px 10px;padding:10px;align-items:center;gap:10px}
 #installBanner p{flex:1;font-size:10px}
 #installBanner button{background:var(--gold);color:#000;border-radius:25px;padding:7px 14px;font-size:10px;cursor:pointer;font-family:inherit;flex-shrink:0}
+
+
+/* ── Message Inbox System ── */
+.msg-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:8px;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:sans-serif;font-weight:bold}
+.msg-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:25px;font-size:10px;font-weight:600;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#c9a84c;border:1px solid rgba(201,168,76,.3);cursor:pointer;font-family:inherit;transition:.15s;position:relative}
+.msg-btn:active{transform:scale(.95)}
+.inbox-msg{background:var(--card2);border:1px solid var(--bdr);border-radius:12px;padding:11px;margin-bottom:8px}
+.inbox-msg .im-from{font-size:9px;color:var(--gold);margin-bottom:4px}
+.inbox-msg .im-text{font-size:11px;color:var(--cream);line-height:1.6}
+.inbox-msg .im-time{font-size:8px;color:var(--mut);margin-top:4px;text-align:left;direction:ltr}
+.inbox-msg .im-status{font-size:8px;padding:2px 7px;border-radius:10px;display:inline-block;margin-top:4px}
+.im-new{background:rgba(204,0,0,.2);color:#fca5a5;border:1px solid var(--red)}
+.im-read{background:rgba(26,122,26,.15);color:#86efac;border:1px solid var(--lgrn)}
+.msg-textarea{width:100%;background:var(--card2);border:1px solid var(--bdr);border-radius:12px;padding:11px 14px;color:var(--cream);font-size:12px;direction:rtl;outline:none;resize:none;min-height:100px;font-family:'Noto Nastaliq Urdu',serif}
+.msg-textarea:focus{border-color:var(--gold)}
+
 @media(min-width:600px){
   #app{max-width:440px;margin:0 auto;box-shadow:0 0 40px rgba(0,0,0,.9)}
   body{background:#000}
@@ -183,6 +220,7 @@ input,select{font-family:inherit;outline:none}
 </head>
 <body>
 <div id="app">
+
   <!-- TOP BAR -->
   <div id="topbar">
     <div class="top-btns">
@@ -190,10 +228,13 @@ input,select{font-family:inherit;outline:none}
       <button id="loginBtn">🔐 لاگ ان</button>
     </div>
     <div class="logo-area">
-      <div><div class="logo-text">PPP PULSE 🌹</div><span class="logo-sub">پاکستان پیپلز پارٹی سندھ</span></div>
+      <div><div class="logo-text"><span style="color:var(--red)">P</span><span style="color:#888">P</span><span style="color:var(--lgrn)">P</span> <span style="color:var(--gold)">PULSE</span> 🌹</div><span class="logo-sub">پاکستان پیپلز پارٹی سندھ</span></div>
       <div class="logo-em">🌹</div>
     </div>
   </div>
+
+  <!-- PPP FLAG -->
+  <div class="ppp-flag"><div class="fr"></div><div class="fb"></div><div class="fg"></div></div>
   <!-- TABS -->
   <div id="feedTabs">
     <button class="ftab on" data-page="home">🏠 ہوم</button>
@@ -202,8 +243,10 @@ input,select{font-family:inherit;outline:none}
     <button class="ftab" data-page="dir">📋 ڈائریکٹری</button>
     <button class="ftab" data-page="tmk">📍 ٹنڈو م خان</button>
     <button class="ftab" data-page="d33">🗺️ 33 اضلاع</button>
+    <button class="ftab" id="psTab" data-page="ps">🏛️ PS عہدیداران</button>
     <button class="ftab" id="adminTab" style="display:none" data-page="admin">⚙️ Admin</button>
   </div>
+
   <!-- TICKER -->
   <div class="ticker"><div class="tt">
     <span>🌹 جئے بھٹو — پیپلز پارٹی زندہ باد</span>
@@ -223,12 +266,14 @@ input,select{font-family:inherit;outline:none}
     <span>🏙️ میئر کراچی: مرتضیٰ وہاب</span>
     <span>📍 ٹنڈو محمد خان: نئی تنظیم 2025</span>
   </div></div>
+
   <!-- MAIN AREA -->
   <div id="mainArea">
     <div id="installBanner">
       <p>📱 <strong>ہوم اسکرین پر لگائیں</strong> — آف لائن بھی چلے گا!</p>
       <button id="installBtn">انسٹال کریں</button>
     </div>
+
     <!-- HOME -->
     <div class="page on" id="page-home">
       <div style="padding:12px 10px 4px;text-align:center;font-size:11px;color:var(--mut)">🌹 جئے بھٹو — عوامی خدمت پورٹل</div>
@@ -240,12 +285,14 @@ input,select{font-family:inherit;outline:none}
       </div>
       <div class="feed-wrap" id="homeGrid"></div>
     </div>
-    <!-- LEADERS -->
+
+    <!-- LEADERS / QIYADAT -->
     <div class="page" id="page-leaders">
       <div class="cat-row" id="leaderCats"></div>
       <div class="feed-wrap" id="leadersGrid"></div>
     </div>
-    <!-- MNA/MPA -->
+
+    <!-- MNA/MPA MEMBERS -->
     <div class="page" id="page-members">
       <div class="dir-wrap">
         <div class="search-box">
@@ -256,6 +303,7 @@ input,select{font-family:inherit;outline:none}
         <div id="memGrid"></div>
       </div>
     </div>
+
     <!-- DIRECTORY -->
     <div class="page" id="page-dir">
       <div class="dir-wrap">
@@ -268,6 +316,7 @@ input,select{font-family:inherit;outline:none}
         <div id="dirG"></div>
       </div>
     </div>
+
     <!-- TMK -->
     <div class="page" id="page-tmk">
       <div class="tmk-section">
@@ -275,20 +324,44 @@ input,select{font-family:inherit;outline:none}
         <div id="tmkGrid"></div>
       </div>
     </div>
+
     <!-- 33 DISTRICTS -->
     <div class="page" id="page-d33">
       <div style="padding:8px 10px;font-size:10px;color:var(--mut);text-align:right">کسی بھی ضلع پر کلک کریں — فوری ڈائریکٹری</div>
       <div class="dist-grid" id="distGrid"></div>
     </div>
+
+    <!-- PS OFFICIALS -->
+    <div class="page" id="page-ps">
+      <div class="dir-wrap">
+        <div class="search-box">
+          <span class="si">🔍</span>
+          <input type="text" id="psSrch" placeholder="نام، ضلع، PS نمبر تلاش کریں…">
+        </div>
+        <div class="pill-row" id="psRoleF"></div>
+        <div id="psGrid"></div>
+      </div>
+    </div>
+
     <!-- ADMIN -->
     <div class="page" id="page-admin">
       <div class="form-page">
         <div class="form-title">⚙️ Admin پینل</div>
+        <!-- Cloud Login section -->
+        <div id="cloudSection" style="background:rgba(26,26,46,.6);border:1px solid rgba(29,155,240,.2);border-radius:14px;padding:12px;margin-bottom:12px">
+          <div style="font-size:11px;color:#1d9bf0;margin-bottom:8px;text-align:center">☁️ Firebase Cloud Sync</div>
+          <div class="fg" style="margin-bottom:8px"><input type="email" id="cloudEmail" placeholder="admin@ppp.com" style="background:#0d1117;border:1px solid rgba(29,155,240,.3);color:#fff;direction:ltr;font-size:11px"></div>
+          <div class="fg" style="margin-bottom:8px"><input type="password" id="cloudPass" placeholder="Cloud پاسورڈ" style="background:#0d1117;border:1px solid rgba(29,155,240,.3);color:#fff;direction:ltr;font-size:11px"></div>
+          <button id="cloudLoginBtn" style="width:100%;background:rgba(29,155,240,.15);color:#1d9bf0;border:1px solid rgba(29,155,240,.3);padding:8px;border-radius:12px;font-size:11px;cursor:pointer;font-family:inherit">☁️ Cloud لاگ ان / Sync</button>
+          <div style="font-size:9px;color:var(--mut);margin-top:6px;text-align:center">Firebase config بھریں تو cloud sync فعال ہوگا</div>
+        </div>
+        <button onclick="openAdminAllInbox()" style="width:100%;background:linear-gradient(135deg,#1a1a2e,#16213e);color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:11px;border-radius:20px;font-size:12px;cursor:pointer;margin-bottom:10px;font-family:inherit">📬 تمام پیغامات / شکایات دیکھیں</button>
         <div class="info-box">🔐 صرف منتظم | پاسورڈ: <strong style="color:var(--gold)">tmc786</strong></div>
         <div class="form-title" style="font-size:13px">⏳ زیرِ جائزہ درخواستیں</div>
         <div id="pendList"></div>
       </div>
     </div>
+
   </div><!-- mainArea -->
 
   <!-- BOTTOM NAV -->
@@ -299,6 +372,7 @@ input,select{font-family:inherit;outline:none}
     <button class="bnav" id="openAddBtn"><span class="bn-ic"><span class="add-ic">➕</span></span><span class="bn-lb">شامل کریں</span></button>
     <button class="bnav" data-nav="tmk"><span class="bn-ic">📍</span><span class="bn-lb">ٹنڈو م خان</span></button>
   </div>
+
 </div><!-- app -->
 
 <!-- LOGIN MODAL -->
@@ -322,7 +396,7 @@ input,select{font-family:inherit;outline:none}
       <div class="fg"><label>ضلع *</label>
         <select id="rd">
           <option value="">-- ضلع منتخب کریں --</option>
-          <option>کراچی مشرقی</option><option>کراچی مغربی</option><option>کراچی وسطی</option>
+          <option>کراچی شرقی</option><option>کراچی مغربی</option><option>کراچی وسطی</option>
           <option>کراچی جنوبی</option><option>کورنگی</option><option>ملیر</option><option>کیماڑی</option>
           <option>حیدرآباد</option><option>جامشورو</option><option>ٹنڈو محمد خان</option>
           <option>ٹنڈو اللہ یار</option><option>ماٹیاری</option><option>بدین</option><option>ٹھٹہ</option>
@@ -335,16 +409,11 @@ input,select{font-family:inherit;outline:none}
       </div>
       <div class="fg"><label>عہدہ</label>
         <select id="rr">
-          <option value="worker">عام کارکن</option>
-          <option value="social">سوشل میڈیا ایکٹیوسٹ</option>
-          <option value="councillor">کونسلر</option>
-          <option value="uc">UC چیئرمین</option>
-          <option value="vc">وائس چیئرمین</option>
-          <option value="town">ٹاؤن کمیٹی</option>
-          <option value="mpa">MPA</option>
-          <option value="mna">MNA</option>
-          <option value="minister">وزیر</option>
-          <option value="dp">ضلعی صدر PPP</option>
+          <option value="worker">عام کارکن</option><option value="social">سوشل میڈیا ایکٹیوسٹ</option>
+          <option value="councillor">کونسلر</option><option value="uc">UC چیئرمین</option>
+          <option value="vc">وائس چیئرمین</option><option value="town">ٹاؤن کمیٹی</option>
+          <option value="mpa">MPA</option><option value="mna">MNA</option>
+          <option value="minister">وزیر</option><option value="dp">ضلعی صدر PPP</option>
           <option value="is">انفارمیشن سیکرٹری</option>
         </select>
       </div>
@@ -383,15 +452,99 @@ input,select{font-family:inherit;outline:none}
   </div>
 </div>
 
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8" id="twScript"></script>
+<!-- Twitter widget optional - embeds disabled by X/Twitter -->
 <script>
 /* ══════════════════════════════════════════════════════
-   PPP PULSE v9.1 — FIXED + PWA THEME COLOR UPGRADED
-   ✅ theme-color light/dark/admin dynamic
+   PPP PULSE v9.0 — FINAL COMPLETE
    ✅ تمام بٹن درست
+   ✅ خودکار PPP ممبران کی فہرست
+   ✅ MNA/MPA مکمل لسٹ
    ✅ XSS محفوظ
    ✅ localStorage auth
+   ✅ SW صرف GitHub پر
    ══════════════════════════════════════════════════════ */
+
+/* ── Dynamic Theme Color ── */
+function setThemeColor(color){
+  var m=document.querySelector('meta[name="theme-color"]');
+  if(m) m.setAttribute('content',color);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FIREBASE CLOUD SYNC — اختیاری
+   ✅ بغیر config کے: localStorage سے چلے گا (offline ok)
+   ✅ config بھرنے پر: Cloud Firestore sync فعال ہوگا
+   ═══════════════════════════════════════════════════════════ */
+var FB_CONFIG = {
+  apiKey:            "",  /* ← اپنا Firebase API Key یہاں */
+  authDomain:        "",  /* ← project-id.firebaseapp.com */
+  projectId:         "",  /* ← اپنا Project ID */
+  storageBucket:     "",
+  messagingSenderId: "",
+  appId:             ""
+};
+var fbApp=null, fbAuth=null, fbDb=null, fbReady=false;
+
+function initFirebase(){
+  try{
+    if(!FB_CONFIG.apiKey||!FB_CONFIG.projectId){
+      console.log('Firebase config empty — localStorage mode');
+      return;
+    }
+    if(typeof firebase==='undefined') return;
+    fbApp  = firebase.initializeApp(FB_CONFIG);
+    fbAuth = firebase.auth();
+    fbDb   = firebase.firestore();
+    fbReady = true;
+    console.log('✅ Firebase Cloud فعال');
+
+    /* Auth state watch */
+    fbAuth.onAuthStateChanged(function(user){
+      if(user){
+        var btn=document.getElementById('loginBtn');
+        if(btn){ btn.textContent='☁️ '+user.email.split('@')[0].substring(0,10); btn.style.background='#1a7a1a'; }
+        syncMembersFromCloud();
+      }
+    });
+  } catch(e){ console.warn('Firebase init failed:', e.message); }
+}
+
+/* Cloud سے members load کرو */
+function syncMembersFromCloud(){
+  if(!fbReady||!fbDb) return;
+  fbDb.collection('ppp_members').get().then(function(snap){
+    var cloudReps=[];
+    snap.forEach(function(doc){ cloudReps.push(Object.assign({id:doc.id},doc.data())); });
+    if(cloudReps.length){
+      sDB('reps', cloudReps);
+      rDir();
+      console.log('☁️ Cloud sync:', cloudReps.length, 'members');
+    }
+  }).catch(function(e){ console.warn('Cloud read failed:', e); });
+}
+
+/* Member cloud پر save */
+function saveToCloud(rep){
+  if(!fbReady||!fbDb) return;
+  fbDb.collection('ppp_members').doc(rep.id).set(rep)
+    .then(function(){ console.log('☁️ Saved to cloud:', rep.name); })
+    .catch(function(e){ console.warn('Cloud save failed:', e); });
+}
+
+/* Member cloud سے delete */
+function deleteFromCloud(id){
+  if(!fbReady||!fbDb) return;
+  fbDb.collection('ppp_members').doc(id).delete()
+    .catch(function(e){ console.warn('Cloud delete failed:', e); });
+}
+
+/* Admin cloud login */
+function cloudLogin(email, pass){
+  if(!fbReady||!fbAuth){ alert('Firebase config نہیں بھری — صرف local mode'); return; }
+  fbAuth.signInWithEmailAndPassword(email, pass)
+    .then(function(){ alert('☁️ Cloud لاگ ان کامیاب!'); })
+    .catch(function(e){ alert('Cloud error: '+e.message); });
+}
 
 /* ── Security helpers ── */
 function esc(s){if(!s)return '';return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
@@ -400,98 +553,194 @@ function gDB(k){try{return JSON.parse(localStorage.getItem('ppp_'+k)||'[]');}cat
 function sDB(k,v){try{localStorage.setItem('ppp_'+k,JSON.stringify(v));}catch(e){}}
 function isA(){return cu&&cu.ia===true;}
 
-/* ✅ PWA Dynamic Theme Color */
-function setThemeColor(color){
-  document.querySelectorAll('meta[name="theme-color"]').forEach(m=>m.setAttribute('content',color));
-}
-
 /* ══════════════════════════════════════════════
-   ڈیٹا — مکمل PPP سندھ فہرست
+   خودکار ڈیٹا — مکمل PPP سندھ فہرست
    ══════════════════════════════════════════════ */
+
+/* اعلیٰ قیادت */
 const LEADERS=[
-  {n:"بلاول بھٹو زرداری",  p:"چیئرمین PPP",              cat:"مرکزی قیادت",  i:"🌹",tw:"BBhuttoZardari",   fb:"BilawalBhuttoZardariPk",tt:"bilawal.bhutto.z",wa:""},
-  {n:"آصف علی زرداری",     p:"صدر پاکستان",              cat:"مرکزی قیادت",  i:"🇵🇰",tw:"AAliZardari",       fb:"AsifAliZardari",        tt:"",wa:""},
-  {n:"مراد علی شاہ",       p:"وزیراعلیٰ سندھ ✅",         cat:"سندھ کابینہ",  i:"🏛️",tw:"MuradAliShahPPP",  fb:"SindhCMHouse",          tt:"",wa:""},
-  {n:"سید ناصر حسین شاہ",  p:"وزیر بلدیات ✅",            cat:"سندھ کابینہ",  i:"🌿",tw:"SyedNasirHShah",   fb:"",                      tt:"",wa:""},
-  {n:"ضیاء الحسن لنجار",   p:"وزیر داخلہ ✅",             cat:"سندھ کابینہ",  i:"🔴",tw:"ZiaLanjar",         fb:"",                      tt:"",wa:""},
-  {n:"شرجیل انعام میمن",   p:"وزیر اطلاعات",             cat:"سندھ کابینہ",  i:"📢",tw:"sharjeelinam",      fb:"SharjeelInamMemon",     tt:"sharjeelinam",wa:""},
-  {n:"سعید غنی",           p:"وزیر لیبر / صدر PPP کراچی",cat:"سندھ کابینہ",  i:"🔧",tw:"SaeedGhani1",      fb:"SaeedGhaniOfficial",    tt:"",wa:""},
-  {n:"جام خان شورو",       p:"وزیر آبپاشی",              cat:"سندھ کابینہ",  i:"💧",tw:"jamkhanshoro",      fb:"",                      tt:"",wa:""},
-  {n:"بختاور بھٹو زرداری", p:"PPP مرکزی قیادت",          cat:"مرکزی قیادت",  i:"🌸",tw:"BakhtawarBZ",       fb:"BakhtawarBhuttoZardari",tt:"",wa:""},
-  {n:"آصفہ بھٹو زرداری",   p:"MNA",                      cat:"مرکزی قیادت",  i:"💫",tw:"AseefaBZ",          fb:"",                      tt:"",wa:""},
-  {n:"مرتضیٰ وہاب",        p:"میئر کراچی",               cat:"میئر/ڈپٹی میئر",i:"🏙️",tw:"murtazawahab1",  fb:"MurtazaWahabOfficial",  tt:"",wa:""},
-  {n:"سلمان مراد",         p:"ڈپٹی میئر کراچی",         cat:"میئر/ڈپٹی میئر",i:"🎯",tw:"SalmanAMurad",    fb:"",                      tt:"",wa:""},
-  {n:"کاشف علی شورو",      p:"میئر حیدرآباد",            cat:"میئر/ڈپٹی میئر",i:"🏙️",tw:"KashifShoro",    fb:"",                      tt:"",wa:""},
-  {n:"شیری رحمان",         p:"سینیٹر PPP / سابق وفاقی وزیر",cat:"سینیٹر",  i:"🌿",tw:"sherryrehman",     fb:"sherryrehman",          tt:"",wa:""},
-  {n:"خورشید احمد شاہ",    p:"سینیٹر / MNA سکھر",        cat:"سینیٹر",       i:"⚡",tw:"KhurshidShah_",    fb:"",                      tt:"",wa:""},
-  {n:"روبینہ خالد",        p:"سینیٹر PPP",               cat:"سینیٹر",       i:"👩‍💼",tw:"RubinakhalidPPP",fb:"",                      tt:"",wa:""},
-  {n:"سبا حیدر",           p:"ترجمان PPP / سینیٹر",      cat:"سینیٹر",       i:"🎤",tw:"SabaHyder1",        fb:"",                      tt:"",wa:""},
-  {n:"مریم بھٹو",          p:"PPP مرکزی رہنما",          cat:"مرکزی قیادت",  i:"🌹",tw:"BhuttoMaryam",      fb:"",                      tt:"",wa:""},
-  {n:"راول شرجیل",         p:"سینیٹر PPP",               cat:"سینیٹر",       i:"⚡",tw:"rawalsharjeel",     fb:"",                      tt:"",wa:""},
-  {n:"CM House سندھ",      p:"وزیراعلیٰ سندھ آفس",       cat:"سرکاری",       i:"🏛️",tw:"SindhCMHouse",    fb:"SindhCMHouse",          tt:"",wa:""},
-  {n:"محکمہ اطلاعات سندھ", p:"سرکاری اطلاعات",           cat:"سرکاری",       i:"📋",tw:"sindhinfodepart",   fb:"",                      tt:"",wa:""},
-  {n:"نثار احمد کھوڑو",    p:"صدر PPP سندھ",             cat:"مرکزی قیادت",  i:"🌹",tw:"",                 fb:"",                      tt:"",wa:""},
-  {n:"وقار مہدی",          p:"جنرل سیکرٹری PPP سندھ",   cat:"مرکزی قیادت",  i:"🌹",tw:"",                 fb:"",                      tt:"",wa:""},
+  {n:"بلاول بھٹو زرداری",  p:"چیئرمین PPP",           cat:"مرکزی قیادت",i:"🌹",tw:"BBhuttoZardari",    fb:"BilawalBhuttoZardariPk",tt:"bilawal.bhutto.z",wa:""},
+  {n:"آصف علی زرداری",     p:"صدر پاکستان",           cat:"مرکزی قیادت",i:"🇵🇰",tw:"AAliZardari",        fb:"AsifAliZardari",         tt:"",wa:""},
+  {n:"مراد علی شاہ",       p:"وزیراعلیٰ سندھ ✅",      cat:"سندھ کابینہ",i:"🏛️",tw:"MuradAliShahPPP",   fb:"SindhCMHouse",           tt:"",wa:""},
+  {n:"سید ناصر حسین شاہ",  p:"وزیر بلدیات ✅",         cat:"سندھ کابینہ",i:"🌿",tw:"SyedNasirHShah",    fb:"",                       tt:"",wa:""},
+  {n:"ضیاء الحسن لنجار",   p:"وزیر داخلہ ✅",          cat:"سندھ کابینہ",i:"🔴",tw:"ZiaLanjar",          fb:"",                       tt:"",wa:""},
+  {n:"شرجیل انعام میمن",   p:"وزیر اطلاعات",          cat:"سندھ کابینہ",i:"📢",tw:"sharjeelinam",       fb:"SharjeelInamMemon",      tt:"sharjeelinam",wa:""},
+  {n:"سعید غنی",           p:"وزیر لیبر/صدر PPP کراچی",cat:"سندھ کابینہ",i:"🔧",tw:"SaeedGhani1",      fb:"SaeedGhaniOfficial",     tt:"",wa:""},
+  {n:"جام خان شورو",       p:"وزیر آبپاشی",           cat:"سندھ کابینہ",i:"💧",tw:"jamkhanshoro",       fb:"",                       tt:"",wa:""},
+  {n:"بختاور بھٹو زرداری", p:"PPP مرکزی قیادت",       cat:"مرکزی قیادت",i:"🌸",tw:"BakhtawarBZ",        fb:"BakhtawarBhuttoZardari", tt:"",wa:""},
+  {n:"آصفہ بھٹو زرداری",   p:"MNA",                   cat:"مرکزی قیادت",i:"💫",tw:"AseefaBZ",           fb:"",                       tt:"",wa:""},
+  {n:"مرتضیٰ وہاب",        p:"میئر کراچی",            cat:"میئر/ڈپٹی میئر",i:"🏙️",tw:"murtazawahab1",  fb:"MurtazaWahabOfficial",   tt:"",wa:""},
+  {n:"سلمان مراد",         p:"ڈپٹی میئر کراچی",      cat:"میئر/ڈپٹی میئر",i:"🎯",tw:"SalmanAMurad",    fb:"",                       tt:"",wa:""},
+  {n:"کاشف علی شورو",      p:"میئر حیدرآباد",         cat:"میئر/ڈپٹی میئر",i:"🏙️",tw:"KashifShoro",    fb:"",                       tt:"",wa:""},
+  {n:"شیری رحمان",         p:"سینیٹر PPP / سابق وفاقی وزیر",cat:"سینیٹر",i:"🌿",tw:"sherryrehman",  fb:"sherryrehman",           tt:"",wa:""},
+  {n:"خورشید احمد شاہ",    p:"سینیٹر/MNA سکھر",       cat:"سینیٹر",i:"⚡",tw:"KhurshidShah_",         fb:"",                       tt:"",wa:""},
+  {n:"روبینہ خالد",        p:"سینیٹر PPP",            cat:"سینیٹر",i:"👩‍💼",tw:"RubinakhalidPPP",    fb:"",                       tt:"",wa:""},
+  {n:"سبا حیدر",           p:"ترجمان PPP / سینیٹر",   cat:"سینیٹر",i:"🎤",tw:"SabaHyder1",             fb:"",                       tt:"",wa:""},
+  {n:"مریم بھٹو",          p:"PPP مرکزی رہنما",       cat:"مرکزی قیادت",i:"🌹",tw:"BhuttoMaryam",       fb:"",                       tt:"",wa:""},
+  {n:"راول شرجیل",         p:"سینیٹر PPP",            cat:"سینیٹر",i:"⚡",tw:"rawalsharjeel",           fb:"",                       tt:"",wa:""},
+  {n:"CM House سندھ",      p:"وزیراعلیٰ سندھ آفس",    cat:"سرکاری",i:"🏛️",tw:"SindhCMHouse",          fb:"SindhCMHouse",           tt:"",wa:""},
+  {n:"محکمہ اطلاعات سندھ", p:"سرکاری اطلاعات",        cat:"سرکاری",i:"📋",tw:"sindhinfodepart",         fb:"",                       tt:"",wa:""},
+  {n:"نثار احمد کھوڑو",    p:"صدر PPP سندھ",          cat:"مرکزی قیادت",i:"🌹",tw:"",                  fb:"",                       tt:"",wa:""},
+  {n:"وقار مہدی",          p:"جنرل سیکرٹری PPP سندھ", cat:"مرکزی قیادت",i:"🌹",tw:"WaqarMehdiPPP1",      fb:"",                       tt:"",wa:""},
+  {n:"وقار مہدی",          p:"جنرل سیکرٹری PPP سندھ", cat:"مرکزی قیادت",i:"🌹",tw:"",                  fb:"",                       tt:"",wa:""},
 ];
 
+/* MNA/MPA مکمل لسٹ */
 const MNAMPA=[
-  {n:"بلاول بھٹو زرداری",  t:"MNA",halqa:"NA-194 لاڑکانہ",          dist:"لاڑکانہ",          tw:"BBhuttoZardari"},
-  {n:"آصفہ بھٹو زرداری",   t:"MNA",halqa:"NA-237 کراچی مشرقی",      dist:"کراچی مشرقی",      tw:"AseefaBZ"},
-  {n:"آصف علی زرداری",     t:"MNA",halqa:"NA-207 شہید بے نظیرآباد", dist:"شہید بے نظیرآباد", tw:"AAliZardari"},
-  {n:"خورشید احمد شاہ",    t:"MNA",halqa:"NA-206 سکھر",              dist:"سکھر",              tw:"KhurshidShah_"},
-  {n:"سید نوید قمر",       t:"MNA",halqa:"NA-221 ٹنڈو محمد خان",     dist:"ٹنڈو محمد خان",    tw:""},
-  {n:"افتخار احمد جدون",   t:"MNA",halqa:"NA-235 کراچی",             dist:"کراچی وسطی",        tw:""},
-  {n:"مراد علی شاہ",       t:"MPA",halqa:"PS-34 نوشہرو فیروز",       dist:"نوشہرو فیروز",      tw:"MuradAliShahPPP"},
-  {n:"ناصر حسین شاہ",      t:"MPA",halqa:"PS-25 سکھر",               dist:"سکھر",              tw:"SyedNasirHShah"},
-  {n:"شرجیل انعام میمن",   t:"MPA",halqa:"PS-61 حیدرآباد",           dist:"حیدرآباد",          tw:"sharjeelinam"},
-  {n:"ضیاء الحسن لنجار",   t:"MPA",halqa:"PS-31 نوشہرو فیروز",       dist:"نوشہرو فیروز",      tw:"ZiaLanjar"},
-  {n:"سعید غنی",           t:"MPA",halqa:"PS-105 کراچی مشرقی",       dist:"کراچی مشرقی",      tw:"SaeedGhani1"},
-  {n:"فریال تالپور",       t:"MPA",halqa:"PS-10 لاڑکانہ",            dist:"لاڑکانہ",           tw:""},
-  {n:"جام خان شورو",       t:"MPA",halqa:"PS-60 حیدرآباد",           dist:"حیدرآباد",          tw:"jamkhanshoro"},
-  {n:"ساجد جوکھیو",        t:"MPA",halqa:"PS-85 ملیر",               dist:"ملیر",              tw:""},
-  {n:"نثار خہرو",          t:"MPA",halqa:"PS-15 قمبر",               dist:"قمبر شہداد کوٹ",   tw:""},
-  {n:"نادیہ گبول",         t:"MPA",halqa:"PS-97 کراچی مشرقی",        dist:"کراچی مشرقی",      tw:""},
-  {n:"جمیل احمد سومرو",    t:"MPA",halqa:"PS-50 عمرکوٹ",             dist:"عمرکوٹ",           tw:""},
-  {n:"محمد بخش میہر",      t:"MPA",halqa:"PS-73 سجاول",              dist:"سجاول",            tw:""},
-  {n:"سہراب خان سرکی",     t:"MPA",halqa:"PS-20 گھوٹکی",             dist:"گھوٹکی",           tw:""},
+  /* MNAs */
+  {n:"بلاول بھٹو زرداری",  t:"MNA",halqa:"NA-194 لاڑکانہ",  dist:"لاڑکانہ",  tw:"BBhuttoZardari"},
+  {n:"آصفہ بھٹو زرداری",   t:"MNA",halqa:"NA-237 کراچی شرقی",dist:"کراچی شرقی",tw:"AseefaBZ"},
+  {n:"آصف علی زرداری",     t:"MNA",halqa:"NA-207 شہید بے نظیرآباد",dist:"شہید بے نظیرآباد",tw:"AAliZardari"},
+  {n:"خورشید احمد شاہ",    t:"MNA",halqa:"NA-206 سکھر",      dist:"سکھر",      tw:"KhurshidShah_"},
+  {n:"سید نوید قمر",       t:"MNA",halqa:"NA-221 ٹنڈو محمد خان",dist:"ٹنڈو محمد خان",tw:""},
+  {n:"افتخار احمد جدون",   t:"MNA",halqa:"NA-235 کراچی",     dist:"کراچی وسطی",tw:""},
+  /* MPAs */
+  {n:"مراد علی شاہ",       t:"MPA",halqa:"PS-34 نوشہرو فیروز",dist:"نوشہرو فیروز",tw:"MuradAliShahPPP"},
+  {n:"ناصر حسین شاہ",      t:"MPA",halqa:"PS-25 سکھر",       dist:"سکھر",      tw:"SyedNasirHShah"},
+  {n:"شرجیل انعام میمن",   t:"MPA",halqa:"PS-61 حیدرآباد",   dist:"حیدرآباد",  tw:"sharjeelinam"},
+  {n:"ضیاء الحسن لنجار",   t:"MPA",halqa:"PS-31 نوشہرو فیروز",dist:"نوشہرو فیروز",tw:"ZiaLanjar"},
+  {n:"سعید غنی",           t:"MPA",halqa:"PS-105 کراچی شرقی",dist:"کراچی شرقی",tw:"SaeedGhani1"},
+  {n:"فریال تالپور",       t:"MPA",halqa:"PS-10 لاڑکانہ",    dist:"لاڑکانہ",   tw:""},
+  {n:"جام خان شورو",       t:"MPA",halqa:"PS-60 حیدرآباد",   dist:"حیدرآباد",  tw:"jamkhanshoro"},
+  {n:"ساجد جوکھیو",        t:"MPA",halqa:"PS-85 ملیر",        dist:"ملیر",       tw:""},
+  {n:"نثار خہرو",          t:"MPA",halqa:"PS-15 قمبر",        dist:"قمبر شہداد کوٹ",tw:""},
+  {n:"نادیہ گبول",         t:"MPA",halqa:"PS-97 کراچی شرقی",dist:"کراچی شرقی",tw:""},
+  {n:"جمیل احمد سومرو",    t:"MPA",halqa:"PS-50 عمرکوٹ",     dist:"عمرکوٹ",    tw:""},
+  {n:"محمد بخش میہر",      t:"MPA",halqa:"PS-73 سجاول",       dist:"سجاول",     tw:""},
+  {n:"سہراب خان سرکی",     t:"MPA",halqa:"PS-20 گھوٹکی",     dist:"گھوٹکی",    tw:""},
 ];
 
+/* ══════════════════════════════════════════════════════
+   PPP سندھ ضلعی عہدیداران — تمام اضلاع
+   صدور، جنرل سیکرٹری، انفارمیشن سیکرٹری
+   ══════════════════════════════════════════════════════ */
+const PPP_OFFICIALS = [
+  /* ════ کراچی ════ */
+  {n:"سعید غنی",          p:"صدر PPP کراچی / وزیر لیبر",dist:"کراچی",      role:"صدر",          tw:"SaeedGhani1",    fb:"SaeedGhaniOfficial",  tt:""},
+  {n:"شمیم ممتاز",        p:"جنرل سیکرٹری PPP کراچی",  dist:"کراچی",      role:"جنرل سیکرٹری", tw:"",               fb:"",                    tt:""},
+  {n:"رضا ہارون",         p:"انفارمیشن سیکرٹری کراچی", dist:"کراچی",      role:"انفارمیشن س",  tw:"RazaHaroon_",    fb:"",                    tt:""},
+  {n:"احمد علی",          p:"صدر PPP کراچی شرقی",     dist:"کراچی شرقی", role:"صدر",          tw:"",               fb:"",                    tt:""},
+  /* ════ حیدرآباد ════ */
+  {n:"نصر اللہ خان مورو", p:"صدر PPP حیدرآباد",        dist:"حیدرآباد",   role:"صدر",          tw:"",               fb:"",                    tt:""},
+  {n:"تاج محمد سومرو",    p:"جنرل سیکرٹری حیدرآباد",  dist:"حیدرآباد",   role:"جنرل سیکرٹری", tw:"",               fb:"",                    tt:""},
+  /* ════ ٹنڈو محمد خان ════ */
+  {n:"سید غلام حیدر شاہ", p:"صدر تعلقہ ٹنڈو م خان",    dist:"ٹنڈو محمد خان",role:"صدر تعلقہ",  tw:"",               fb:"",                    tt:""},
+  {n:"ڈاکٹر جام زوئنر",   p:"جنرل سیکرٹری ٹنڈو م خان", dist:"ٹنڈو محمد خان",role:"جنرل سیکرٹری",tw:"",               fb:"",                    tt:""},
+  {n:"اختر علی وساں",     p:"انفارمیشن سیکرٹری",       dist:"ٹنڈو محمد خان",role:"انفارمیشن س",  tw:"",               fb:"",                    tt:""},
+  /* ════ لاڑکانہ ════ */
+  {n:"آغا سراج درانی",    p:"صدر PPP لاڑکانہ / سابق اسپیکر",dist:"لاڑکانہ",role:"صدر",        tw:"",               fb:"",                    tt:""},
+  {n:"غلام قادر چانڈیو",  p:"جنرل سیکرٹری لاڑکانہ",   dist:"لاڑکانہ",   role:"جنرل سیکرٹری", tw:"",               fb:"",                    tt:""},
+  /* ════ سکھر ════ */
+  {n:"سید جمال شاہ",      p:"صدر PPP سکھر",             dist:"سکھر",       role:"صدر",          tw:"",               fb:"",                    tt:""},
+  {n:"مزمل قریشی",        p:"جنرل سیکرٹری سکھر",       dist:"سکھر",       role:"جنرل سیکرٹری", tw:"",               fb:"",                    tt:""},
+  {n:"جمال خان شورو",     p:"انفارمیشن سیکرٹری سکھر",  dist:"سکھر",       role:"انفارمیشن س",  tw:"",               fb:"",                    tt:""},
+  /* ════ شہید بے نظیرآباد (نواب شاہ) ════ */
+  {n:"سید ندیم شاہ",      p:"صدر PPP SBA",               dist:"شہید بے نظیرآباد",role:"صدر",    tw:"",               fb:"",                    tt:""},
+  {n:"کریم بخش کلھوڑو",   p:"جنرل سیکرٹری SBA",         dist:"شہید بے نظیرآباد",role:"جنرل سیکرٹری",tw:"",            fb:"",                    tt:""},
+  /* ════ میرپورخاص ════ */
+  {n:"سید ولی محمد شاہ",  p:"صدر PPP میرپورخاص",        dist:"میرپورخاص",  role:"صدر",          tw:"",               fb:"",                    tt:""},
+  {n:"غلام یاسین قریشی",  p:"جنرل سیکرٹری میرپورخاص",  dist:"میرپورخاص",  role:"جنرل سیکرٹری", tw:"",               fb:"",                    tt:""},
+  /* ════ خیرپور ════ */
+  {n:"سید ذوالفقار میرزا", p:"صدر PPP خیرپور",           dist:"خیرپور",     role:"صدر",          tw:"ZAMirzaPPP",     fb:"",                    tt:""},
+  /* ════ گھوٹکی ════ */
+  {n:"خالد لنڈ",           p:"MNA / صدر PPP گھوٹکی",    dist:"گھوٹکی",     role:"صدر",          tw:"",               fb:"",                    tt:""},
+  /* ════ جیکب آباد ════ */
+  {n:"میر اعجاز جکھرانی",  p:"MNA / صدر PPP جیکب آباد", dist:"جیکب آباد",  role:"صدر",          tw:"",               fb:"",                    tt:""},
+  /* ════ دادو ════ */
+  {n:"ارفان لغاری",        p:"MNA / صدر PPP دادو",       dist:"دادو",        role:"صدر",          tw:"",               fb:"",                    tt:""},
+  /* ════ جامشورو ════ */
+  {n:"شمیم ممتاز علی بھٹو",p:"صدر PPP جامشورو",         dist:"جامشورو",    role:"صدر",          tw:"",               fb:"",                    tt:""},
+  /* ════ بدین ════ */
+  {n:"غلام علی ٹالپور",   p:"MNA / صدر PPP بدین",        dist:"بدین",        role:"صدر",          tw:"",               fb:"",                    tt:""},
+  /* ════ ٹھٹہ ════ */
+  {n:"صادق علی میمن",     p:"MNA / صدر PPP ٹھٹہ",        dist:"ٹھٹہ",        role:"صدر",          tw:"",               fb:"",                    tt:""},
+  /* ════ سانگھڑ ════ */
+  {n:"قاضی آصف احمد",     p:"صدر PPP سانگھڑ",            dist:"سانگھڑ",     role:"صدر",          tw:"",               fb:"",                    tt:""},
+  /* ════ شکارپور ════ */
+  {n:"میر ابد بھایو",      p:"MNA / صدر PPP شکارپور",    dist:"شکارپور",    role:"صدر",          tw:"",               fb:"",                    tt:""},
+  /* ════ قمبر شہداد کوٹ ════ */
+  {n:"نثار خہرو",          p:"MPA / ضلعی صدر قمبر",      dist:"قمبر شہداد کوٹ",role:"صدر",       tw:"",               fb:"",                    tt:""},
+  /* ════ نوشہرو فیروز ════ */
+  {n:"علی مراد پنہور",     p:"صدر PPP نوشہرو فیروز",     dist:"نوشہرو فیروز",role:"صدر",         tw:"",               fb:"",                    tt:""},
+  /* ════ عمرکوٹ ════ */
+  {n:"یوسف ٹالپور",        p:"MNA / صدر PPP عمرکوٹ",     dist:"عمرکوٹ",    role:"صدر",          tw:"",               fb:"",                    tt:""},
+  /* ════ تھرپارکر ════ */
+  {n:"مہیش کمار ملانی",    p:"MNA / صدر PPP تھرپارکر",   dist:"تھرپارکر",  role:"صدر",          tw:"maheshmalani",   fb:"",                    tt:""},
+  /* ════ ماٹیاری ════ */
+  {n:"مخدوم جمیل الزمان", p:"MNA / صدر PPP ماٹیاری",    dist:"ماٹیاری",   role:"صدر",          tw:"",               fb:"",                    tt:""},
+  /* ════ ٹنڈو اللہ یار ════ */
+  {n:"ذوالفقار باچانی",    p:"MNA / صدر PPP ٹنڈو اللہ یار",dist:"ٹنڈو اللہ یار",role:"صدر",    tw:"",               fb:"",                    tt:""},
+  /* ════ سجاول ════ */
+  {n:"ایاز شاہ شیرازی",   p:"MNA / صدر PPP سجاول",       dist:"سجاول",      role:"صدر",          tw:"",               fb:"",                    tt:""},
+
+  /* ════ کراچی وسطی PS-122 تا PS-130 — PDF سے ════ */
+  {n:"سلطان احمد",           p:"صدر PS-122 کراچی وسطی",     dist:"کراچی وسطی",  role:"صدر",          tw:"",fb:"",tt:""},
+  {n:"مصطفیٰ افضل احمد مغل", p:"سینئر نائب صدر PS-122",     dist:"کراچی وسطی",  role:"سینئر نائب صدر",tw:"",fb:"",tt:""},
+  {n:"شاہ نواز باقر اعوان",  p:"جنرل سیکریٹری PS-122",      dist:"کراچی وسطی",  role:"جنرل سیکریٹری",tw:"",fb:"",tt:""},
+  {n:"سید احمد شاہ",         p:"انفارمیشن سیکریٹری PS-122", dist:"کراچی وسطی",  role:"انفارمیشن س",  tw:"",fb:"",tt:""},
+  {n:"عمران خان بشیر احمد",  p:"ریکارڈ سیکریٹری PS-122",    dist:"کراچی وسطی",  role:"ریکارڈ سیکریٹری",tw:"",fb:"",tt:""},
+  /* PS-124 تا PS-130 — ایک ہی ٹیم تمام UCs */
+  {n:"غیاث الدین وقاص قریشی",p:"صدر PS-124 تا PS-130",       dist:"کراچی وسطی",  role:"صدر",          tw:"",fb:"",tt:""},
+  {n:"محمد شفیق",            p:"جنرل سیکریٹری PS-124/130",  dist:"کراچی وسطی",  role:"جنرل سیکریٹری",tw:"",fb:"",tt:""},
+  {n:"عرفان خان",            p:"نائب صدر PS-124/130",        dist:"کراچی وسطی",  role:"نائب صدر",     tw:"",fb:"",tt:""},
+  {n:"سید کاشف",             p:"انفارمیشن سیکریٹری PS-124/130",dist:"کراچی وسطی",role:"انفارمیشن س",  tw:"",fb:"",tt:""},
+  {n:"محمد سلیم",            p:"فنانس سیکریٹری PS-124/130",  dist:"کراچی وسطی",  role:"فنانس سیکریٹری",tw:"",fb:"",tt:""},
+  {n:"راؤ شاہ رخ",           p:"رابطہ سیکریٹری PS-124/130",  dist:"کراچی وسطی",  role:"رابطہ سیکریٹری",tw:"",fb:"",tt:""},
+
+  /* ════ کراچی وسطی (District Central) — Excel ڈیٹا ════ */
+  {n:"Farhan Abbasi",       p:"صدر PS-124 UC-03",              dist:"کراچی وسطی",  role:"صدر",           tw:"",fb:"",tt:""},
+  {n:"Humayou Hafeez",      p:"جنرل سیکریٹری PS-124 UC-03",    dist:"کراچی وسطی",  role:"جنرل سیکریٹری", tw:"",fb:"",tt:""},
+  {n:"Syed Mansoor Haider", p:"صدر PS-125 UC-01",              dist:"کراچی وسطی",  role:"صدر",           tw:"",fb:"",tt:""},
+  {n:"Faheem Hussain Andhi",p:"صدر PS-125 UC-02",              dist:"کراچی وسطی",  role:"صدر",           tw:"",fb:"",tt:""},
+  {n:"Amir Habib Khan",     p:"صدر PS-125 UC-03",              dist:"کراچی وسطی",  role:"صدر",           tw:"",fb:"",tt:""},
+  {n:"Ubaid Jellani",       p:"صدر PS-126 UC-01",              dist:"کراچی وسطی",  role:"صدر",           tw:"",fb:"",tt:""},
+  {n:"Farhan Siddiq",       p:"صدر PS-127 UC-05",              dist:"کراچی وسطی",  role:"صدر",           tw:"",fb:"",tt:""},
+  {n:"Ali Naqvi",           p:"صدر PS-128 UC-05",              dist:"کراچی وسطی",  role:"صدر",           tw:"",fb:"",tt:""},
+  {n:"Abdul Rehman",        p:"صدر PS-129 UC-09",              dist:"کراچی وسطی",  role:"صدر",           tw:"",fb:"",tt:""},
+  {n:"Waqas Ahmed",         p:"صدر PS-130 UC-01",              dist:"کراچی وسطی",  role:"صدر",           tw:"",fb:"",tt:""},
+  /* ════ قاشمور/کشمور ════ */
+  {n:"احسن مزاری",         p:"MNA / صدر PPP قاشمور",      dist:"قاشمور",    role:"صدر",          tw:"",               fb:"",                    tt:""},
+];
+
+/* 33 اضلاع ڈیٹا */
 const DIST=[
-  {d:"کراچی مشرقی",      e:"🌆",dv:"کراچی",    mna:"آصفہ بھٹو",        mpa:"PS-97–112", mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
-  {d:"کراچی مغربی",      e:"🌆",dv:"کراچی",    mna:"متعدد",             mpa:"متعدد",     mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
-  {d:"کراچی وسطی",      e:"🌆",dv:"کراچی",    mna:"متعدد",             mpa:"متعدد",     mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
-  {d:"کراچی جنوبی",     e:"🌆",dv:"کراچی",    mna:"متعدد",             mpa:"متعدد",     mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
-  {d:"کورنگی",           e:"🏭",dv:"کراچی",    mna:"متعدد",             mpa:"PS-91–96",  mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
-  {d:"ملیر",             e:"🌆",dv:"کراچی",    mna:"متعدد",             mpa:"PS-84–90",  mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
-  {d:"کیماڑی",           e:"⚓",dv:"کراچی",    mna:"متعدد",             mpa:"متعدد",     mayor:"مرتضیٰ وہاب",  t:""},
-  {d:"حیدرآباد",         e:"🏙️",dv:"حیدرآباد",mna:"متعدد",             mpa:"PS-60–65",  mayor:"کاشف شورو",    t:"KashifShoro"},
-  {d:"جامشورو",          e:"🌿",dv:"حیدرآباد",mna:"متعدد",             mpa:"PS-77–79",  mayor:"جلد آئے گا",   t:""},
-  {d:"ماٹیاری",          e:"🌿",dv:"حیدرآباد",mna:"مخدوم جمیل",        mpa:"PS-56–57",  mayor:"جلد آئے گا",   t:""},
-  {d:"ٹنڈو محمد خان",   e:"🌿",dv:"حیدرآباد",mna:"سید نوید قمر",     mpa:"PS-66–67",  mayor:"نئی تنظیم ✅",  t:""},
-  {d:"ٹنڈو اللہ یار",   e:"🌿",dv:"حیدرآباد",mna:"ذوالفقار باچانی",   mpa:"PS-58–59",  mayor:"جلد آئے گا",   t:""},
-  {d:"بدین",             e:"🌊",dv:"حیدرآباد",mna:"غلام علی تالپور",   mpa:"PS-68–72",  mayor:"جلد آئے گا",   t:""},
-  {d:"ٹھٹہ",             e:"🌊",dv:"حیدرآباد",mna:"صادق علی میمن",    mpa:"PS-75–76",  mayor:"جلد آئے گا",   t:""},
-  {d:"سجاول",            e:"🌊",dv:"حیدرآباد",mna:"ایاز شاہ شیرازی",   mpa:"PS-73–74",  mayor:"جلد آئے گا",   t:""},
-  {d:"میرپورخاص",        e:"🌿",dv:"میرپورخاص",mna:"پیر حسن علی",      mpa:"PS-45–48",  mayor:"جلد آئے گا",   t:""},
-  {d:"عمرکوٹ",           e:"🏜️",dv:"میرپورخاص",mna:"یوسف تالپور",     mpa:"PS-49–51",  mayor:"جلد آئے گا",   t:""},
-  {d:"تھرپارکر",         e:"🏜️",dv:"میرپورخاص",mna:"مہیش ملانی",       mpa:"PS-52–55",  mayor:"جلد آئے گا",   t:""},
-  {d:"سانگھڑ",           e:"🌿",dv:"SBA",      mna:"متعدد",             mpa:"PS-38–44",  mayor:"جلد آئے گا",   t:""},
-  {d:"شہید بے نظیرآباد",e:"🌹",dv:"SBA",      mna:"آصف علی زرداری",   mpa:"PS-37–38",  mayor:"جلد آئے گا",   t:"AAliZardari"},
-  {d:"نوشہرو فیروز",     e:"🌿",dv:"SBA",      mna:"متعدد",             mpa:"PS-33–36",  mayor:"جلد آئے گا",   t:""},
-  {d:"دادو",             e:"🌿",dv:"SBA",      mna:"ارفان لغاری",       mpa:"PS-80–83",  mayor:"جلد آئے گا",   t:""},
-  {d:"سکھر",             e:"🏙️",dv:"سکھر",    mna:"خورشید احمد شاہ",   mpa:"PS-22–25",  mayor:"ارسلان شیخ",   t:"KhurshidShah_"},
-  {d:"خیرپور",           e:"🌿",dv:"سکھر",    mna:"متعدد",             mpa:"PS-26–32",  mayor:"جلد آئے گا",   t:""},
-  {d:"گھوٹکی",           e:"🌿",dv:"سکھر",    mna:"خالد لنڈ",          mpa:"PS-18–21",  mayor:"جلد آئے گا",   t:""},
-  {d:"لاڑکانہ",          e:"🌹",dv:"لاڑکانہ", mna:"بلاول بھٹو",        mpa:"PS-10–13",  mayor:"جلد آئے گا",   t:"BBhuttoZardari"},
-  {d:"شکارپور",          e:"🌿",dv:"لاڑکانہ", mna:"میر ابد بھایو",     mpa:"PS-7–8",    mayor:"جلد آئے گا",   t:""},
-  {d:"جیکب آباد",        e:"🌿",dv:"لاڑکانہ", mna:"میر اعجاز جکھرانی", mpa:"PS-1–3",    mayor:"جلد آئے گا",   t:""},
-  {d:"قاشمور",           e:"🌿",dv:"لاڑکانہ", mna:"احسن مزاری",        mpa:"PS-4–6",    mayor:"جلد آئے گا",   t:""},
-  {d:"قمبر شہداد کوٹ",  e:"🌿",dv:"لاڑکانہ", mna:"بلاول بھٹو",        mpa:"PS-14–17",  mayor:"جلد آئے گا",   t:"BBhuttoZardari"},
-  {d:"مٹیاری",           e:"🌿",dv:"حیدرآباد", mna:"مخدوم جمیل",        mpa:"PS-56–57",  mayor:"جلد آئے گا",   t:""},
-  {d:"کشمور",            e:"🌿",dv:"لاڑکانہ", mna:"احسن مزاری",        mpa:"PS-4–6",    mayor:"جلد آئے گا",   t:""},
-  {d:"دیگر / مزید",      e:"🌐",dv:"سندھ",    mna:"متعدد",             mpa:"متعدد",     mayor:"جلد آئے گا",   t:""},
+  {d:"کراچی شرقی",  e:"🌆",dv:"کراچی",    mna:"آصفہ بھٹو",       mpa:"PS-97–112",mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
+  {d:"سہراب گوٹھ",    e:"🏘️",dv:"کراچی شرقی",mna:"صادق علی میمن",   mpa:"PS-106",    mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
+  {d:"کراچی مغربی",  e:"🌆",dv:"کراچی",    mna:"متعدد",            mpa:"متعدد",     mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
+  {d:"کراچی وسطی",  e:"🌆",dv:"کراچی",    mna:"متعدد",            mpa:"متعدد",     mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
+  {d:"کراچی جنوبی", e:"🌆",dv:"کراچی",    mna:"متعدد",            mpa:"متعدد",     mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
+  {d:"کورنگی",       e:"🏭",dv:"کراچی",    mna:"متعدد",            mpa:"PS-91–96",  mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
+  {d:"ملیر",         e:"🌆",dv:"کراچی",    mna:"متعدد",            mpa:"PS-84–90",  mayor:"مرتضیٰ وہاب",  t:"murtazawahab1"},
+  {d:"کیماڑی",       e:"⚓",dv:"کراچی",    mna:"متعدد",            mpa:"متعدد",     mayor:"مرتضیٰ وہاب",  t:""},
+  {d:"حیدرآباد",     e:"🏙️",dv:"حیدرآباد",mna:"متعدد",            mpa:"PS-60–65",  mayor:"کاشف شورو",    t:"KashifShoro"},
+  {d:"جامشورو",      e:"🌿",dv:"حیدرآباد",mna:"متعدد",            mpa:"PS-77–79",  mayor:"جلد آئے گا",   t:""},
+  {d:"ماٹیاری",      e:"🌿",dv:"حیدرآباد",mna:"مخدوم جمیل",       mpa:"PS-56–57",  mayor:"جلد آئے گا",   t:""},
+  {d:"ٹنڈو محمد خان",e:"🌿",dv:"حیدرآباد",mna:"سید نوید قمر",    mpa:"PS-66–67",  mayor:"نئی تنظیم ✅",  t:""},
+  {d:"ٹنڈو اللہ یار",e:"🌿",dv:"حیدرآباد",mna:"ذوالفقار باچانی",  mpa:"PS-58–59",  mayor:"جلد آئے گا",   t:""},
+  {d:"بدین",         e:"🌊",dv:"حیدرآباد",mna:"غلام علی ٹالپور",  mpa:"PS-68–72",  mayor:"جلد آئے گا",   t:""},
+  {d:"ٹھٹہ",         e:"🌊",dv:"حیدرآباد",mna:"صادق علی میمن",   mpa:"PS-75–76",  mayor:"جلد آئے گا",   t:""},
+  {d:"سجاول",        e:"🌊",dv:"حیدرآباد",mna:"ایاز شاہ شیرازی",  mpa:"PS-73–74",  mayor:"جلد آئے گا",   t:""},
+  {d:"میرپورخاص",    e:"🌿",dv:"میرپورخاص",mna:"پیر حسن علی",     mpa:"PS-45–48",  mayor:"جلد آئے گا",   t:""},
+  {d:"عمرکوٹ",       e:"🏜️",dv:"میرپورخاص",mna:"یوسف ٹالپور",    mpa:"PS-49–51",  mayor:"جلد آئے گا",   t:""},
+  {d:"تھرپارکر",     e:"🏜️",dv:"میرپورخاص",mna:"مہیش ملانی",      mpa:"PS-52–55",  mayor:"جلد آئے گا",   t:""},
+  {d:"سانگھڑ",       e:"🌿",dv:"SBA",      mna:"متعدد",            mpa:"PS-38–44",  mayor:"جلد آئے گا",   t:""},
+  {d:"شہید بے نظیرآباد",e:"🌹",dv:"SBA",  mna:"آصف علی زرداری",  mpa:"PS-37–38",  mayor:"جلد آئے گا",   t:"AAliZardari"},
+  {d:"نوشہرو فیروز", e:"🌿",dv:"SBA",      mna:"متعدد",            mpa:"PS-33–36",  mayor:"جلد آئے گا",   t:""},
+  {d:"دادو",          e:"🌿",dv:"SBA",      mna:"ارفان لغاری",      mpa:"PS-80–83",  mayor:"جلد آئے گا",   t:""},
+  {d:"سکھر",         e:"🏙️",dv:"سکھر",    mna:"خورشید احمد شاہ",  mpa:"PS-22–25",  mayor:"ارسلان شیخ",   t:"KhurshidShah_"},
+  {d:"خیرپور",       e:"🌿",dv:"سکھر",    mna:"متعدد",            mpa:"PS-26–32",  mayor:"جلد آئے گا",   t:""},
+  {d:"گھوٹکی",       e:"🌿",dv:"سکھر",    mna:"خالد لنڈ",         mpa:"PS-18–21",  mayor:"جلد آئے گا",   t:""},
+  {d:"لاڑکانہ",      e:"🌹",dv:"لاڑکانہ", mna:"بلاول بھٹو",       mpa:"PS-10–13",  mayor:"جلد آئے گا",   t:"BBhuttoZardari"},
+  {d:"شکارپور",      e:"🌿",dv:"لاڑکانہ", mna:"میر ابد بھایو",    mpa:"PS-7–8",    mayor:"جلد آئے گا",   t:""},
+  {d:"جیکب آباد",    e:"🌿",dv:"لاڑکانہ", mna:"میر اعجاز جکھرانی",mpa:"PS-1–3",    mayor:"جلد آئے گا",   t:""},
+  {d:"قاشمور",       e:"🌿",dv:"لاڑکانہ", mna:"احسن مزاری",       mpa:"PS-4–6",    mayor:"جلد آئے گا",   t:""},
+  {d:"قمبر شہداد کوٹ",e:"🌿",dv:"لاڑکانہ",mna:"بلاول بھٹو",       mpa:"PS-14–17",  mayor:"جلد آئے گا",   t:"BBhuttoZardari"},
+  {d:"مٹیاری",       e:"🌿",dv:"حیدرآباد", mna:"مخدوم جمیل",       mpa:"PS-56–57",  mayor:"جلد آئے گا",   t:""},
+  {d:"کشمور",        e:"🌿",dv:"لاڑکانہ", mna:"احسن مزاری",       mpa:"PS-4–6",    mayor:"جلد آئے گا",   t:""},
+  {d:"دیگر / مزید",  e:"🌐",dv:"سندھ",    mna:"متعدد",            mpa:"متعدد",     mayor:"جلد آئے گا",   t:""},
 ];
 
+/* TMK 2025 */
 const TMK=[
   {area:"ضلع ٹنڈو محمد خان",members:[
     {n:"نور محمد ویسرو",p:"سینئر نائب صدر"},{n:"شیر امین لاکھو",p:"نائب صدر"},
@@ -536,19 +785,33 @@ function mkSoc(l){
   if(l.fb) s+=`<a class="sbtn sbtn-fb" href="https://facebook.com/${esc(l.fb)}" target="_blank" rel="noopener">📘 Facebook</a>`;
   if(l.tt) s+=`<a class="sbtn sbtn-tt" href="https://tiktok.com/@${esc(l.tt)}" target="_blank" rel="noopener">🎵 TikTok</a>`;
   if(l.wa) s+=`<a class="sbtn sbtn-wa" href="https://wa.me/92${esc(l.wa).replace(/^0/,'')}" target="_blank" rel="noopener">📱 WA</a>`;
+  /* Message button — always show for leaders */
+  let unread = getMsgCount(l.n);
+  let unreadBadge = unread>0 ? `<span class="msg-badge">${unread}</span>` : '';
+  s+=`<button class="msg-btn" data-leader="${esc(l.n)}" data-role="${esc(l.p||'')}">📩 پیغام${unreadBadge}</button>`;
   return s||'<span class="sbtn sbtn-grey">سوشل میڈیا جلد</span>';
 }
 
 function buildCard(l,idx,withTw){
-  let tw='';
-  if(withTw&&l.tw){
-    tw=`<div class="tw-embed">
-      <div class="tw-loader" id="twld${idx}">
-        <div class="spinner"></div>
-        <p style="font-size:9px;color:var(--mut)">Twitter لوڈ ہو رہا ہے…</p>
-        <a class="tw-link" href="https://twitter.com/${esc(l.tw)}" target="_blank" rel="noopener">@${esc(l.tw)} پر جائیں ↗</a>
+  /* Twitter embed ہٹا دیا — X/Twitter نے embedding بند کر دی
+     اب beautiful profile card دکھائیں */
+  let twitterSection = '';
+  if(l.tw){
+    twitterSection = `<div style="background:linear-gradient(135deg,#0d1117,#1a1a2e);padding:14px 12px;border-top:1px solid rgba(29,155,240,.2);border-bottom:1px solid rgba(29,155,240,.1)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--red),#400);border:2px solid #1d9bf0;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${l.i||'🌹'}</div>
+        <div style="flex:1;text-align:right">
+          <div style="font-size:12px;color:#fff;font-weight:600">${esc(l.n)}</div>
+          <div style="font-size:10px;color:#1d9bf0;direction:ltr;text-align:left">@${esc(l.tw)}</div>
+        </div>
+        <a href="https://twitter.com/${esc(l.tw)}" target="_blank" rel="noopener" style="background:#1d9bf0;color:#fff;padding:7px 14px;border-radius:25px;font-size:11px;font-family:sans-serif;text-decoration:none;flex-shrink:0;font-weight:600">
+          🐦 فالو کریں
+        </a>
       </div>
-      <a class="twitter-timeline" data-theme="dark" data-height="260" data-tweet-limit="3" data-chrome="nofooter noborders transparent" href="https://twitter.com/${esc(l.tw)}">@${esc(l.tw)}</a>
+      <div style="margin-top:10px;background:rgba(29,155,240,.08);border:1px solid rgba(29,155,240,.15);border-radius:12px;padding:10px 12px">
+        <div style="font-size:9px;color:rgba(29,155,240,.8);margin-bottom:4px;direction:ltr">twitter.com/${esc(l.tw)}</div>
+        <div style="font-size:10px;color:var(--mut)">تازہ ٹویٹس دیکھنے کے لیے بٹن دبائیں — یا پروفائل وزٹ کریں</div>
+      </div>
     </div>`;
   }
   return `<div class="fcard">
@@ -560,7 +823,7 @@ function buildCard(l,idx,withTw){
       </div>
       <div class="fcard-av">${l.i||'🌹'}</div>
     </div>
-    ${tw}
+    ${twitterSection}
     <div class="social-row">${mkSoc(l)}</div>
   </div>`;
 }
@@ -644,7 +907,7 @@ let srchQ='',lvlF='all';
 function rDir(){
   const q=srchQ.toLowerCase();
   let html=DIST.filter(d=>!q||[d.d,d.dv,d.mna,d.mpa,d.mayor].join(' ').toLowerCase().includes(q))
-               .map(buildDCard).join('');
+              .map(buildDCard).join('');
   const reps=gDB('reps').filter(r=>{
     if(lvlF!=='all'&&r.level!==lvlF)return false;
     if(!q)return true;
@@ -689,6 +952,42 @@ function renderPending(){
   ).join('');
 }
 
+
+/* ══════════════════════════════
+   PS عہدیداران Render System
+   ══════════════════════════════ */
+var psRoleFilter='all', psSearchQ='';
+
+function renderPsOfficials(){
+  var roles=[...new Set(PPP_OFFICIALS.map(function(o){return o.role;}))];
+  var roleHtml='<button class="chip on" data-psrole="all">سب</button>';
+  roles.forEach(function(r){
+    roleHtml+='<button class="chip" data-psrole="'+esc(r)+'">'+esc(r)+'</button>';
+  });
+  var el=document.getElementById('psRoleF');
+  if(el) el.innerHTML=roleHtml;
+
+  var q=psSearchQ.toLowerCase();
+  var filtered=PPP_OFFICIALS.filter(function(o){
+    if(psRoleFilter!=='all'&&o.role!==psRoleFilter)return false;
+    if(!q)return true;
+    return [o.n,o.p,o.dist,o.role,o.tw||''].join(' ').toLowerCase().includes(q);
+  });
+
+  var html=filtered.map(function(o){
+    var socials='';
+    if(o.tw) socials+='<a class="sbtn sbtn-tw" href="https://twitter.com/'+esc(o.tw)+'" target="_blank" rel="noopener">🐦 Twitter</a>';
+    if(o.fb) socials+='<a class="sbtn sbtn-fb" href="https://facebook.com/'+esc(o.fb)+'" target="_blank" rel="noopener">📘 Facebook</a>';
+    if(o.tt) socials+='<a class="sbtn sbtn-tt" href="https://tiktok.com/@'+esc(o.tt)+'" target="_blank" rel="noopener">🎵 TikTok</a>';
+    if(!socials) socials='<span class="sbtn sbtn-grey">سوشل میڈیا جلد</span>';
+    var roleColor=o.role==='صدر'?'var(--gold)':o.role==='جنرل سیکریٹری'?'#86efac':'var(--mut)';
+    return '<div class="dcard"><div class="dcard-h"><span class="em2">🌹</span><div><h3>'+esc(o.n)+'</h3><div class="dv">'+esc(o.p)+'</div></div><span style="font-size:9px;padding:3px 8px;border-radius:10px;background:rgba(201,168,76,.15);color:'+roleColor+';border:1px solid '+roleColor+';flex-shrink:0">'+esc(o.role)+'</span></div><div class="dcard-b"><div class="drow"><span class="lbl">📍 ضلع:</span><span class="val">'+esc(o.dist)+'</span></div></div><div class="social-row">'+socials+'</div></div>';
+  }).join('');
+
+  var g=document.getElementById('psGrid');
+  if(g) g.innerHTML=html||'<div style="padding:30px;text-align:center;color:var(--mut)">🔍 کوئی نتیجہ نہیں</div>';
+}
+
 /* ══════════════════════════════
    PAGE NAVIGATION
    ══════════════════════════════ */
@@ -703,6 +1002,7 @@ function SP(pid){
   if(pid==='dir')rDir();
   if(pid==='admin')renderPending();
   if(pid==='tmk')renderTMK();
+  if(pid==='ps')renderPsOfficials();
 }
 
 /* ══════════════════════════════
@@ -713,21 +1013,11 @@ function updUI(){
   const aTab=document.getElementById('adminTab');
   if(cu){
     btn.textContent='👤 '+(cu.name||'ممبر').substring(0,12);
-    if(isA()){
-      btn.style.background='var(--gold)';
-      btn.style.color='#000';
-      setThemeColor('#c9a84c'); /* ✅ Admin = Gold */
-    }else{
-      btn.style.background='var(--lgrn)';
-      btn.style.color='#fff';
-      setThemeColor('#1a5c1a'); /* ✅ User = Green */
-    }
+    btn.style.background=isA()?'var(--gold)':'var(--lgrn)';setThemeColor(isA()?'#c9a84c':'#8b0000');
+    btn.style.color=isA()?'#000':'#fff';
     if(aTab)aTab.style.display=isA()?'inline-block':'none';
   }else{
-    btn.textContent='🔐 لاگ ان';
-    btn.style.background='var(--red)';
-    btn.style.color='#fff';
-    setThemeColor('#8b0000'); /* ✅ لاگ آؤٹ = Dark Red */
+    btn.textContent='🔐 لاگ ان';btn.style.background='var(--red)';btn.style.color='#fff';
     if(aTab)aTab.style.display='none';
   }
   rDir();if(isA())renderPending();
@@ -738,10 +1028,9 @@ function doLogin(){
   const p=document.getElementById('lp').value;
   if(!u||!p){alert('نام اور پاسورڈ درج کریں');return;}
   if(p===AP){
-    cu={name:u||'Admin',ia:true};
-    localStorage.setItem('ppp_cu',JSON.stringify(cu));
+    cu={name:u||'Admin',ia:true};localStorage.setItem('ppp_cu',JSON.stringify(cu));
     document.getElementById('loginModal').classList.remove('open');
-    updUI();alert('🔑 Admin لاگ ان!\n🌹 جئے بھٹو!');return;
+    setThemeColor('#c9a84c');updUI();alert('🔑 Admin لاگ ان!\n🌹 جئے بھٹو!');return;
   }
   const found=gDB('users').find(uu=>(uu.name===u||uu.ph===u)&&uu.pw===p);
   if(found){
@@ -788,7 +1077,7 @@ function doAdd(){
     whatsapp:document.getElementById('aWa').value.trim(),
     by:cu.name||'user',approved:isA(),ts:new Date().toISOString()
   };
-  if(isA()){const reps=gDB('reps');reps.push(rep);sDB('reps',reps);alert('✅ فوری شامل!\n🌹 جئے بھٹو!');rDir();}
+  if(isA()){const reps=gDB('reps');reps.push(rep);sDB('reps',reps);saveToCloud(rep);alert('✅ فوری شامل!\n🌹 جئے بھٹو!');rDir();}
   else{const pend=gDB('pend');pend.push(rep);sDB('pend',pend);alert('✅ Admin کو بھیج دیا\n🌹 جئے بھٹو!');}
   ['aN','aDt','aPs','aTw','aFb','aTt','aWa'].forEach(id=>{document.getElementById(id).value='';});
   btn.disabled=false;btn.textContent='✅ جمع کروائیں';
@@ -808,69 +1097,99 @@ function twLoad(){
       setTimeout(twHide,8000);
     });
   }else if(twR<12){twR++;setTimeout(twLoad,1500);}
-  else{document.querySelectorAll('.tw-loader').forEach(e=>{
-    const s=e.querySelector('.spinner');if(s)s.style.display='none';
-    const p=e.querySelector('p');if(p)p.textContent='نیٹ چیک کریں';
-  });}
+  else{document.querySelectorAll('.tw-loader').forEach(e=>{const s=e.querySelector('.spinner');if(s)s.style.display='none';const p=e.querySelector('p');if(p)p.textContent='نیٹ چیک کریں';});}
 }
-document.getElementById('twScript').addEventListener('load',()=>{twR=0;twLoad();});
+/* twScript listener removed */
 
 /* ══════════════════════════════
-   SINGLE EVENT DELEGATION
+   ✅ SINGLE EVENT DELEGATION — تمام بٹن یہاں
    ══════════════════════════════ */
 document.addEventListener('click',function(e){
   const t=e.target;
+
   // Feed tabs
   const ft=t.closest('.ftab[data-page]');
   if(ft){document.querySelectorAll('.bnav').forEach(b=>b.classList.remove('on'));SP(ft.getAttribute('data-page'));return;}
+
   // Bottom nav
   const bn=t.closest('.bnav[data-nav]');
   if(bn){document.querySelectorAll('.bnav').forEach(b=>b.classList.remove('on'));bn.classList.add('on');SP(bn.getAttribute('data-nav'));return;}
+
   // Stat boxes
   const sb=t.closest('.stat-box[data-goto]');
   if(sb){SP(sb.getAttribute('data-goto'));return;}
+
   // District tiles
   const dt=t.closest('.dist-tile');
   if(dt){const d=dt.getAttribute('data-dname');document.getElementById('srchI').value=d;srchQ=d;SP('dir');return;}
-  // District pills — ✅ Fixed: check parent container
-  const dpChip=t.closest('.chip');
-  if(dpChip&&dpChip.closest('#dPills')){
-    const txt=dpChip.textContent.trim().replace(/^.\s*/,'');
-    document.getElementById('srchI').value=txt;srchQ=txt;
-    document.querySelectorAll('#dPills .chip').forEach(c=>c.classList.remove('on'));
-    dpChip.classList.add('on');rDir();return;
-  }
+
+  // District pills
+  const dp=t.closest('#dPills')?.contains(t.closest('.chip'))&&t.closest('.chip');
+  if(dp){const txt=dp.textContent.replace(/^.\s/,'').trim();document.getElementById('srchI').value=txt;srchQ=txt;document.querySelectorAll('#dPills .chip').forEach(c=>c.classList.remove('on'));dp.classList.add('on');rDir();return;}
+
   // Level filter
   const lv=t.closest('[data-lvl]');
   if(lv){lvlF=lv.getAttribute('data-lvl');document.querySelectorAll('#lvlF .chip').forEach(c=>c.classList.remove('on'));lv.classList.add('on');rDir();return;}
+
+  // PS Role filter
+  const psr=t.closest('[data-psrole]');
+  if(psr){psRoleFilter=psr.getAttribute('data-psrole');document.querySelectorAll('[data-psrole]').forEach(function(c){c.classList.remove('on');});psr.classList.add('on');renderPsOfficials();return;}
   // Leader cat filter
   const lc=t.closest('[data-lcat]');
   if(lc){leaderCat=lc.getAttribute('data-lcat');document.querySelectorAll('[data-lcat]').forEach(c=>c.classList.remove('on'));lc.classList.add('on');renderLeaders();return;}
+
   // Member type filter
   const mt=t.closest('[data-mtype]');
   if(mt){memType=mt.getAttribute('data-mtype');document.querySelectorAll('[data-mtype]').forEach(c=>c.classList.remove('on'));mt.classList.add('on');renderMembers();return;}
+
   // Delete rep (Admin)
   const dr=t.closest('.del-rep');
-  if(dr&&isA()){if(confirm('یقیناً حذف کریں؟')){sDB('reps',gDB('reps').filter(r=>r.id!==dr.getAttribute('data-id')));rDir();}return;}
-  // Approve
+  if(dr&&isA()){if(confirm('یقیناً حذف کریں؟')){var delId=dr.getAttribute('data-id');sDB('reps',gDB('reps').filter(r=>r.id!==delId));deleteFromCloud(delId);rDir();}return;}
+
+  // Approve/Reject pending
   const ap=t.closest('.p-approve');
   if(ap){const pid=ap.getAttribute('data-pid');const pend=gDB('pend');const item=pend.find(r=>r.id===pid);if(item){item.approved=true;const reps=gDB('reps');reps.push(item);sDB('reps',reps);sDB('pend',pend.filter(r=>r.id!==pid));renderPending();rDir();alert('✅ منظور');}return;}
-  // Reject
   const rj=t.closest('.p-reject');
   if(rj){sDB('pend',gDB('pend').filter(r=>r.id!==rj.getAttribute('data-pid')));renderPending();alert('❌ مسترد');return;}
+
   // Login/Register tabs
   if(t.id==='tabL'){t.classList.add('on');document.getElementById('tabR').classList.remove('on');document.getElementById('mL').style.display='block';document.getElementById('mR').style.display='none';return;}
   if(t.id==='tabR'){t.classList.add('on');document.getElementById('tabL').classList.remove('on');document.getElementById('mL').style.display='none';document.getElementById('mR').style.display='block';return;}
-  // Submits
+
+  // Login/Register submits
   if(t.id==='loginSubmit'){doLogin();return;}
   if(t.id==='regSubmit'){doReg();return;}
   if(t.id==='addBtn'){doAdd();return;}
-  // Modals
+
+  // Open/close modals
   if(t.id==='openAddBtn'||t.closest('#openAddBtn')){document.getElementById('addModal').classList.add('open');return;}
   if(t.id==='closeAddBtn'){document.getElementById('addModal').classList.remove('open');return;}
   if(t.id==='loginBtn'){
-    if(cu){if(confirm('لاگ آؤٹ کریں؟\n'+(cu.name||''))){cu=null;localStorage.removeItem('ppp_cu');updUI();}}
+    if(cu){if(confirm('لاگ آؤٹ کریں؟\n'+(cu.name||''))){cu=null;localStorage.removeItem('ppp_cu');setThemeColor('#8b0000');updUI();}}
     else document.getElementById('loginModal').classList.add('open');return;
+  }
+  // Message button
+  const msgBtnEl=t.closest('.msg-btn[data-leader]');
+  if(msgBtnEl){
+    var ln=msgBtnEl.getAttribute('data-leader');
+    var lr=msgBtnEl.getAttribute('data-role');
+    /* If admin or current logged-in user is this leader — open inbox */
+    if(isA()){openInbox(ln);}
+    else{openMsgModal(ln,lr);}
+    return;
+  }
+  // Send message
+  if(t.id==='msgSendBtn'){sendMsg();return;}
+  // Close message modal
+  if(t.id==='msgCloseBtn'){document.getElementById('msgModal').classList.remove('open');return;}
+  if(t.id==='inboxCloseBtn'){document.getElementById('inboxModal').classList.remove('open');return;}
+  // Cloud Login button
+  if(t.id==='cloudLoginBtn'){
+    var ce=document.getElementById('cloudEmail').value.trim();
+    var cp=document.getElementById('cloudPass').value;
+    if(fbReady){cloudLogin(ce,cp);}
+    else{syncMembersFromCloud();alert('Firebase config نہیں بھری\n/home/claude/index_fixed.html میں FB_CONFIG بھریں');}
+    return;
   }
   // Backdrop close
   const ov=t.closest('.ov');if(ov&&t===ov){ov.classList.remove('open');return;}
@@ -880,6 +1199,9 @@ document.addEventListener('click',function(e){
 document.getElementById('srchI').addEventListener('input',function(){
   clearTimeout(this._dt);this._dt=setTimeout(()=>{srchQ=this.value.trim();rDir();},300);
 });
+document.getElementById('psSrch').addEventListener('input',function(){
+  clearTimeout(this._dt);this._dt=setTimeout(function(){psSearchQ=document.getElementById('psSrch').value.trim();renderPsOfficials();},300);
+});
 document.getElementById('memSrch').addEventListener('input',function(){
   clearTimeout(this._dt);this._dt=setTimeout(()=>{memQ=this.value.trim();renderMembers();},300);
 });
@@ -888,13 +1210,8 @@ document.getElementById('memSrch').addEventListener('input',function(){
    PWA
    ══════════════════════════════ */
 let dp2=null;
-window.addEventListener('beforeinstallprompt',e=>{
-  e.preventDefault();dp2=e;
-  document.getElementById('installBanner').style.display='flex';
-});
-document.getElementById('installBtn').addEventListener('click',()=>{
-  if(dp2){dp2.prompt();dp2.userChoice.then(()=>{dp2=null;document.getElementById('installBanner').style.display='none';});}
-});
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp2=e;document.getElementById('installBanner').style.display='flex';});
+document.getElementById('installBtn').addEventListener('click',()=>{if(dp2){dp2.prompt();dp2.userChoice.then(()=>{dp2=null;document.getElementById('installBanner').style.display='none';});}});
 window.addEventListener('appinstalled',()=>{document.getElementById('installBanner').style.display='none';});
 
 /* Offline */
@@ -903,22 +1220,217 @@ window.addEventListener('online',()=>setOL(true));
 window.addEventListener('offline',()=>setOL(false));
 setOL(navigator.onLine);
 
+
+/* ══════════════════════════════
+   خودکار JOIN لنک سسٹم
+   ══════════════════════════════ */
+function checkInviteLink() {
+  try {
+    var url = new URL(window.location.href);
+    var inv = url.searchParams.get('join');
+    if(inv) {
+      // Invite link سے آیا — رجسٹریشن modal کھولو
+      setTimeout(function() {
+        document.getElementById('loginModal').classList.add('open');
+        // Register tab activate
+        document.getElementById('tabR').click();
+        // Pre-fill info if encoded
+        try {
+          var info = JSON.parse(atob(inv));
+          if(info.dist) { var rd = document.getElementById('rd'); if(rd) rd.value = info.dist; }
+          if(info.role) { var rr = document.getElementById('rr'); if(rr) rr.value = info.role; }
+        } catch(e) {}
+        // Show welcome message
+        var wm = document.createElement('div');
+        wm.style.cssText = 'background:rgba(26,122,26,.15);border:1px solid #1a7a1a;border-radius:14px;padding:12px;margin-bottom:12px;font-size:11px;color:#bef264;text-align:center';
+        wm.innerHTML = '🌹 <strong>جئے بھٹو!</strong><br>آپ کو PPP Pulse پر مدعو کیا گیا ہے<br>رجسٹریشن کریں اور ہمارے ساتھ شامل ہوں';
+        var mR = document.getElementById('mR');
+        if(mR) mR.insertBefore(wm, mR.firstChild);
+      }, 800);
+    }
+  } catch(e) {}
+}
+
+function genInviteLink(dist, role) {
+  var base = window.location.origin + window.location.pathname;
+  var info = {};
+  if(dist) info.dist = dist;
+  if(role) info.role = role;
+  var enc = btoa(JSON.stringify(info));
+  return base + '?join=' + enc;
+}
+
+
+function copyInviteLink() {
+  var link = genInviteLink('','');
+  if(navigator.clipboard) {
+    navigator.clipboard.writeText(link).then(function() { alert('✅ لنک کاپی ہو گیا!\nWhatsApp یا کسی بھی جگہ پیسٹ کریں'); });
+  } else {
+    prompt('یہ لنک کاپی کریں:', link);
+  }
+}
+function shareInvite() {
+  var link = genInviteLink('', '');
+  var msg = '🌹 *جئے بھٹو — PPP Pulse سندھ*\n\nآپ کو پاکستان پیپلز پارٹی سندھ کے ڈیجیٹل پورٹل میں شامل ہونے کی دعوت ہے!\n\n▶️ ابھی جوائن کریں:\n' + link + '\n\n🌹 جئے بھٹو — پیپلز پارٹی زندہ باد';
+  if(navigator.share) {
+    navigator.share({ title:'PPP Pulse - دعوت نامہ', text: msg, url: link });
+  } else {
+    var wa = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(msg);
+    window.open(wa, '_blank');
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   پیغام / شکایت سسٹم — Inbox System
+   ═══════════════════════════════════════════════ */
+var _msgTarget = '';
+
+function getMsgCount(leaderName) {
+  var msgs = gDB('msgs_' + leaderName.replace(/\s/g,'_'));
+  return msgs.filter(function(m){return !m.read;}).length;
+}
+
+function openMsgModal(leaderName, role) {
+  _msgTarget = leaderName;
+  document.getElementById('msgModalTitle').textContent = '📩 ' + leaderName + ' کو پیغام';
+  document.getElementById('msgToInfo').textContent = '🌹 ' + role + ' | PPP سندھ';
+  document.getElementById('msgText').value = '';
+  document.getElementById('msgSenderName').value = cu ? (cu.name||'') : '';
+  document.getElementById('msgSenderPhone').value = cu ? (cu.ph||'') : '';
+  document.getElementById('msgModal').classList.add('open');
+}
+
+function sendMsg() {
+  var txt = document.getElementById('msgText').value.trim();
+  var sender = document.getElementById('msgSenderName').value.trim();
+  if(!txt) { alert('براہ کرم پیغام لکھیں'); return; }
+  if(!sender) { alert('اپنا نام ضرور لکھیں'); return; }
+  var btn = document.getElementById('msgSendBtn');
+  btn.disabled = true; btn.textContent = '⏳ بھیجا جا رہا ہے…';
+  var msg = {
+    id: 'm_'+Date.now(),
+    from: sender,
+    phone: document.getElementById('msgSenderPhone').value.trim(),
+    text: txt,
+    to: _msgTarget,
+    ts: new Date().toISOString(),
+    read: false
+  };
+  var key = 'msgs_' + _msgTarget.replace(/\s/g,'_');
+  var msgs = gDB(key); msgs.push(msg); sDB(key, msgs);
+  btn.disabled = false; btn.textContent = '📤 پیغام بھیجیں';
+  document.getElementById('msgModal').classList.remove('open');
+  alert('✅ آپ کا پیغام ' + _msgTarget + ' کو بھیج دیا گیا\n🌹 جئے بھٹو!');
+  /* Refresh cards to update badge count */
+  if(document.getElementById('page-leaders').classList.contains('on')) renderLeaders();
+  else renderHome();
+}
+
+function openInbox(leaderName) {
+  var key = 'msgs_' + leaderName.replace(/\s/g,'_');
+  var msgs = gDB(key);
+  document.getElementById('inboxTitle').textContent = '📬 ان باکس — ' + leaderName;
+  if(!msgs.length) {
+    document.getElementById('inboxList').innerHTML = '<div class="info-box ok" style="text-align:center">✅ کوئی پیغام نہیں</div>';
+  } else {
+    /* Mark all as read */
+    msgs.forEach(function(m){ m.read = true; }); sDB(key, msgs);
+    var html = msgs.slice().reverse().map(function(m) {
+      var d = new Date(m.ts);
+      var timeStr = d.toLocaleDateString('ur-PK') + ' ' + d.toLocaleTimeString('ur-PK',{hour:'2-digit',minute:'2-digit'});
+      return `<div class="inbox-msg">
+        <div class="im-from">👤 ${esc(m.from)}${m.phone?' | 📞 '+esc(m.phone):''}</div>
+        <div class="im-text">${esc(m.text)}</div>
+        <div class="im-time">${timeStr}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('inboxList').innerHTML = html;
+  }
+  document.getElementById('inboxModal').classList.add('open');
+}
+
+/* Admin: see ALL inboxes */
+function openAdminAllInbox() {
+  var allMsgs = [];
+  LEADERS.forEach(function(l) {
+    var key = 'msgs_' + l.n.replace(/\s/g,'_');
+    var msgs = gDB(key);
+    msgs.forEach(function(m){ allMsgs.push(Object.assign({}, m, {toName: l.n})); });
+  });
+  allMsgs.sort(function(a,b){ return new Date(b.ts)-new Date(a.ts); });
+  document.getElementById('inboxTitle').textContent = '📬 تمام پیغامات — Admin';
+  if(!allMsgs.length) {
+    document.getElementById('inboxList').innerHTML = '<div class="info-box ok" style="text-align:center">✅ کوئی پیغام نہیں</div>';
+  } else {
+    document.getElementById('inboxList').innerHTML = allMsgs.map(function(m) {
+      var d = new Date(m.ts);
+      var timeStr = d.toLocaleDateString('ur-PK')+' '+d.toLocaleTimeString('ur-PK',{hour:'2-digit',minute:'2-digit'});
+      return `<div class="inbox-msg">
+        <div class="im-from">📤 <strong>بھیجنے والا:</strong> ${esc(m.from)}${m.phone?' | '+esc(m.phone):''}</div>
+        <div class="im-from" style="color:var(--mut)">📬 <strong>موصول:</strong> ${esc(m.toName)}</div>
+        <div class="im-text">${esc(m.text)}</div>
+        <div class="im-time">${timeStr}</div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('inboxModal').classList.add('open');
+}
+
 /* ══════════════════════════════
    BOOT
    ══════════════════════════════ */
 window.addEventListener('load',function(){
+  // SW صرف GitHub پر
   const host=window.location.hostname;
   if((host.includes('github.io')||host==='localhost'||host==='127.0.0.1')&&'serviceWorker' in navigator)
     navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+  // Session restore
   try{const s=localStorage.getItem('ppp_cu');if(s)cu=JSON.parse(s);}catch(e){}
+
+  // Init all
   renderHome();
   renderTMK();
   renderDistGrid();
   document.getElementById('dPills').innerHTML=DIST.map(d=>`<button class="chip">${d.e} ${esc(d.d)}</button>`).join('');
   rDir();
   updUI();
-  setTimeout(twLoad,800);
+  if(typeof twLoad==='function') setTimeout(twLoad,800);
 });
 </script>
+
+<!-- MESSAGE MODAL -->
+<div class="ov" id="msgModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="msgModalTitle">📩 پیغام بھیجیں</div>
+    <div class="info-box" id="msgToInfo" style="text-align:center;font-size:12px"></div>
+    <div class="fg">
+      <label>آپ کا نام</label>
+      <input type="text" id="msgSenderName" placeholder="آپ کا نام درج کریں">
+    </div>
+    <div class="fg">
+      <label>موبائل / رابطہ (اختیاری)</label>
+      <input type="text" id="msgSenderPhone" placeholder="0300-0000000" style="direction:ltr">
+    </div>
+    <div class="fg">
+      <label>پیغام / شکایت *</label>
+      <textarea class="msg-textarea" id="msgText" placeholder="یہاں اپنا پیغام یا شکایت لکھیں…"></textarea>
+    </div>
+    <button class="submit-btn" id="msgSendBtn">📤 پیغام بھیجیں</button>
+    <button style="width:100%;background:none;color:var(--mut);padding:10px;font-size:12px;cursor:pointer;margin-top:6px" id="msgCloseBtn">بند کریں</button>
+  </div>
+</div>
+
+<!-- INBOX MODAL (Admin / Leader view) -->
+<div class="ov" id="inboxModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="inboxTitle">📬 ان باکس</div>
+    <div id="inboxList"></div>
+    <button style="width:100%;background:none;color:var(--mut);padding:10px;font-size:12px;cursor:pointer;margin-top:6px" id="inboxCloseBtn">بند کریں</button>
+  </div>
+</div>
+
 </body>
 </html>
