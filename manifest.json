@@ -17,3 +17,37 @@
   "screenshots": [],
   "prefer_related_applications": false
 }
+{
+  "uid": "AUTH_USER_ID_12345",
+  "fullName": "Abdul Raheem Sario",
+  "cnic": "42201XXXXXXXX",
+  "mobileNumber": "+92300XXXXXXX",
+  "photoURL": "https://storage.googleapis.com/...",
+  "qrMembershipId": "PPP-SD-2026-9982",
+  "role": "Councilor", 
+  "userLevel": "UC Level", 
+  "geoScope": {
+    "division": "Karachi",
+    "district": "Karachi East",
+    "ps": "PS-XX",
+    "town": "Sohrab Goth",
+    "uc": "UC-XX"
+  },
+  "socialMedia": {
+    "facebook": "profile_link",
+    "x": "profile_link"
+  },
+  "isVerified": true,
+  "verifiedBy": "DISTRICT_ADMIN_ID",
+  "createdAt": "2026-05-29T12:55:00Z"
+}
+{
+  "broadcastId": "BC_88392",
+  "senderId": "LEADERSHIP_USER_ID",
+  "title": "صوبائی تنظیم کے لیے اہم ہدایات",
+  "message": "تمام یو سی کونسلرز اپنے اپنے علاقوں میں عوامی شکایات کے پورٹل کو فعال کریں۔",
+  "mediaUrl": "https://storage.googleapis.com/video.mp4",
+  "targetLevel": "UC Level", 
+  "targetDistrict": "All", 
+  "sentAt": "2026-05-29T13:00:00Z"
+}
