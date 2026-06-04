@@ -1900,31 +1900,3 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
-<div id="broadcastBar" style="display:none;position:fixed;bottom:70px;left:0;right:0;background:linear-gradient(135deg,#8b0000,#cc0000);border-top:2px solid #c9a84c;padding:12px 16px;z-index:999;direction:rtl">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-<span style="color:#c9a84c;font-weight:bold;font-size:14px">📢 براڈکاسٹ پیغام</span>
-<button onclick="document.getElementById('broadcastBar').style.display='none'" style="background:none;border:none;color:#fff;font-size:18px">✕</button>
-</div>
-<textarea id="bcMsg" placeholder="قیادت کا پیغام یہاں لکھیں..." style="width:100%;background:#1a0000;border:1px solid #c9a84c;border-radius:8px;padding:8px;color:#fff;font-family:inherit;font-size:12px;direction:rtl;resize:none;height:60px"></textarea>
-<div style="display:flex;gap:8px;margin-top:8px">
-<button onclick="sendBroadcast('whatsapp')" style="flex:1;background:#25d366;color:#fff;border:none;border-radius:20px;padding:8px;font-size:11px;font-family:inherit">📱 WhatsApp</button>
-<button onclick="sendBroadcast('twitter')" style="flex:1;background:#1d9bf0;color:#fff;border:none;border-radius:20px;padding:8px;font-size:11px;font-family:inherit">🐦 Twitter</button>
-<button onclick="sendBroadcast('copy')" style="flex:1;background:#c9a84c;color:#000;border:none;border-radius:20px;padding:8px;font-size:11px;font-family:inherit">📋 Copy</button>
-</div>
-</div>
-<script>
-function sendBroadcast(type){
-  var msg=document.getElementById('bcMsg').value.trim();
-  if(!msg){alert('پیغام لکھیں');return;}
-  var full='🌹 PPP Pulse | پیپلز پارٹی سندھ\n\n'+msg+'\n\n#PPP #جئے_بھٹو #سندھ';
-  if(type==='whatsapp')window.open('https://wa.me/?text='+encodeURIComponent(full),'_blank');
-  else if(type==='twitter')window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(full),'_blank');
-  else{navigator.clipboard.writeText(full).then(function(){alert('کاپی ہو گیا! ✅');});}
-}
-var oldUpdUI=window.updUI;
-window.updUI=function(){
-  if(oldUpdUI)oldUpdUI();
-  var isAdmin=window.cu&&window.cu.ia;
-  document.getElementById('broadcastBar').style.display=isAdmin?'block':'none';
-};
-</script>
