@@ -6,6 +6,8 @@
 <title>PPP Pulse Ultra — سندھ ڈیجیٹل نیٹ ورک</title>
 <meta name="theme-color" content="#080808">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <style>
 :root{--red:#dd0000;--red-dark:#990000;--black:#080808;--green:#00aa00;--green-bright:#00ee00;--white:#f0f0f0;--text-light:#dddddd;}
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -15,9 +17,8 @@ body{font-family:'Noto Nastaliq Urdu',serif;background:var(--black);color:var(--
 .screen.active{display:flex;}
 #screen-login{background:radial-gradient(ellipse at 15% 40%,rgba(221,0,0,.45) 0%,transparent 45%),radial-gradient(ellipse at 85% 40%,rgba(0,238,0,.35) 0%,transparent 45%),linear-gradient(135deg,#1a0000 0%,#080808 40%,#001400 100%);align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden;}
 #screen-login::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(204,0,0,.04) 40px,rgba(204,0,0,.04) 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(204,0,0,.04) 40px,rgba(204,0,0,.04) 41px);pointer-events:none;}
-.login-card{background:rgba(8,8,8,.92);border:1px solid rgba(221,0,0,.5);border-radius:16px;padding:28px 24px;width:100%;max-width:400px;backdrop-filter:blur(20px);box-shadow:0 0 60px rgba(221,0,0,.2),0 20px 40px rgba(0,0,0,.9);animation:fadeUp .6s ease;position:relative;z-index:1;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-.ppp-flag{display:flex;direction:ltr;width:72px;height:44px;margin:0 auto 16px;border-radius:4px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.6);}
+.login-card{background:rgba(8,8,8,.92);border:1px solid rgba(221,0,0,.5);border-radius:16px;padding:28px 24px;width:100%;max-width:400px;backdrop-filter:blur(20px);box-shadow:0 0 60px rgba(221,0,0,.2),0 20px 40px rgba(0,0,0,.9);position:relative;z-index:1;}
+.ppp-flag{display:flex;direction:ltr;width:72px;height:44px;margin:0 auto 16px;border-radius:4px;overflow:hidden;}
 .flag-stripe{flex:1;}.flag-black{background:#111;}.flag-red{background:var(--red);}.flag-green{background:var(--green-bright);}
 .login-title{font-family:'Orbitron',sans-serif;font-size:17px;font-weight:900;color:#fff;text-align:center;letter-spacing:3px;margin-bottom:4px;}
 .login-subtitle{font-size:12px;color:rgba(0,220,0,.85);text-align:center;margin-bottom:20px;line-height:1.8;}
@@ -26,11 +27,10 @@ body{font-family:'Noto Nastaliq Urdu',serif;background:var(--black);color:var(--
 .form-group{margin-bottom:14px;}
 .form-label{display:block;font-size:11px;color:var(--text-light);margin-bottom:6px;opacity:.8;}
 .form-input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(204,0,0,.3);border-radius:8px;padding:11px 14px;color:var(--white);font-family:'Noto Nastaliq Urdu',serif;font-size:13px;direction:rtl;transition:all .3s;outline:none;}
-.form-input:focus{border-color:var(--red);background:rgba(204,0,0,.1);box-shadow:0 0 0 3px rgba(204,0,0,.15);}
+.form-input:focus{border-color:var(--red);background:rgba(204,0,0,.1);}
 .form-input::placeholder{color:rgba(255,255,255,.3);}
 select.form-input option{background:#1a0000;color:var(--white);}
 .btn-primary{width:100%;background:linear-gradient(135deg,var(--red-dark),var(--red));border:none;border-radius:10px;padding:13px;color:var(--white);font-family:'Noto Nastaliq Urdu',serif;font-size:15px;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(204,0,0,.4);}
-.btn-primary:hover{transform:translateY(-2px);}
 .btn-primary:disabled{opacity:.6;}
 .btn-secondary{background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:10px 20px;color:var(--text-light);font-family:'Noto Nastaliq Urdu',serif;font-size:12px;cursor:pointer;width:100%;margin-top:8px;}
 .register-link{text-align:center;margin-top:14px;font-size:11px;color:rgba(255,255,255,.4);}
@@ -38,11 +38,6 @@ select.form-input option{background:#1a0000;color:var(--white);}
 .role-tabs{display:flex;gap:5px;margin-bottom:16px;background:rgba(0,0,0,.3);border-radius:10px;padding:4px;}
 .role-tab{flex:1;padding:7px 3px;border:none;border-radius:7px;background:transparent;color:rgba(255,255,255,.5);font-family:'Noto Nastaliq Urdu',serif;font-size:10px;cursor:pointer;text-align:center;}
 .role-tab.active{background:var(--red-dark);color:var(--white);}
-.otp-info-box{background:rgba(0,100,200,.15);border:1px solid rgba(29,155,240,.4);border-radius:10px;padding:12px;margin-bottom:14px;text-align:center;}
-.otp-info-box p{font-size:11px;color:rgba(200,220,255,.8);line-height:1.8;}
-.otp-row{display:flex;gap:6px;justify-content:center;margin:12px 0;direction:ltr;}
-.otp-input{width:42px;height:54px;background:rgba(255,255,255,.06);border:1px solid rgba(204,0,0,.3);border-radius:10px;text-align:center;font-size:20px;font-weight:700;color:#ffd060;font-family:'Orbitron',sans-serif;outline:none;}
-.otp-input:focus{border-color:var(--red);}
 .topbar{background:linear-gradient(90deg,#330000,#080808 40%,#003300);border-bottom:2px solid transparent;border-image:linear-gradient(90deg,#dd0000,#080808,#00ee00) 1;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-shrink:0;}
 .topbar-left{display:flex;align-items:center;gap:9px;}
 .topbar-flag{display:flex;direction:ltr;width:30px;height:19px;border-radius:2px;overflow:hidden;}
@@ -76,13 +71,6 @@ select.form-input option{background:#1a0000;color:var(--white);}
 .ticker-badge{background:var(--red);padding:7px 11px;font-size:9px;font-weight:700;white-space:nowrap;}
 .ticker-text{padding:7px 11px;font-size:11px;white-space:nowrap;overflow:hidden;animation:ticker 22s linear infinite;}
 @keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-.activity-item{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);}
-.activity-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
-.dot-red{background:var(--red);}
-.dot-green{background:var(--green-bright);}
-.dot-gold{background:#ffcc00;}
-.activity-text{flex:1;font-size:11px;color:var(--text-light);line-height:1.6;}
-.activity-time{font-size:9px;color:rgba(255,255,255,.3);white-space:nowrap;}
 .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:9px;}
 .badge-red{background:rgba(221,0,0,.2);border:1px solid rgba(221,0,0,.5);color:#ff6666;}
 .badge-green{background:rgba(0,220,0,.15);border:1px solid rgba(0,220,0,.5);color:#44ff44;}
@@ -177,7 +165,6 @@ textarea.form-input{resize:vertical;min-height:80px;}
 .rep-info{flex:1;}
 .rep-name{font-size:13px;font-weight:600;margin-bottom:2px;}
 .rep-pos{font-size:9px;color:#ffd060;margin-bottom:2px;}
-.rep-const{font-size:9px;color:rgba(255,255,255,.5);}
 .rep-type-badge{font-size:8px;padding:2px 7px;border-radius:10px;margin-top:3px;display:inline-block;}
 .type-mna{background:rgba(255,100,0,.15);border:1px solid rgba(255,100,0,.4);color:#ffaa66;}
 .type-mpa{background:rgba(0,150,255,.15);border:1px solid rgba(0,150,255,.4);color:#66ccff;}
@@ -215,12 +202,11 @@ textarea.form-input{resize:vertical;min-height:80px;}
 #gps-result{font-size:10px;color:var(--green-bright);margin-top:5px;}
 .spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;}
 @keyframes spin{to{transform:rotate(360deg)}}
+.pass-hint{font-size:10px;color:rgba(255,255,255,.3);text-align:center;margin-top:8px;}
 @media(max-width:360px){.form-row{grid-template-columns:1fr;}.admin-stat-row{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
-
-<div id="recaptcha-container"></div>
 
 <!-- LOGIN -->
 <div id="screen-login" class="screen active">
@@ -237,39 +223,23 @@ textarea.form-input{resize:vertical;min-height:80px;}
       <span style="font-size:16px">&#x1F339;</span>
       <div class="d d-green"></div><div class="d d-black"></div>
     </div>
-    <div id="login-step-1">
-      <div class="role-tabs">
-        <button class="role-tab active" onclick="setRole('ورکر',this)">ورکر</button>
-        <button class="role-tab" onclick="setRole('UC سطح',this)">UC</button>
-        <button class="role-tab" onclick="setRole('ضلع سطح',this)">ضلع</button>
-        <button class="role-tab" onclick="setRole('ایڈمن',this)">ایڈمن</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">&#x1F4F1; موبائل نمبر</label>
-        <input type="tel" class="form-input" id="loginPhone" placeholder="03XX-XXXXXXX" dir="ltr" maxlength="13">
-      </div>
-      <div id="admin-pass-group" style="display:none" class="form-group">
-        <label class="form-label">&#x1F510; ایڈمن پاس ورڈ</label>
-        <input type="password" class="form-input" id="adminPass" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" dir="ltr">
-      </div>
-      <button class="btn-primary" id="btn-send-otp" onclick="sendOTP()">&#x1F4E4; OTP بھیجیں</button>
+    <div class="role-tabs">
+      <button class="role-tab active" onclick="setRole('ورکر',this)">ورکر</button>
+      <button class="role-tab" onclick="setRole('UC سطح',this)">UC</button>
+      <button class="role-tab" onclick="setRole('ضلع سطح',this)">ضلع</button>
+      <button class="role-tab" onclick="setRole('ایڈمن',this)">ایڈمن</button>
     </div>
-    <div id="login-step-2" style="display:none">
-      <div class="otp-info-box">
-        <p>نمبر <strong id="shown-phone" style="color:#66aaff;font-family:monospace"></strong><br>پر SMS OTP بھیجا گیا ہے</p>
-      </div>
-      <div class="otp-row">
-        <input type="tel" class="otp-input" maxlength="1" id="o1" oninput="otpNext(this,'o2')">
-        <input type="tel" class="otp-input" maxlength="1" id="o2" oninput="otpNext(this,'o3')">
-        <input type="tel" class="otp-input" maxlength="1" id="o3" oninput="otpNext(this,'o4')">
-        <input type="tel" class="otp-input" maxlength="1" id="o4" oninput="otpNext(this,'o5')">
-        <input type="tel" class="otp-input" maxlength="1" id="o5" oninput="otpNext(this,'o6')">
-        <input type="tel" class="otp-input" maxlength="1" id="o6" oninput="otpNext(this,null)">
-      </div>
-      <button class="btn-primary" id="btn-verify-otp" onclick="verifyOTP()" style="margin-bottom:8px">&#x2705; تصدیق کریں</button>
-      <button class="btn-secondary" onclick="backToPhone()">&#x2190; واپس جائیں</button>
+    <div class="form-group">
+      <label class="form-label">&#x1F464; یوزر نام</label>
+      <input type="text" class="form-input" id="loginUser" placeholder="اپنا نام لکھیں">
     </div>
-    <div class="register-link">
+    <div class="form-group">
+      <label class="form-label">&#x1F510; پاس ورڈ</label>
+      <input type="password" class="form-input" id="loginPass" placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;" dir="ltr" onkeypress="if(event.keyCode==13)doLogin()">
+    </div>
+    <button class="btn-primary" id="btn-login" onclick="doLogin()">&#x1F511; داخل ہوں</button>
+    <div class="pass-hint">ورکر پاس ورڈ: ppp786 | ایڈمن: tmc786</div>
+    <div class="register-link" style="margin-top:12px">
       ابھی تک رجسٹرڈ نہیں؟ <a onclick="showScreen('screen-register')">نیا اکاؤنٹ بنائیں</a>
     </div>
     <div style="text-align:center;margin-top:8px;font-size:9px;color:rgba(255,255,255,.2)">
@@ -306,17 +276,17 @@ textarea.form-input{resize:vertical;min-height:80px;}
     <div class="tab-page active" id="page-dashboard">
       <div class="ticker-wrap">
         <div class="ticker-badge">&#x1F534; LIVE</div>
-        <div class="ticker-text">جیے بھٹو &#x1F339; — PPP سندھ ڈیجیٹل نیٹ ورک — Firebase Powered — #PPPZindabad</div>
+        <div class="ticker-text">جیے بھٹو &#x1F339; — PPP سندھ ڈیجیٹل نیٹ ورک — Firebase Powered — #PPPZindabad &#x1F5F3;</div>
       </div>
       <div class="stats-grid">
         <div class="stat-card"><div class="stat-icon">&#x1F465;</div><div class="stat-num" id="stat-workers">0</div><div class="stat-label">کل ممبران</div></div>
-        <div class="stat-card"><div class="stat-icon">&#x1F4CB;</div><div class="stat-num" id="stat-complaints">0</div><div class="stat-label">کل شکایات</div></div>
+        <div class="stat-card"><div class="stat-icon">&#x1F4CB;</div><div class="stat-num" id="stat-complaints">0</div><div class="stat-label">شکایات</div></div>
         <div class="stat-card"><div class="stat-icon">&#x1F3DB;</div><div class="stat-num">159</div><div class="stat-label">PPP نمائندے</div></div>
         <div class="stat-card"><div class="stat-icon">&#x1F5FA;</div><div class="stat-num">33</div><div class="stat-label">سندھ اضلاع</div></div>
       </div>
       <div class="broadcast-card">
         <div class="broadcast-title">&#x1F4E2; تازہ ترین پیغام</div>
-        <div class="broadcast-msg" id="latest-broadcast-msg">PPP Pulse Ultra میں خوش آمدید! یہ سندھ کا پہلا Firebase-powered ڈیجیٹل سیاسی نیٹ ورک ہے۔ جیے بھٹو!</div>
+        <div class="broadcast-msg" id="latest-broadcast-msg">PPP Pulse Ultra میں خوش آمدید! یہ سندھ کا پہلا Firebase ڈیجیٹل سیاسی نیٹ ورک ہے۔ جیے بھٹو!</div>
         <div class="broadcast-meta">
           <span class="badge badge-red" id="latest-broadcast-type">&#x1F534; خوش آمدید</span>
           <span class="badge badge-gold">PPP Pulse</span>
@@ -390,7 +360,7 @@ textarea.form-input{resize:vertical;min-height:80px;}
         <button class="btn-primary" id="btn-submit-complaint" onclick="submitComplaint()">&#x1F4E4; شکایت جمع کریں</button>
       </div>
       <div style="font-size:12px;font-weight:600;margin:14px 0 10px">&#x1F4CB; شکایات (Firebase)</div>
-      <div id="my-complaints-list"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">لاگ ان کریں تو شکایات لوڈ ہوں گی</div></div>
+      <div id="my-complaints-list"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">ابھی تک کوئی شکایت نہیں</div></div>
     </div>
 
     <!-- BROADCAST -->
@@ -400,11 +370,11 @@ textarea.form-input{resize:vertical;min-height:80px;}
         <div class="broadcast-card">
           <span class="badge badge-green" style="margin-bottom:9px;display:inline-block">&#x1F339; خوش آمدید</span>
           <div class="broadcast-title">PPP Pulse Ultra میں خوش آمدید!</div>
-          <div class="broadcast-msg">یہ سندھ کا پہلا Firebase-powered ڈیجیٹل سیاسی نیٹ ورک ہے۔</div>
+          <div class="broadcast-msg">یہ سندھ کا پہلا Firebase ڈیجیٹل سیاسی نیٹ ورک ہے۔</div>
           <div class="broadcast-meta"><span class="badge badge-gold">PPP Pulse</span></div>
           <div class="btn-row">
             <button class="btn-sm btn-sm-green" onclick="doShare('whatsapp')">&#x1F4AC; واٹس ایپ</button>
-            <button class="btn-sm btn-sm-blue" onclick="doShare('twitter')">&#x1F426; X/ٹوئٹر</button>
+            <button class="btn-sm btn-sm-blue" onclick="doShare('twitter')">&#x1F426; X</button>
           </div>
         </div>
       </div>
@@ -413,7 +383,7 @@ textarea.form-input{resize:vertical;min-height:80px;}
     <!-- CARD -->
     <div class="tab-page" id="page-card">
       <div class="section-header"><span class="icon">&#x1FAA6;</span><div><h2>ڈیجیٹل کارڈ</h2><p>PPP ممبرشپ کارڈ</p></div></div>
-      <div class="card-outer" id="memberCard">
+      <div class="card-outer">
         <div class="card-flag-stripe"><div class="cfs-r"></div><div class="cfs-b"></div><div class="cfs-g"></div></div>
         <div class="card-body">
           <div class="card-header">
@@ -445,7 +415,7 @@ textarea.form-input{resize:vertical;min-height:80px;}
         <div class="card-flag-stripe-bottom"><div class="cfs-r"></div><div class="cfs-b"></div><div class="cfs-g"></div></div>
       </div>
       <div class="btn-row" style="margin-bottom:18px">
-        <button class="btn-sm btn-sm-gold" onclick="doShare('card')">&#x1F4E4; شیئر کریں</button>
+        <button class="btn-sm btn-sm-gold" onclick="doShare('card')">&#x1F4E4; شیئر</button>
         <button class="btn-sm btn-sm-red" onclick="showAlert('&#x1F4BE;','محفوظ','اسکرین شاٹ لے کر محفوظ کریں')">&#x1F4BE; محفوظ</button>
       </div>
     </div>
@@ -465,8 +435,8 @@ textarea.form-input{resize:vertical;min-height:80px;}
       <div class="profile-info-grid">
         <div class="info-item"><div class="info-label">ضلع</div><div class="info-val">کراچی ایسٹ</div></div>
         <div class="info-item"><div class="info-label">TMC</div><div class="info-val">سہراب گوٹھ</div></div>
-        <div class="info-item"><div class="info-label">عہدہ</div><div class="info-val">لیبر کونسلر</div></div>
-        <div class="info-item"><div class="info-label">ID</div><div class="info-val" style="font-size:10px;font-family:'Orbitron',sans-serif">PPP-KHI-0786</div></div>
+        <div class="info-item"><div class="info-label">عہدہ</div><div class="info-val" id="p-pos">لیبر کونسلر</div></div>
+        <div class="info-item"><div class="info-label">ID</div><div class="info-val" style="font-size:10px;font-family:'Orbitron',sans-serif" id="p-mid">PPP-KHI-0786</div></div>
       </div>
       <div class="btn-row" style="margin-bottom:14px">
         <button class="btn-sm btn-sm-outline" onclick="navTo('card')">&#x1FAA6; میرا کارڈ</button>
@@ -480,7 +450,7 @@ textarea.form-input{resize:vertical;min-height:80px;}
         <div class="toggle-wrap"><div class="toggle-label">&#x1F514; نوٹیفیکیشن</div><div class="toggle on" onclick="toggleSw(this)"><div class="toggle-knob"></div></div></div>
         <div class="toggle-wrap" style="border:none"><div class="toggle-label">&#x1F319; ڈارک موڈ</div><div class="toggle on" onclick="toggleSw(this)"><div class="toggle-knob"></div></div></div>
       </div>
-      <div style="text-align:center;margin-top:14px;font-size:9px;color:rgba(255,255,255,.2)">PPP Pulse Ultra v4.0 — Firebase&#x1F339; جیے بھٹو</div>
+      <div style="text-align:center;margin-top:14px;font-size:9px;color:rgba(255,255,255,.2)">PPP Pulse Ultra v4.0 — Firebase &#x1F339; جیے بھٹو</div>
     </div>
 
     <!-- ADMIN -->
@@ -522,7 +492,7 @@ textarea.form-input{resize:vertical;min-height:80px;}
         <div style="font-size:12px;font-weight:600">&#x1F465; ممبران</div>
         <button class="btn-sm btn-sm-outline" style="flex:0;padding:5px 12px" onclick="loadAdminMembers()">&#x1F504; تازہ</button>
       </div>
-      <div id="admin-members-panel"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">اوپر تازہ کریں بٹن دبائیں</div></div>
+      <div id="admin-members-panel"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">تازہ کریں بٹن دبائیں</div></div>
       <div style="font-size:12px;font-weight:600;margin:14px 0 10px">&#x1F4CB; شکایات</div>
       <div id="admin-complaints-panel"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">لوڈ ہو رہا ہے...</div></div>
     </div>
@@ -544,11 +514,11 @@ textarea.form-input{resize:vertical;min-height:80px;}
       <button style="background:transparent;border:none;color:#00ee00;font-size:20px;cursor:pointer" onclick="showScreen('screen-login')">&#x2190;</button>
       <div><div style="font-family:'Orbitron',sans-serif;font-size:14px;font-weight:900;color:#fff">نئی رجسٹریشن</div><div style="font-size:10px;color:rgba(255,255,255,.4)">PPP ڈیجیٹل ممبر بنیں</div></div>
     </div>
-    <div class="reg-progress"><div class="reg-step done" id="rs1"></div><div class="reg-step active" id="rs2"></div><div class="reg-step" id="rs3"></div><div class="reg-step" id="rs4"></div></div>
+    <div class="reg-progress"><div class="reg-step active" id="rs1"></div><div class="reg-step" id="rs2"></div><div class="reg-step" id="rs3"></div><div class="reg-step" id="rs4"></div></div>
     <div id="reg-step-1">
       <div style="font-size:13px;color:#fff;margin-bottom:14px;font-weight:600">ذاتی معلومات</div>
-      <div class="form-group"><label class="form-label">&#x1F464; پورا نام</label><input type="text" class="form-input" id="r-name" placeholder="محمد علی احمد"></div>
-      <div class="form-group"><label class="form-label">&#x1F194; CNIC</label><input type="text" class="form-input" id="r-cnic" placeholder="42101-XXXXXXX-X" dir="ltr" maxlength="15"></div>
+      <div class="form-group"><label class="form-label">&#x1F464; پورا نام (لازمی)</label><input type="text" class="form-input" id="r-name" placeholder="محمد علی احمد"></div>
+      <div class="form-group"><label class="form-label">&#x1F194; CNIC (لازمی)</label><input type="text" class="form-input" id="r-cnic" placeholder="42101-XXXXXXX-X" dir="ltr" maxlength="15"></div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">&#x1F4F1; موبائل</label><input type="tel" class="form-input" id="r-phone" placeholder="03XX-XXXXXXX" dir="ltr"></div>
         <div class="form-group"><label class="form-label">&#x1F382; عمر</label><input type="number" class="form-input" id="r-age" placeholder="25" dir="ltr"></div>
@@ -601,11 +571,6 @@ textarea.form-input{resize:vertical;min-height:80px;}
   </div>
 </div>
 
-<!-- Firebase CDN (compat version - works without bundler, no arrow functions needed) -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
 <script>
 // ═══════════════════════════════════════
 // FIREBASE INIT
@@ -619,15 +584,20 @@ var firebaseConfig = {
   appId: "1:1013111052058:web:f910f3e640c2a6bba8fea3"
 };
 firebase.initializeApp(firebaseConfig);
-var auth = firebase.auth();
 var db = firebase.firestore();
 
 // ═══════════════════════════════════════
-// GLOBAL STATE
+// PASSWORDS
+// ═══════════════════════════════════════
+var WORKER_PASS = 'ppp786';
+var ADMIN_PASS = 'tmc786';
+
+// ═══════════════════════════════════════
+// STATE
 // ═══════════════════════════════════════
 var currentRole = 'ورکر';
 var isAdmin = false;
-var confirmationResult = null;
+var currentUser = '';
 var bcType = 'ایمرجنسی';
 var repTypeFilter = 'سب';
 var gpsLat = null;
@@ -645,7 +615,7 @@ var DISTRICTS = [
 ];
 
 // ═══════════════════════════════════════
-// REPRESENTATIVES
+// REPS
 // ═══════════════════════════════════════
 var REPS = [
   {name:'بلاول بھٹو زرداری',pos:'چیئرمین PPP | MNA لاڑکانہ',con:'NA-194 لاڑکانہ',type:'قیادت',tw:'BBhuttoZardari',v:true,e:'🌹',d:'لاڑکانہ'},
@@ -675,129 +645,59 @@ window.onload = function() {
   var rd = document.getElementById('r-district');
   if (cd) cd.innerHTML = opts;
   if (rd) rd.innerHTML = opts;
-
   renderReps(REPS);
-  setupRecaptcha();
 };
 
 // ═══════════════════════════════════════
-// RECAPTCHA
-// ═══════════════════════════════════════
-function setupRecaptcha() {
-  try {
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-      'size': 'invisible',
-      'callback': function() {}
-    });
-    window.recaptchaVerifier.render();
-  } catch(e) {
-    console.log('Recaptcha setup:', e.message);
-  }
-}
-
-// ═══════════════════════════════════════
-// LOGIN
+// LOGIN (پاس ورڈ - کوئی OTP نہیں)
 // ═══════════════════════════════════════
 function setRole(role, btn) {
   currentRole = role;
   var tabs = document.querySelectorAll('.role-tab');
   for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
   btn.classList.add('active');
-  document.getElementById('admin-pass-group').style.display = (role === 'ایڈمن') ? 'block' : 'none';
 }
 
-function sendOTP() {
-  var phone = document.getElementById('loginPhone').value.trim();
-  if (!phone || phone.length < 10) {
-    showAlert('⚠️', 'نمبر غلط', 'درست موبائل نمبر درج کریں');
-    return;
-  }
-  if (currentRole === 'ایڈمن') {
-    var pass = document.getElementById('adminPass').value;
-    if (pass !== 'tmc786') {
-      showAlert('❌', 'پاس ورڈ غلط', 'ایڈمن پاس ورڈ غلط ہے');
-      return;
-    }
+function doLogin() {
+  var user = document.getElementById('loginUser').value.trim();
+  var pass = document.getElementById('loginPass').value.trim();
+
+  if (!user) { showAlert('⚠️', 'نامکمل', 'یوزر نام درج کریں'); return; }
+  if (!pass) { showAlert('⚠️', 'نامکمل', 'پاس ورڈ درج کریں'); return; }
+
+  var validPass = false;
+  if (currentRole === 'ایڈمن' && pass === ADMIN_PASS) {
+    validPass = true;
+    isAdmin = true;
+  } else if (currentRole !== 'ایڈمن' && pass === WORKER_PASS) {
+    validPass = true;
+    isAdmin = false;
+  } else if (pass === ADMIN_PASS) {
+    validPass = true;
     isAdmin = true;
   }
-  phone = phone.replace(/-/g, '').replace(/ /g, '');
-  if (phone.charAt(0) === '0') phone = '+92' + phone.substring(1);
-  else if (phone.charAt(0) !== '+') phone = '+92' + phone;
 
-  var btn = document.getElementById('btn-send-otp');
-  btn.innerHTML = '⏳ بھیجا جا رہا ہے...';
-  btn.disabled = true;
-
-  auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
-    .then(function(result) {
-      confirmationResult = result;
-      document.getElementById('shown-phone').textContent = phone;
-      document.getElementById('login-step-1').style.display = 'none';
-      document.getElementById('login-step-2').style.display = 'block';
-      setTimeout(function() { document.getElementById('o1').focus(); }, 100);
-    })
-    .catch(function(err) {
-      showAlert('❌', 'خرابی', err.message);
-      btn.innerHTML = '📤 OTP بھیجیں';
-      btn.disabled = false;
-      try { window.recaptchaVerifier.clear(); } catch(e) {}
-      setupRecaptcha();
-    });
-}
-
-function otpNext(cur, nextId) {
-  cur.value = cur.value.replace(/[^0-9]/g, '').slice(0, 1);
-  if (cur.value.length === 1 && nextId) {
-    document.getElementById(nextId).focus();
-  }
-}
-
-function verifyOTP() {
-  var code = '';
-  var ids = ['o1','o2','o3','o4','o5','o6'];
-  for (var i = 0; i < ids.length; i++) code += document.getElementById(ids[i]).value;
-
-  if (!confirmationResult) {
-    showAlert('⚠️', 'مسئلہ', 'پہلے OTP بھیجیں');
+  if (!validPass) {
+    showAlert('❌', 'پاس ورڈ غلط', 'پاس ورڈ درست نہیں۔\nورکر: ppp786\nایڈمن: tmc786');
     return;
   }
-  if (code.length < 6) {
-    showAlert('⚠️', 'نامکمل', '6 ہندسے درج کریں');
-    return;
+
+  currentUser = user;
+  document.getElementById('topbar-name').textContent = user.split(' ')[0];
+  document.getElementById('topbar-role').textContent = isAdmin ? 'ایڈمن' : currentRole;
+  document.getElementById('topbar-subtitle').textContent = isAdmin ? 'ایڈمن کنٹرول' : 'سندھ نیٹ ورک';
+  document.getElementById('p-name').textContent = user;
+  document.getElementById('card-name').textContent = user;
+
+  if (isAdmin) {
+    document.getElementById('admin-access-btn').style.display = 'block';
+    document.getElementById('p-role-badge').textContent = 'ایڈمن';
   }
-  var btn = document.getElementById('btn-verify-otp');
-  btn.innerHTML = '⏳ تصدیق ہو رہی ہے...';
-  btn.disabled = true;
 
-  confirmationResult.confirm(code)
-    .then(function(result) {
-      document.getElementById('topbar-name').textContent = isAdmin ? 'ایڈمن' : 'ورکر';
-      document.getElementById('topbar-role').textContent = isAdmin ? 'ایڈمن' : currentRole;
-      if (isAdmin) {
-        document.getElementById('admin-access-btn').style.display = 'block';
-        document.getElementById('p-role-badge').textContent = 'ایڈمن';
-        document.getElementById('topbar-subtitle').textContent = 'ایڈمن کنٹرول';
-      }
-      loadDashboardStats();
-      listenComplaints();
-      showScreen('screen-app');
-      navTo('dashboard');
-    })
-    .catch(function(err) {
-      showAlert('❌', 'کوڈ غلط', 'OTP درست نہیں');
-      btn.innerHTML = '✅ تصدیق کریں';
-      btn.disabled = false;
-    });
-}
-
-function backToPhone() {
-  document.getElementById('login-step-2').style.display = 'none';
-  document.getElementById('login-step-1').style.display = 'block';
-  var ids = ['o1','o2','o3','o4','o5','o6'];
-  for (var i = 0; i < ids.length; i++) document.getElementById(ids[i]).value = '';
-  var btn = document.getElementById('btn-send-otp');
-  btn.innerHTML = '📤 OTP بھیجیں';
-  btn.disabled = false;
+  loadDashboardStats();
+  listenComplaints();
+  showScreen('screen-app');
+  navTo('dashboard');
 }
 
 // ═══════════════════════════════════════
@@ -815,7 +715,7 @@ function loadDashboardStats() {
 }
 
 function listenComplaints() {
-  db.collection('complaints').orderBy('createdAt', 'desc').onSnapshot(function(snapshot) {
+  db.collection('complaints').orderBy('createdAt','desc').onSnapshot(function(snapshot) {
     var list = document.getElementById('my-complaints-list');
     if (!list) return;
     list.innerHTML = '';
@@ -836,7 +736,7 @@ function listenComplaints() {
     if (count === 0) list.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">ابھی تک کوئی شکایت نہیں</div>';
     document.getElementById('admin-stat-pending').textContent = pending;
     if (isAdmin) renderAdminComplaints(snapshot);
-  });
+  }, function() {});
 }
 
 function renderAdminComplaints(snapshot) {
@@ -847,12 +747,7 @@ function renderAdminComplaints(snapshot) {
     var d = docSnap.data();
     var row = document.createElement('div');
     row.className = 'complaint-row';
-    var sel = '<select class="status-select" onchange="updateComplaintStatus(\'' + docSnap.id + '\',this.value)">';
-    sel += '<option' + (d.status==='زیرِ کارروائی'?' selected':'') + '>زیرِ کارروائی</option>';
-    sel += '<option' + (d.status==='حل ہو گئی'?' selected':'') + '>حل ہو گئی</option>';
-    sel += '<option' + (d.status==='مسترد'?' selected':'') + '>مسترد</option>';
-    sel += '</select>';
-    row.innerHTML = '<div class="complaint-row-header"><span class="complaint-id">' + (d.complaintId||'') + '</span>' + sel + '</div><div style="font-size:11px;margin-bottom:3px">' + (d.dept||'') + ' — ' + (d.district||'') + '</div><div style="font-size:10px;color:rgba(255,255,255,.6);margin-bottom:3px">' + (d.text||'').substring(0,50) + '</div><div style="font-size:9px;color:rgba(255,255,255,.4)">CNIC: ' + (d.cnic||'') + '</div>';
+    row.innerHTML = '<div class="complaint-row-header"><span class="complaint-id">' + (d.complaintId||'') + '</span><select class="status-select" onchange="updateComplaintStatus(\'' + docSnap.id + '\',this.value)"><option' + (d.status==='زیرِ کارروائی'?' selected':'') + '>زیرِ کارروائی</option><option' + (d.status==='حل ہو گئی'?' selected':'') + '>حل ہو گئی</option><option' + (d.status==='مسترد'?' selected':'') + '>مسترد</option></select></div><div style="font-size:11px;margin-bottom:3px">' + (d.dept||'') + ' — ' + (d.district||'') + '</div><div style="font-size:10px;color:rgba(255,255,255,.6);margin-bottom:3px">' + (d.text||'').substring(0,50) + '</div><div style="font-size:9px;color:rgba(255,255,255,.4)">CNIC: ' + (d.cnic||'') + '</div>';
     panel.appendChild(row);
   });
   if (!snapshot.size) panel.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">کوئی شکایت نہیں</div>';
@@ -860,12 +755,12 @@ function renderAdminComplaints(snapshot) {
 
 function updateComplaintStatus(docId, status) {
   db.collection('complaints').doc(docId).update({status: status})
-    .then(function() { showAlert('✅', 'اپڈیٹ', 'حالت تبدیل ہو گئی'); })
-    .catch(function() { showAlert('❌', 'خرابی', 'اپڈیٹ نہ ہو سکی'); });
+    .then(function() { showAlert('✅','اپڈیٹ','حالت تبدیل ہو گئی'); })
+    .catch(function() { showAlert('❌','خرابی','اپڈیٹ نہ ہو سکی'); });
 }
 
 // ═══════════════════════════════════════
-// REPRESENTATIVES
+// REPS
 // ═══════════════════════════════════════
 function renderReps(data) {
   var el = document.getElementById('reps-list');
@@ -879,7 +774,7 @@ function renderReps(data) {
     var twBtn = r.tw ? '<a href="https://x.com/' + r.tw + '" target="_blank" style="display:inline-flex;align-items:center;gap:3px;background:rgba(29,155,240,.15);border:1px solid rgba(29,155,240,.4);border-radius:10px;padding:3px 9px;font-size:9px;color:#66aaff;text-decoration:none;margin-top:5px">🐦 @' + r.tw + (r.v?' ✓':'') + '</a>' : '<span style="font-size:8px;color:rgba(255,255,255,.2);display:block;margin-top:3px">X اکاؤنٹ نہیں</span>';
     var card = document.createElement('div');
     card.className = 'rep-card';
-    card.innerHTML = '<div class="rep-avatar">' + r.e + (r.v ? '<span style="position:absolute;bottom:-2px;right:-2px;background:#1d9bf0;border-radius:50%;width:13px;height:13px;font-size:8px;display:flex;align-items:center;justify-content:center;color:#fff">✓</span>' : '') + '</div><div class="rep-info"><div class="rep-name">' + r.name + '</div><div class="rep-pos">' + r.pos + '</div><div class="rep-const">' + r.con + '</div>' + (r.d ? '<div style="font-size:9px;color:rgba(0,200,0,.6)">📍 ' + r.d + '</div>' : '') + '<span class="rep-type-badge ' + tc + '">' + r.type + '</span>' + twBtn + '</div>';
+    card.innerHTML = '<div class="rep-avatar">' + r.e + (r.v ? '<span style="position:absolute;bottom:-2px;right:-2px;background:#1d9bf0;border-radius:50%;width:13px;height:13px;font-size:8px;display:flex;align-items:center;justify-content:center;color:#fff">✓</span>' : '') + '</div><div class="rep-info"><div class="rep-name">' + r.name + '</div><div class="rep-pos">' + r.pos + '</div><div style="font-size:9px;color:rgba(255,255,255,.5)">' + r.con + '</div>' + (r.d ? '<div style="font-size:9px;color:rgba(0,200,0,.6)">📍 ' + r.d + '</div>' : '') + '<span class="rep-type-badge ' + tc + '">' + r.type + '</span>' + twBtn + '</div>';
     el.appendChild(card);
   }
 }
@@ -925,20 +820,16 @@ function getGPS() {
   var res = document.getElementById('gps-result');
   lbl.innerHTML = '⏳ مقام معلوم ہو رہا ہے...';
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      function(pos) {
-        gpsLat = pos.coords.latitude;
-        gpsLng = pos.coords.longitude;
-        lbl.textContent = '✅ مقام موصول';
-        res.textContent = '📍 ' + gpsLat.toFixed(4) + ', ' + gpsLng.toFixed(4);
-      },
-      function() {
-        lbl.textContent = '📍 مقام حاصل کریں';
-        res.textContent = '⚠️ مقام کی اجازت نہیں';
-      }
-    );
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      gpsLat = pos.coords.latitude;
+      gpsLng = pos.coords.longitude;
+      lbl.textContent = '✅ مقام موصول';
+      res.textContent = '📍 ' + gpsLat.toFixed(4) + ', ' + gpsLng.toFixed(4);
+    }, function() {
+      lbl.textContent = '📍 مقام حاصل کریں';
+      res.textContent = '⚠️ مقام کی اجازت نہیں';
+    });
   } else {
-    lbl.textContent = '📍 مقام حاصل کریں';
     res.textContent = '⚠️ GPS دستیاب نہیں';
   }
 }
@@ -949,28 +840,19 @@ function submitComplaint() {
   var district = document.getElementById('c-district').value;
   var deptEl = document.querySelector('.dept-chip.selected');
   var dept = deptEl ? deptEl.textContent : '';
-
   if (!cnic || cnic.length < 13) { showAlert('⚠️','CNIC','CNIC نمبر لازمی ہے'); return; }
   if (!text || text.length < 10) { showAlert('⚠️','تفصیل','کم از کم 10 حروف لکھیں'); return; }
   if (!district) { showAlert('⚠️','ضلع','ضلع منتخب کریں'); return; }
-
   var btn = document.getElementById('btn-submit-complaint');
   btn.innerHTML = '⏳ جمع ہو رہی ہے...';
   btn.disabled = true;
-
   var cid = 'PPP-' + Date.now().toString().slice(-6);
   db.collection('complaints').add({
-    complaintId: cid,
-    cnic: cnic,
-    text: text,
-    district: district,
-    dept: dept,
-    status: 'زیرِ کارروائی',
-    lat: gpsLat,
-    lng: gpsLng,
+    complaintId: cid, cnic: cnic, text: text, district: district, dept: dept,
+    status: 'زیرِ کارروائی', user: currentUser, lat: gpsLat, lng: gpsLng,
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(function() {
-    showAlertId('✅','شکایت درج ہو گئی','Firebase پر محفوظ ہو گئی', cid);
+    showAlertId('✅','شکایت درج ہو گئی','Firebase پر محفوظ', cid);
     document.getElementById('c-text').value = '';
     document.getElementById('c-cnic').value = '';
     document.getElementById('gps-result').textContent = '';
@@ -1006,17 +888,12 @@ function completeReg() {
   var cnic = document.getElementById('r-cnic').value.trim();
   var phone = document.getElementById('r-phone').value.trim();
   if (!name || !cnic || !phone) { showAlert('⚠️','نامکمل','نام، CNIC اور موبائل لازمی ہیں'); return; }
-
   var btn = document.getElementById('btn-complete-reg');
   btn.innerHTML = '⏳ رجسٹر ہو رہا ہے...';
   btn.disabled = true;
-
   var mid = 'PPP-' + Date.now().toString().slice(-4);
   db.collection('members').add({
-    memberId: mid,
-    name: name,
-    cnic: cnic,
-    phone: phone,
+    memberId: mid, name: name, cnic: cnic, phone: phone,
     age: document.getElementById('r-age').value,
     district: document.getElementById('r-district').value,
     uc: document.getElementById('r-uc').value,
@@ -1031,8 +908,7 @@ function completeReg() {
     document.getElementById('card-area').textContent = document.getElementById('r-district').value;
     document.getElementById('card-uc').textContent = document.getElementById('r-uc').value;
     document.getElementById('card-mid').textContent = mid;
-    document.getElementById('p-name').textContent = name;
-    document.getElementById('topbar-name').textContent = name.split(' ')[0];
+    document.getElementById('p-mid').textContent = mid;
     showAlert('🎉','رجسٹریشن مکمل','Firebase پر محفوظ ہو گیا');
     btn.innerHTML = 'رجسٹریشن مکمل کریں 🎉';
     btn.disabled = false;
@@ -1098,7 +974,7 @@ function publishBroadcast() {
 function bcWhatsApp() {
   var msg = document.getElementById('bc-msg').value.trim();
   if (!msg) { showAlert('⚠️','پیغام لکھیں',''); return; }
-  window.open('https://wa.me/?text=' + encodeURIComponent('🌹 PPP Pulse Ultra\n\n' + document.getElementById('bc-title').value + '\n\n' + msg + '\n\n#PPPZindabad'), '_blank');
+  window.open('https://wa.me/?text=' + encodeURIComponent('🌹 PPP Pulse\n\n' + msg + '\n\n#PPPZindabad'), '_blank');
 }
 
 function bcTwitter() {
@@ -1135,25 +1011,16 @@ function navTo(page) {
 // ═══════════════════════════════════════
 function logout() {
   if (!confirm('کیا آپ واقعی لاگ آؤٹ کرنا چاہتے ہیں؟')) return;
-  auth.signOut().catch(function() {});
   isAdmin = false;
+  currentUser = '';
   document.getElementById('admin-access-btn').style.display = 'none';
-  document.getElementById('login-step-2').style.display = 'none';
-  document.getElementById('login-step-1').style.display = 'block';
-  document.getElementById('loginPhone').value = '';
-  document.getElementById('adminPass').value = '';
-  var ids = ['o1','o2','o3','o4','o5','o6'];
-  for (var i = 0; i < ids.length; i++) document.getElementById(ids[i]).value = '';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
   var tabs = document.querySelectorAll('.role-tab');
-  for (var j = 0; j < tabs.length; j++) tabs[j].classList.remove('active');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
   tabs[0].classList.add('active');
   currentRole = 'ورکر';
-  document.getElementById('admin-pass-group').style.display = 'none';
-  var btn = document.getElementById('btn-send-otp');
-  btn.innerHTML = '📤 OTP بھیجیں';
-  btn.disabled = false;
   showScreen('screen-login');
-  setupRecaptcha();
 }
 
 // ═══════════════════════════════════════
