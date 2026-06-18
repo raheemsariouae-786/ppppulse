@@ -9,572 +9,502 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <style>
-:root{--red:#dd0000;--red-dark:#990000;--black:#080808;--green:#00aa00;--green-bright:#00ee00;--white:#f0f0f0;--text-light:#dddddd;}
+:root{--red:#dd0000;--rd:#990000;--black:#080808;--gb:#00ee00;--w:#f0f0f0;--tl:#dddddd;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Noto Nastaliq Urdu',serif;background:var(--black);color:var(--white);min-height:100vh;overflow-x:hidden;direction:rtl;}
-::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--red);border-radius:2px;}
+body{font-family:'Noto Nastaliq Urdu',serif;background:var(--black);color:var(--w);min-height:100vh;overflow-x:hidden;direction:rtl;}
 .screen{display:none;min-height:100vh;flex-direction:column;}
 .screen.active{display:flex;}
-#screen-login{background:radial-gradient(ellipse at 15% 40%,rgba(221,0,0,.45) 0%,transparent 45%),radial-gradient(ellipse at 85% 40%,rgba(0,238,0,.35) 0%,transparent 45%),linear-gradient(135deg,#1a0000 0%,#080808 40%,#001400 100%);align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden;}
-#screen-login::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(204,0,0,.04) 40px,rgba(204,0,0,.04) 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(204,0,0,.04) 40px,rgba(204,0,0,.04) 41px);pointer-events:none;}
-.login-card{background:rgba(8,8,8,.92);border:1px solid rgba(221,0,0,.5);border-radius:16px;padding:28px 24px;width:100%;max-width:400px;backdrop-filter:blur(20px);box-shadow:0 0 60px rgba(221,0,0,.2),0 20px 40px rgba(0,0,0,.9);position:relative;z-index:1;}
-.ppp-flag{display:flex;direction:ltr;width:72px;height:44px;margin:0 auto 16px;border-radius:4px;overflow:hidden;}
-.flag-stripe{flex:1;}.flag-black{background:#111;}.flag-red{background:var(--red);}.flag-green{background:var(--green-bright);}
-.login-title{font-family:'Orbitron',sans-serif;font-size:17px;font-weight:900;color:#fff;text-align:center;letter-spacing:3px;margin-bottom:4px;}
-.login-subtitle{font-size:12px;color:rgba(0,220,0,.85);text-align:center;margin-bottom:20px;line-height:1.8;}
-.divider-flag{display:flex;direction:ltr;align-items:center;gap:8px;margin-bottom:18px;}
-.divider-flag .d{height:2px;flex:1;}.d-black{background:#444;}.d-red{background:var(--red);}.d-green{background:var(--green-bright);}
-.form-group{margin-bottom:14px;}
-.form-label{display:block;font-size:11px;color:var(--text-light);margin-bottom:6px;opacity:.8;}
-.form-input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(204,0,0,.3);border-radius:8px;padding:11px 14px;color:var(--white);font-family:'Noto Nastaliq Urdu',serif;font-size:13px;direction:rtl;transition:all .3s;outline:none;}
-.form-input:focus{border-color:var(--red);background:rgba(204,0,0,.1);}
-.form-input::placeholder{color:rgba(255,255,255,.3);}
-select.form-input option{background:#1a0000;color:var(--white);}
-.btn-primary{width:100%;background:linear-gradient(135deg,var(--red-dark),var(--red));border:none;border-radius:10px;padding:13px;color:var(--white);font-family:'Noto Nastaliq Urdu',serif;font-size:15px;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(204,0,0,.4);}
-.btn-primary:disabled{opacity:.6;}
-.btn-secondary{background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:10px 20px;color:var(--text-light);font-family:'Noto Nastaliq Urdu',serif;font-size:12px;cursor:pointer;width:100%;margin-top:8px;}
-.register-link{text-align:center;margin-top:14px;font-size:11px;color:rgba(255,255,255,.4);}
-.register-link a{color:#00dd00;cursor:pointer;}
-.role-tabs{display:flex;gap:5px;margin-bottom:16px;background:rgba(0,0,0,.3);border-radius:10px;padding:4px;}
-.role-tab{flex:1;padding:7px 3px;border:none;border-radius:7px;background:transparent;color:rgba(255,255,255,.5);font-family:'Noto Nastaliq Urdu',serif;font-size:10px;cursor:pointer;text-align:center;}
-.role-tab.active{background:var(--red-dark);color:var(--white);}
-.topbar{background:linear-gradient(90deg,#330000,#080808 40%,#003300);border-bottom:2px solid transparent;border-image:linear-gradient(90deg,#dd0000,#080808,#00ee00) 1;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-shrink:0;}
-.topbar-left{display:flex;align-items:center;gap:9px;}
-.topbar-flag{display:flex;direction:ltr;width:30px;height:19px;border-radius:2px;overflow:hidden;}
-.topbar-flag div{flex:1;}
-.topbar-title{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:900;color:#fff;letter-spacing:2px;}
-.topbar-subtitle{font-size:9px;color:#00cc00;}
-.topbar-user{display:flex;align-items:center;gap:8px;cursor:pointer;}
-.user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--red-dark),var(--red));border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:13px;}
-.user-name{font-size:10px;color:#eee;text-align:right;}
-.user-role{font-size:9px;color:#00ee00;}
-.bottomnav{position:fixed;bottom:0;left:0;right:0;background:rgba(6,6,6,.97);border-top:1px solid rgba(100,0,0,.5);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
-.nav-item{flex:1;padding:9px 3px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;background:transparent;}
-.nav-item .nav-icon{font-size:19px;}
-.nav-item .nav-label{font-size:8px;color:rgba(255,255,255,.4);font-family:'Noto Nastaliq Urdu',serif;}
-.nav-item.active .nav-label{color:#00ee00;}
-.page-content{flex:1;padding:14px;padding-bottom:76px;overflow-y:auto;}
-.section-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
-.section-header .icon{font-size:22px;}
-.section-header h2{font-size:17px;color:var(--white);font-weight:600;}
-.section-header p{font-size:10px;color:rgba(255,255,255,.5);}
+#sl{background:radial-gradient(ellipse at 15% 40%,rgba(221,0,0,.45) 0%,transparent 45%),radial-gradient(ellipse at 85% 40%,rgba(0,238,0,.35) 0%,transparent 45%),linear-gradient(135deg,#1a0000,#080808 40%,#001400);align-items:center;justify-content:center;padding:20px;}
+.lc{background:rgba(8,8,8,.95);border:1px solid rgba(221,0,0,.5);border-radius:16px;padding:28px 24px;width:100%;max-width:400px;box-shadow:0 0 60px rgba(221,0,0,.2);}
+.pf{display:flex;direction:ltr;width:72px;height:44px;margin:0 auto 16px;border-radius:4px;overflow:hidden;}
+.pf div{flex:1;}
+.lt{font-family:'Orbitron',sans-serif;font-size:17px;font-weight:900;color:#fff;text-align:center;letter-spacing:3px;margin-bottom:4px;}
+.ls{font-size:12px;color:rgba(0,220,0,.85);text-align:center;margin-bottom:20px;line-height:1.8;}
+.fg{margin-bottom:14px;}
+.fl{display:block;font-size:11px;color:var(--tl);margin-bottom:6px;}
+.fi{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(204,0,0,.3);border-radius:8px;padding:11px 14px;color:var(--w);font-family:'Noto Nastaliq Urdu',serif;font-size:13px;direction:rtl;outline:none;}
+.fi:focus{border-color:var(--red);background:rgba(204,0,0,.1);}
+.fi::placeholder{color:rgba(255,255,255,.3);}
+select.fi option{background:#1a0000;}
+.bp{width:100%;background:linear-gradient(135deg,var(--rd),var(--red));border:none;border-radius:10px;padding:13px;color:#fff;font-family:'Noto Nastaliq Urdu',serif;font-size:15px;cursor:pointer;box-shadow:0 4px 20px rgba(204,0,0,.4);}
+.bp:disabled{opacity:.6;}
+.bs{background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:10px;color:var(--tl);font-family:'Noto Nastaliq Urdu',serif;font-size:12px;cursor:pointer;width:100%;margin-top:8px;}
+.rl{text-align:center;margin-top:14px;font-size:11px;color:rgba(255,255,255,.4);}
+.rl a{color:#00dd00;cursor:pointer;}
+.rtabs{display:flex;gap:5px;margin-bottom:16px;background:rgba(0,0,0,.3);border-radius:10px;padding:4px;}
+.rt{flex:1;padding:7px 3px;border:none;border-radius:7px;background:transparent;color:rgba(255,255,255,.5);font-family:'Noto Nastaliq Urdu',serif;font-size:10px;cursor:pointer;text-align:center;}
+.rt.active{background:var(--rd);color:#fff;}
+.ph{font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:8px;line-height:1.6;}
+.tb{background:linear-gradient(90deg,#330000,#080808 40%,#003300);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-shrink:0;border-bottom:1px solid rgba(100,0,0,.5);}
+.tbl{display:flex;align-items:center;gap:9px;}
+.tf{display:flex;direction:ltr;width:30px;height:19px;border-radius:2px;overflow:hidden;}
+.tf div{flex:1;}
+.tt{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:900;color:#fff;letter-spacing:2px;}
+.ts{font-size:9px;color:#00cc00;}
+.tu{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--rd),var(--red));border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:13px;}
+.un{font-size:10px;color:#eee;text-align:right;}
+.ur{font-size:9px;color:#00ee00;}
+.bn{position:fixed;bottom:0;left:0;right:0;background:rgba(6,6,6,.97);border-top:1px solid rgba(100,0,0,.5);display:flex;z-index:100;}
+.ni{flex:1;padding:9px 3px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;background:transparent;}
+.ni .ic{font-size:19px;}
+.ni .nl{font-size:8px;color:rgba(255,255,255,.4);font-family:'Noto Nastaliq Urdu',serif;}
+.ni.active .nl{color:#00ee00;}
+.pc{flex:1;padding:14px;padding-bottom:76px;overflow-y:auto;}
+.tp{display:none;}
+.tp.active{display:block;}
 .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;margin-bottom:12px;}
-.card-red{background:linear-gradient(135deg,rgba(204,0,0,.15),rgba(136,0,0,.1));border-color:rgba(204,0,0,.3);}
-.card-green{background:linear-gradient(135deg,rgba(26,107,26,.15),rgba(0,80,0,.1));border-color:rgba(34,170,34,.3);}
-.card-blue{background:linear-gradient(135deg,rgba(0,60,150,.15),rgba(0,40,100,.1));border-color:rgba(0,100,200,.3);}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
-.stat-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;text-align:center;}
-.stat-icon{font-size:22px;margin-bottom:5px;}
-.stat-num{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:#fff;}
-.stat-label{font-size:9px;color:rgba(255,255,255,.5);margin-top:2px;}
-.ticker-wrap{background:var(--red-dark);border-radius:8px;overflow:hidden;margin-bottom:14px;display:flex;align-items:center;}
-.ticker-badge{background:var(--red);padding:7px 11px;font-size:9px;font-weight:700;white-space:nowrap;}
-.ticker-text{padding:7px 11px;font-size:11px;white-space:nowrap;overflow:hidden;animation:ticker 22s linear infinite;}
-@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:9px;}
-.badge-red{background:rgba(221,0,0,.2);border:1px solid rgba(221,0,0,.5);color:#ff6666;}
-.badge-green{background:rgba(0,220,0,.15);border:1px solid rgba(0,220,0,.5);color:#44ff44;}
-.badge-gold{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.35);color:#fff;}
-.badge-blue{background:rgba(0,100,200,.2);border:1px solid rgba(0,100,200,.4);color:#66aaff;}
-.pulse{animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.broadcast-card{background:linear-gradient(135deg,#0a0a0a,#180000 50%,#001800);border:1px solid rgba(221,0,0,.4);border-radius:14px;padding:18px;margin-bottom:12px;}
-.broadcast-title{font-size:13px;color:#fff;margin-bottom:7px;font-weight:600;}
-.broadcast-msg{font-size:11px;color:var(--text-light);line-height:1.8;margin-bottom:10px;}
-.broadcast-meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
-.btn-row{display:flex;gap:7px;margin-top:10px;}
-.btn-sm{flex:1;padding:9px 7px;border-radius:8px;border:none;font-family:'Noto Nastaliq Urdu',serif;font-size:11px;cursor:pointer;}
-.btn-sm-red{background:linear-gradient(135deg,var(--red-dark),var(--red));color:#fff;}
-.btn-sm-gold{background:linear-gradient(135deg,#555,#fff);color:#000;}
-.btn-sm-green{background:linear-gradient(135deg,#0a3a0a,var(--green-bright));color:#fff;}
-.btn-sm-blue{background:linear-gradient(135deg,#001a4a,#1d9bf0);color:#fff;}
-.btn-sm-outline{background:transparent;border:1px solid rgba(255,255,255,.2);color:var(--text-light);}
-.card-outer{width:100%;max-width:440px;margin:0 auto 18px;border-radius:14px;overflow:hidden;direction:ltr;box-shadow:0 12px 40px rgba(0,0,0,.9);}
-.card-flag-stripe{display:flex;height:9px;width:100%;}
-.cfs-r{flex:1;background:#cc0000;}.cfs-b{flex:1;background:#111;}.cfs-g{flex:1;background:#00bb00;}
-.card-body{background:linear-gradient(160deg,#0d0d0d 0%,#1c0000 45%,#001400 100%);padding:12px 13px 10px;}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.card-header-left{display:flex;align-items:center;gap:6px;}
-.card-mini-flag{display:flex;width:28px;height:18px;border-radius:3px;overflow:hidden;}
-.cmf-r{flex:1;background:#cc0000;}.cmf-b{flex:1;background:#111;}.cmf-g{flex:1;background:#00bb00;}
-.card-org-name{font-family:'Orbitron',sans-serif;font-size:7.5px;font-weight:900;color:#fff;letter-spacing:1.5px;}
-.card-org-sub{font-size:6px;color:rgba(255,255,255,.4);font-family:'Noto Nastaliq Urdu',serif;direction:rtl;}
-.card-chip{width:28px;height:20px;background:linear-gradient(140deg,#b8900e,#f5d060,#9a7008);border-radius:3px;}
-.card-middle{display:flex;gap:10px;margin-bottom:9px;align-items:flex-start;}
-.card-photo{width:58px;min-height:70px;border-radius:7px;border:1.5px solid rgba(255,255,255,.25);background:linear-gradient(160deg,#1a0000,#300000);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
-.card-photo-icon{font-size:28px;}
-.card-photo-label{font-size:5.5px;color:rgba(255,255,255,.25);margin-top:2px;}
-.card-info{flex:1;}
-.card-badge-row{display:flex;flex-wrap:wrap;gap:2px;margin-bottom:4px;}
-.cbadge{font-size:6.5px;padding:2px 6px;border-radius:10px;font-weight:700;}
-.cb-red{background:rgba(204,0,0,.35);border:1px solid rgba(220,0,0,.6);color:#ffaaaa;}
-.cb-green{background:rgba(0,170,0,.28);border:1px solid rgba(0,200,0,.5);color:#aaffaa;}
-.cb-white{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.75);}
-.card-member-name{font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;line-height:1.3;direction:rtl;font-family:'Noto Nastaliq Urdu',serif;}
-.card-member-pos{font-size:8.5px;color:#ffd060;margin-bottom:5px;direction:rtl;font-family:'Noto Nastaliq Urdu',serif;}
-.card-info-row{display:flex;flex-direction:column;gap:2px;}
-.card-info-line{font-size:7.5px;color:rgba(255,255,255,.55);direction:rtl;font-family:'Noto Nastaliq Urdu',serif;}
-.card-divider{height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,.15),transparent);margin-bottom:8px;}
-.card-footer{display:flex;align-items:center;justify-content:space-between;}
-.card-id-lbl{font-size:6px;color:rgba(255,255,255,.3);margin-bottom:2px;}
-.card-id-val{font-family:'Orbitron',sans-serif;font-size:8.5px;color:#ffd060;letter-spacing:2px;}
-.card-verified{display:flex;align-items:center;gap:3px;font-size:7.5px;color:#44ff88;font-weight:600;}
-.card-vdot{width:5px;height:5px;border-radius:50%;background:#44ff88;animation:vblink 2s infinite;}
-@keyframes vblink{0%,100%{opacity:1}50%{opacity:.15}}
-.card-qr{width:42px;height:42px;background:#fff;border-radius:4px;padding:3px;flex-shrink:0;}
-.card-qr svg{width:100%;height:100%;display:block;}
-.card-flag-stripe-bottom{display:flex;height:4px;width:100%;}
-.reg-progress{display:flex;gap:4px;margin-bottom:22px;}
-.reg-step{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.1);}
-.reg-step.done{background:var(--green-bright);}
-.reg-step.active{background:var(--red);}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.upload-area{border:2px dashed rgba(204,0,0,.4);border-radius:10px;padding:18px;text-align:center;cursor:pointer;background:rgba(204,0,0,.05);}
-.upload-icon{font-size:26px;margin-bottom:7px;}
-.upload-text{font-size:11px;color:rgba(255,255,255,.5);}
-.dept-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
-.dept-chip{padding:5px 11px;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.7);font-family:'Noto Nastaliq Urdu',serif;font-size:10px;cursor:pointer;}
-.dept-chip.selected{background:rgba(204,0,0,.2);border-color:var(--red);color:#fff;}
-textarea.form-input{resize:vertical;min-height:80px;}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:center;justify-content:center;padding:20px;}
-.modal-overlay.open{display:flex;}
-.modal-box{background:linear-gradient(135deg,#1a0000,#080808 50%,#001200);border:1px solid rgba(204,0,0,.4);border-radius:14px;padding:26px 22px;width:100%;max-width:320px;text-align:center;}
-.modal-icon{font-size:44px;margin-bottom:12px;}
-.modal-title{font-size:16px;font-weight:700;margin-bottom:7px;}
-.modal-msg{font-size:11px;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:16px;}
-.modal-id{font-family:'Orbitron',sans-serif;font-size:13px;color:#00ff88;margin-bottom:14px;word-break:break-all;}
-.profile-hero{background:linear-gradient(135deg,#200000,#080808 50%,#001a00);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:22px;text-align:center;margin-bottom:18px;}
-.profile-avatar-large{width:74px;height:74px;border-radius:50%;background:linear-gradient(135deg,var(--red-dark),var(--red));border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;}
-.profile-name{font-size:18px;font-weight:700;}
-.profile-pos{font-size:11px;color:#00dd00;margin-top:3px;}
-.profile-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;}
-.info-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:11px;}
-.info-label{font-size:9px;color:rgba(255,255,255,.4);margin-bottom:3px;}
-.info-val{font-size:12px;color:var(--white);}
-.tab-page{display:none;}
-.tab-page.active{display:block;}
-.search-box{position:relative;margin-bottom:14px;}
-.search-box input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:11px 18px 11px 40px;color:var(--white);font-family:'Noto Nastaliq Urdu',serif;font-size:12px;outline:none;direction:rtl;}
-.search-box input:focus{border-color:var(--red);}
-.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;}
-.cat-tabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:3px;}
-.cat-tab{padding:5px 13px;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);font-family:'Noto Nastaliq Urdu',serif;font-size:10px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
-.cat-tab.active{background:rgba(204,0,0,.2);border-color:var(--red);color:#fff;}
-.rep-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;margin-bottom:9px;display:flex;align-items:center;gap:10px;}
-.rep-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#330000,#cc0000);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;position:relative;}
-.rep-info{flex:1;}
-.rep-name{font-size:13px;font-weight:600;margin-bottom:2px;}
-.rep-pos{font-size:9px;color:#ffd060;margin-bottom:2px;}
-.rep-type-badge{font-size:8px;padding:2px 7px;border-radius:10px;margin-top:3px;display:inline-block;}
-.type-mna{background:rgba(255,100,0,.15);border:1px solid rgba(255,100,0,.4);color:#ffaa66;}
-.type-mpa{background:rgba(0,150,255,.15);border:1px solid rgba(0,150,255,.4);color:#66ccff;}
-.type-mayor{background:rgba(255,200,0,.15);border:1px solid rgba(255,200,0,.4);color:#ffee66;}
-.type-chairman{background:rgba(0,200,100,.15);border:1px solid rgba(0,200,100,.4);color:#66ffaa;}
-.type-leader{background:rgba(200,150,0,.15);border:1px solid rgba(200,150,0,.4);color:#ffcc44;}
-.activist-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;margin-bottom:9px;display:flex;align-items:center;gap:11px;}
-.activist-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#330000,#cc0000);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.activist-info{flex:1;}
-.activist-name{font-size:13px;font-weight:600;margin-bottom:2px;}
-.activist-pos{font-size:9px;color:#00cc00;margin-bottom:2px;}
-.activist-district{font-size:9px;color:rgba(255,255,255,.4);}
-.activist-constituency{font-size:8px;color:rgba(255,200,0,.6);}
-.admin-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:18px;}
-.admin-stat{background:rgba(255,255,255,.05);border-radius:10px;padding:9px;text-align:center;}
-.admin-stat-num{font-family:'Orbitron',sans-serif;font-size:16px;color:#00ee00;font-weight:700;}
-.admin-stat-label{font-size:8px;color:rgba(255,255,255,.4);margin-top:2px;}
-.bc-composer{background:rgba(0,0,0,.4);border:1px solid rgba(204,0,0,.3);border-radius:12px;padding:14px;margin-bottom:14px;}
-.bc-type-row{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap;}
-.bc-type-btn{padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);font-family:'Noto Nastaliq Urdu',serif;font-size:10px;cursor:pointer;}
-.bc-type-btn.selected{border-color:var(--red);background:rgba(204,0,0,.2);color:#fff;}
-.char-count{font-size:9px;color:rgba(255,255,255,.3);text-align:left;margin-top:3px;direction:ltr;}
-.complaint-row{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:11px;margin-bottom:7px;}
-.complaint-row-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
-.complaint-id{font-family:'Orbitron',sans-serif;font-size:9px;color:#ffd060;}
-.status-select{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:3px 7px;color:#fff;font-family:'Noto Nastaliq Urdu',serif;font-size:9px;}
-.toggle-wrap{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);}
-.toggle-label{font-size:12px;}
-.toggle{width:38px;height:20px;border-radius:10px;position:relative;cursor:pointer;}
-.toggle.on{background:var(--green-bright);}
-.toggle.off{background:#444;}
-.toggle-knob{position:absolute;top:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:all .3s;}
-.toggle.on .toggle-knob{right:2px;}
-.toggle.off .toggle-knob{left:2px;}
-#gps-result{font-size:10px;color:var(--green-bright);margin-top:5px;}
-.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;}
-@keyframes spin{to{transform:rotate(360deg)}}
-.pass-hint{font-size:10px;color:rgba(255,255,255,.3);text-align:center;margin-top:8px;}
-@media(max-width:360px){.form-row{grid-template-columns:1fr;}.admin-stat-row{grid-template-columns:1fr 1fr;}}
+.cr{background:linear-gradient(135deg,rgba(204,0,0,.15),rgba(136,0,0,.1));border-color:rgba(204,0,0,.3);}
+.cg{background:linear-gradient(135deg,rgba(26,107,26,.15),rgba(0,80,0,.1));border-color:rgba(34,170,34,.3);}
+.cb{background:linear-gradient(135deg,rgba(0,60,150,.15),rgba(0,40,100,.1));border-color:rgba(0,100,200,.3);}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.sc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;text-align:center;}
+.si{font-size:22px;margin-bottom:5px;}
+.sn{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:#fff;}
+.sl{font-size:9px;color:rgba(255,255,255,.5);margin-top:2px;}
+.tw{background:var(--rd);border-radius:8px;overflow:hidden;margin-bottom:14px;display:flex;align-items:center;}
+.tb2{background:var(--red);padding:7px 11px;font-size:9px;font-weight:700;white-space:nowrap;}
+.tt2{padding:7px 11px;font-size:11px;white-space:nowrap;overflow:hidden;animation:tick 22s linear infinite;}
+@keyframes tick{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.bdg{display:inline-block;padding:2px 9px;border-radius:20px;font-size:9px;}
+.br{background:rgba(221,0,0,.2);border:1px solid rgba(221,0,0,.5);color:#ff6666;}
+.bg{background:rgba(0,220,0,.15);border:1px solid rgba(0,220,0,.5);color:#44ff44;}
+.bo{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.35);color:#fff;}
+.bb{background:rgba(0,100,200,.2);border:1px solid rgba(0,100,200,.4);color:#66aaff;}
+.bcc{background:linear-gradient(135deg,#0a0a0a,#180000 50%,#001800);border:1px solid rgba(221,0,0,.4);border-radius:14px;padding:18px;margin-bottom:12px;}
+.bt{font-size:13px;color:#fff;margin-bottom:7px;font-weight:600;}
+.bm{font-size:11px;color:var(--tl);line-height:1.8;margin-bottom:10px;}
+.bmt{display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
+.br2{display:flex;gap:7px;margin-top:10px;}
+.bs2{flex:1;padding:9px 7px;border-radius:8px;border:none;font-family:'Noto Nastaliq Urdu',serif;font-size:11px;cursor:pointer;}
+.bsr{background:linear-gradient(135deg,var(--rd),var(--red));color:#fff;}
+.bsg{background:linear-gradient(135deg,#0a3a0a,var(--gb));color:#fff;}
+.bsb{background:linear-gradient(135deg,#001a4a,#1d9bf0);color:#fff;}
+.bso{background:transparent;border:1px solid rgba(255,255,255,.2);color:var(--tl);}
+.co{width:100%;max-width:440px;margin:0 auto 18px;border-radius:14px;overflow:hidden;direction:ltr;box-shadow:0 12px 40px rgba(0,0,0,.9);}
+.cf{display:flex;height:9px;width:100%;}
+.cfr{flex:1;background:#cc0000;}.cfb{flex:1;background:#111;}.cfg{flex:1;background:#00bb00;}
+.cb2{background:linear-gradient(160deg,#0d0d0d,#1c0000 45%,#001400);padding:12px 13px 10px;}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.chl{display:flex;align-items:center;gap:6px;}
+.cmf{display:flex;width:28px;height:18px;border-radius:3px;overflow:hidden;}
+.con{font-family:'Orbitron',sans-serif;font-size:7.5px;font-weight:900;color:#fff;letter-spacing:1.5px;}
+.cos{font-size:6px;color:rgba(255,255,255,.4);font-family:'Noto Nastaliq Urdu',serif;}
+.cch{width:28px;height:20px;background:linear-gradient(140deg,#b8900e,#f5d060,#9a7008);border-radius:3px;}
+.cm{display:flex;gap:10px;margin-bottom:9px;align-items:flex-start;}
+.cp{width:58px;min-height:70px;border-radius:7px;border:1.5px solid rgba(255,255,255,.25);background:linear-gradient(160deg,#1a0000,#300000);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
+.cpi{font-size:28px;}
+.cpl{font-size:5.5px;color:rgba(255,255,255,.25);margin-top:2px;}
+.ci{flex:1;}
+.cbr{display:flex;flex-wrap:wrap;gap:2px;margin-bottom:4px;}
+.cbg{font-size:6.5px;padding:2px 6px;border-radius:10px;font-weight:700;}
+.cb3{background:rgba(204,0,0,.35);border:1px solid rgba(220,0,0,.6);color:#ffaaaa;}
+.cb4{background:rgba(0,170,0,.28);border:1px solid rgba(0,200,0,.5);color:#aaffaa;}
+.cb5{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.75);}
+.cmn{font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;direction:rtl;font-family:'Noto Nastaliq Urdu',serif;}
+.cmp{font-size:8.5px;color:#ffd060;margin-bottom:5px;direction:rtl;font-family:'Noto Nastaliq Urdu',serif;}
+.cir{display:flex;flex-direction:column;gap:2px;}
+.cil{font-size:7.5px;color:rgba(255,255,255,.55);direction:rtl;font-family:'Noto Nastaliq Urdu',serif;}
+.cd{height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,.15),transparent);margin-bottom:8px;}
+.cft{display:flex;align-items:center;justify-content:space-between;}
+.cil2{font-size:6px;color:rgba(255,255,255,.3);margin-bottom:2px;}
+.civ{font-family:'Orbitron',sans-serif;font-size:8.5px;color:#ffd060;letter-spacing:2px;}
+.cvf{display:flex;align-items:center;gap:3px;font-size:7.5px;color:#44ff88;font-weight:600;}
+.cvd{width:5px;height:5px;border-radius:50%;background:#44ff88;animation:vb 2s infinite;}
+@keyframes vb{0%,100%{opacity:1}50%{opacity:.15}}
+.cq{width:42px;height:42px;background:#fff;border-radius:4px;padding:3px;flex-shrink:0;}
+.cq svg{width:100%;height:100%;}
+.rp{display:flex;gap:4px;margin-bottom:22px;}
+.rs{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.1);}
+.rs.done{background:var(--gb);}
+.rs.active{background:var(--red);}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ua{border:2px dashed rgba(204,0,0,.4);border-radius:10px;padding:18px;text-align:center;cursor:pointer;background:rgba(204,0,0,.05);}
+.ui{font-size:26px;margin-bottom:7px;}
+.ut{font-size:11px;color:rgba(255,255,255,.5);}
+.dc{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+.dc2{padding:5px 11px;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.7);font-family:'Noto Nastaliq Urdu',serif;font-size:10px;cursor:pointer;}
+.dc2.sel{background:rgba(204,0,0,.2);border-color:var(--red);color:#fff;}
+textarea.fi{resize:vertical;min-height:80px;}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.mo.open{display:flex;}
+.mb{background:linear-gradient(135deg,#1a0000,#080808 50%,#001200);border:1px solid rgba(204,0,0,.4);border-radius:14px;padding:26px 22px;width:100%;max-width:320px;text-align:center;}
+.mi{font-size:44px;margin-bottom:12px;}
+.mt{font-size:16px;font-weight:700;margin-bottom:7px;}
+.mm{font-size:11px;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:16px;}
+.mid{font-family:'Orbitron',sans-serif;font-size:13px;color:#00ff88;margin-bottom:14px;word-break:break-all;}
+.ph2{background:linear-gradient(135deg,#200000,#080808 50%,#001a00);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:22px;text-align:center;margin-bottom:18px;}
+.pa{width:74px;height:74px;border-radius:50%;background:linear-gradient(135deg,var(--rd),var(--red));border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;}
+.pn{font-size:18px;font-weight:700;}
+.pp{font-size:11px;color:#00dd00;margin-top:3px;}
+.pig{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;}
+.ii{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:11px;}
+.il{font-size:9px;color:rgba(255,255,255,.4);margin-bottom:3px;}
+.iv{font-size:12px;color:var(--w);}
+.sb{position:relative;margin-bottom:14px;}
+.sb input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:11px 18px 11px 40px;color:var(--w);font-family:'Noto Nastaliq Urdu',serif;font-size:12px;outline:none;direction:rtl;}
+.sb input:focus{border-color:var(--red);}
+.si2{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;}
+.ct{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:3px;}
+.ct2{padding:5px 13px;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);font-family:'Noto Nastaliq Urdu',serif;font-size:10px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.ct2.active{background:rgba(204,0,0,.2);border-color:var(--red);color:#fff;}
+.rc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;margin-bottom:9px;display:flex;align-items:center;gap:10px;}
+.ra{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#330000,#cc0000);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;position:relative;}
+.ri{flex:1;}
+.rn{font-size:13px;font-weight:600;margin-bottom:2px;}
+.rp2{font-size:9px;color:#ffd060;margin-bottom:2px;}
+.rtb{font-size:8px;padding:2px 7px;border-radius:10px;margin-top:3px;display:inline-block;}
+.tm{background:rgba(255,100,0,.15);border:1px solid rgba(255,100,0,.4);color:#ffaa66;}
+.tp2{background:rgba(0,150,255,.15);border:1px solid rgba(0,150,255,.4);color:#66ccff;}
+.tmy{background:rgba(255,200,0,.15);border:1px solid rgba(255,200,0,.4);color:#ffee66;}
+.tc{background:rgba(0,200,100,.15);border:1px solid rgba(0,200,100,.4);color:#66ffaa;}
+.tl2{background:rgba(200,150,0,.15);border:1px solid rgba(200,150,0,.4);color:#ffcc44;}
+.tw2{background:rgba(200,0,200,.15);border:1px solid rgba(200,0,200,.4);color:#ff88ff;}
+.asr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:18px;}
+.as{background:rgba(255,255,255,.05);border-radius:10px;padding:9px;text-align:center;}
+.asn{font-family:'Orbitron',sans-serif;font-size:16px;color:#00ee00;font-weight:700;}
+.asl{font-size:8px;color:rgba(255,255,255,.4);margin-top:2px;}
+.bcc2{background:rgba(0,0,0,.4);border:1px solid rgba(204,0,0,.3);border-radius:12px;padding:14px;margin-bottom:14px;}
+.btr{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap;}
+.btb{padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);font-family:'Noto Nastaliq Urdu',serif;font-size:10px;cursor:pointer;}
+.btb.sel{border-color:var(--red);background:rgba(204,0,0,.2);color:#fff;}
+.cc{font-size:9px;color:rgba(255,255,255,.3);text-align:left;margin-top:3px;direction:ltr;}
+.cr2{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:11px;margin-bottom:7px;}
+.crh{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.cid{font-family:'Orbitron',sans-serif;font-size:9px;color:#ffd060;}
+.ss{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:3px 7px;color:#fff;font-family:'Noto Nastaliq Urdu',serif;font-size:9px;}
+.tw3{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.tl3{font-size:12px;}
+.tg{width:38px;height:20px;border-radius:10px;position:relative;cursor:pointer;}
+.tg.on{background:var(--gb);}
+.tg.off{background:#444;}
+.tk{position:absolute;top:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:all .3s;}
+.tg.on .tk{right:2px;}
+.tg.off .tk{left:2px;}
+.ac{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;margin-bottom:9px;display:flex;align-items:center;gap:11px;}
+.aa{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#330000,#cc0000);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ai{flex:1;}
+.an{font-size:13px;font-weight:600;margin-bottom:2px;}
+.ap{font-size:9px;color:#00cc00;margin-bottom:2px;}
+.ad{font-size:9px;color:rgba(255,255,255,.4);}
+.aq{font-size:8px;color:rgba(255,200,0,.6);}
+#gr{font-size:10px;color:var(--gb);margin-top:5px;}
+.sp{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(max-width:360px){.fr{grid-template-columns:1fr;}.asr{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
 
 <!-- LOGIN -->
-<div id="screen-login" class="screen active">
-  <div class="login-card">
-    <div class="ppp-flag">
-      <div class="flag-stripe flag-red"></div>
-      <div class="flag-stripe flag-black"></div>
-      <div class="flag-stripe flag-green"></div>
-    </div>
-    <div class="login-title">PPP PULSE ULTRA</div>
-    <div class="login-subtitle">سندھ ڈیجیٹل پولیٹیکل نیٹ ورک<br>Enterprise v4.0 — Firebase Powered</div>
-    <div class="divider-flag">
-      <div class="d d-black"></div><div class="d d-red"></div>
-      <span style="font-size:16px">&#x1F339;</span>
-      <div class="d d-green"></div><div class="d d-black"></div>
-    </div>
-    <div class="role-tabs">
-      <button class="role-tab active" onclick="setRole('ورکر',this)">ورکر</button>
-      <button class="role-tab" onclick="setRole('UC سطح',this)">UC</button>
-      <button class="role-tab" onclick="setRole('ضلع سطح',this)">ضلع</button>
-      <button class="role-tab" onclick="setRole('ایڈمن',this)">ایڈمن</button>
-    </div>
-    <div class="form-group">
-      <label class="form-label">&#x1F464; یوزر نام</label>
-      <input type="text" class="form-input" id="loginUser" placeholder="اپنا نام لکھیں">
-    </div>
-    <div class="form-group">
-      <label class="form-label">&#x1F510; پاس ورڈ</label>
-      <input type="password" class="form-input" id="loginPass" placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;" dir="ltr" onkeypress="if(event.keyCode==13)doLogin()">
-    </div>
-    <button class="btn-primary" id="btn-login" onclick="doLogin()">&#x1F511; داخل ہوں</button>
-    <div class="pass-hint">ورکر پاس ورڈ: ppp786 | ایڈمن: tmc786</div>
-    <div class="register-link" style="margin-top:12px">
-      ابھی تک رجسٹرڈ نہیں؟ <a onclick="showScreen('screen-register')">نیا اکاؤنٹ بنائیں</a>
-    </div>
-    <div style="text-align:center;margin-top:8px;font-size:9px;color:rgba(255,255,255,.2)">
-      &#x1F512; Firebase Secured &bull; PPP Digital Network v4.0
-    </div>
+<div id="sl" class="screen active">
+ <div class="lc">
+  <div class="pf"><div style="background:#dd0000"></div><div style="background:#111"></div><div style="background:#00ee00"></div></div>
+  <div class="lt">PPP PULSE ULTRA</div>
+  <div class="ls">سندھ ڈیجیٹل پولیٹیکل نیٹ ورک<br>Enterprise v4.0</div>
+  <div class="rtabs">
+   <button class="rt active" onclick="setRole('ورکر',this)">ورکر</button>
+   <button class="rt" onclick="setRole('UC',this)">UC</button>
+   <button class="rt" onclick="setRole('ضلع',this)">ضلع</button>
+   <button class="rt" onclick="setRole('ایڈمن',this)">ایڈمن</button>
   </div>
+  <div class="fg"><label class="fl">&#x1F464; یوزر نام</label><input type="text" class="fi" id="lu" placeholder="اپنا نام لکھیں"></div>
+  <div class="fg"><label class="fl">&#x1F510; پاس ورڈ</label><input type="password" class="fi" id="lp" placeholder="پاس ورڈ" dir="ltr" onkeypress="if(event.keyCode==13)doLogin()"></div>
+  <button class="bp" id="blb" onclick="doLogin()">&#x1F511; داخل ہوں</button>
+  <div class="rl" style="margin-top:0"></div>
+  <div class="rl">ابھی تک رجسٹرڈ نہیں؟ <a onclick="showScreen('sr')">نیا اکاؤنٹ بنائیں</a></div>
+ </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="screen-app" class="screen" style="flex-direction:column;">
-  <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-flag">
-        <div style="background:#cc0000;flex:1"></div>
-        <div style="background:#111;flex:1"></div>
-        <div style="background:#00bb00;flex:1"></div>
-      </div>
-      <div>
-        <div class="topbar-title">PPP PULSE</div>
-        <div class="topbar-subtitle" id="topbar-subtitle">سندھ نیٹ ورک</div>
-      </div>
-    </div>
-    <div class="topbar-user" onclick="navTo('profile')">
-      <div>
-        <div class="user-name" id="topbar-name">ورکر</div>
-        <div class="user-role" id="topbar-role">لاگ ان</div>
-      </div>
-      <div class="user-avatar">&#x1F339;</div>
-    </div>
+<!-- APP -->
+<div id="sa" class="screen" style="flex-direction:column;">
+ <div class="tb">
+  <div class="tbl">
+   <div class="tf"><div style="background:#cc0000;flex:1"></div><div style="background:#111;flex:1"></div><div style="background:#00bb00;flex:1"></div></div>
+   <div><div class="tt">PPP PULSE</div><div class="ts" id="tsu">سندھ نیٹ ورک</div></div>
   </div>
-  <div class="page-content">
-
-    <!-- DASHBOARD -->
-    <div class="tab-page active" id="page-dashboard">
-      <div class="ticker-wrap">
-        <div class="ticker-badge">&#x1F534; LIVE</div>
-        <div class="ticker-text">جیے بھٹو &#x1F339; — PPP سندھ ڈیجیٹل نیٹ ورک — Firebase Powered — #PPPZindabad &#x1F5F3;</div>
-      </div>
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-icon">&#x1F465;</div><div class="stat-num" id="stat-workers">0</div><div class="stat-label">کل ممبران</div></div>
-        <div class="stat-card"><div class="stat-icon">&#x1F4CB;</div><div class="stat-num" id="stat-complaints">0</div><div class="stat-label">شکایات</div></div>
-        <div class="stat-card"><div class="stat-icon">&#x1F3DB;</div><div class="stat-num">159</div><div class="stat-label">PPP نمائندے</div></div>
-        <div class="stat-card"><div class="stat-icon">&#x1F5FA;</div><div class="stat-num">33</div><div class="stat-label">سندھ اضلاع</div></div>
-      </div>
-      <div class="broadcast-card">
-        <div class="broadcast-title">&#x1F4E2; تازہ ترین پیغام</div>
-        <div class="broadcast-msg" id="latest-broadcast-msg">PPP Pulse Ultra میں خوش آمدید! یہ سندھ کا پہلا Firebase ڈیجیٹل سیاسی نیٹ ورک ہے۔ جیے بھٹو!</div>
-        <div class="broadcast-meta">
-          <span class="badge badge-red" id="latest-broadcast-type">&#x1F534; خوش آمدید</span>
-          <span class="badge badge-gold">PPP Pulse</span>
-        </div>
-        <div class="btn-row">
-          <button class="btn-sm btn-sm-green" onclick="showAlert('&#x2705;','شکریہ','PPP Pulse استعمال کرنے کا شکریہ')">&#x2705; ٹھیک ہے</button>
-          <button class="btn-sm btn-sm-outline" onclick="doShare('whatsapp')">&#x1F4E4; شیئر</button>
-        </div>
-      </div>
-      <div style="font-size:12px;font-weight:600;margin-bottom:11px">&#x26A1; فوری اقدامات</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px">
-        <button class="card card-red" style="cursor:pointer;text-align:center;border:none" onclick="navTo('complaints')"><div style="font-size:26px;margin-bottom:5px">&#x1F4DD;</div><div style="font-size:11px">شکایت درج کریں</div></button>
-        <button class="card card-green" style="cursor:pointer;text-align:center;border:none" onclick="navTo('reps')"><div style="font-size:26px;margin-bottom:5px">&#x1F3DB;</div><div style="font-size:11px">PPP نمائندے</div></button>
-        <button class="card card-blue" style="cursor:pointer;text-align:center;border:none" onclick="navTo('broadcast')"><div style="font-size:26px;margin-bottom:5px">&#x1F4E2;</div><div style="font-size:11px">نشریات</div></button>
-        <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)" onclick="navTo('card')"><div style="font-size:26px;margin-bottom:5px">&#x1FAA6;</div><div style="font-size:11px">ڈیجیٹل کارڈ</div></button>
-      </div>
-    </div>
-
-    <!-- REPS -->
-    <div class="tab-page" id="page-reps">
-      <div class="section-header"><span class="icon">&#x1F3DB;</span><div><h2>PPP نمائندے</h2><p>سندھ 2024</p></div></div>
-      <div class="search-box">
-        <span class="search-icon">&#x1F50D;</span>
-        <input type="text" id="rep-search" placeholder="نام یا حلقہ..." oninput="filterReps(this.value)">
-      </div>
-      <div class="cat-tabs">
-        <button class="cat-tab active" onclick="filterRepsByType('سب',this)">سب</button>
-        <button class="cat-tab" onclick="filterRepsByType('قیادت',this)">قیادت</button>
-        <button class="cat-tab" onclick="filterRepsByType('MNA',this)">MNA</button>
-        <button class="cat-tab" onclick="filterRepsByType('MPA',this)">MPA</button>
-        <button class="cat-tab" onclick="filterRepsByType('میئر',this)">میئر</button>
-        <button class="cat-tab" onclick="filterRepsByType('چیئرمین',this)">چیئرمین</button>
-      </div>
-      <div id="reps-list"></div>
-    </div>
-
-    <!-- COMPLAINTS -->
-    <div class="tab-page" id="page-complaints">
-      <div class="section-header"><span class="icon">&#x1F4DD;</span><div><h2>شکایت درج کریں</h2><p>Firebase پر محفوظ ہوگی</p></div></div>
-      <div class="card">
-        <div class="form-group">
-          <label class="form-label">&#x1F3DB; محکمہ</label>
-          <div class="dept-chips">
-            <button class="dept-chip selected" onclick="selectDept(this)">پانی</button>
-            <button class="dept-chip" onclick="selectDept(this)">بجلی</button>
-            <button class="dept-chip" onclick="selectDept(this)">سیوریج</button>
-            <button class="dept-chip" onclick="selectDept(this)">سڑک</button>
-            <button class="dept-chip" onclick="selectDept(this)">گیس</button>
-            <button class="dept-chip" onclick="selectDept(this)">صحت</button>
-            <button class="dept-chip" onclick="selectDept(this)">تعلیم</button>
-            <button class="dept-chip" onclick="selectDept(this)">دیگر</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">&#x1F4CD; ضلع</label>
-          <select class="form-input" id="c-district"><option value="">ضلع منتخب کریں</option></select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">&#x1F194; CNIC (لازمی)</label>
-          <input type="text" class="form-input" id="c-cnic" placeholder="42101-XXXXXXX-X" dir="ltr" maxlength="15">
-        </div>
-        <div class="form-group">
-          <label class="form-label">&#x270D; تفصیل</label>
-          <textarea class="form-input" id="c-text" placeholder="مسئلے کی مکمل تفصیل..."></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label">&#x1F4E1; GPS مقام</label>
-          <button class="btn-sm btn-sm-outline" style="width:100%" onclick="getGPS()"><span id="gps-label">&#x1F4CD; مقام حاصل کریں</span></button>
-          <div id="gps-result"></div>
-        </div>
-        <button class="btn-primary" id="btn-submit-complaint" onclick="submitComplaint()">&#x1F4E4; شکایت جمع کریں</button>
-      </div>
-      <div style="font-size:12px;font-weight:600;margin:14px 0 10px">&#x1F4CB; شکایات (Firebase)</div>
-      <div id="my-complaints-list"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">ابھی تک کوئی شکایت نہیں</div></div>
-    </div>
-
-    <!-- BROADCAST -->
-    <div class="tab-page" id="page-broadcast">
-      <div class="section-header"><span class="icon">&#x1F4E2;</span><div><h2>نشریات</h2><p>قیادت کے پیغامات</p></div></div>
-      <div id="broadcast-list">
-        <div class="broadcast-card">
-          <span class="badge badge-green" style="margin-bottom:9px;display:inline-block">&#x1F339; خوش آمدید</span>
-          <div class="broadcast-title">PPP Pulse Ultra میں خوش آمدید!</div>
-          <div class="broadcast-msg">یہ سندھ کا پہلا Firebase ڈیجیٹل سیاسی نیٹ ورک ہے۔</div>
-          <div class="broadcast-meta"><span class="badge badge-gold">PPP Pulse</span></div>
-          <div class="btn-row">
-            <button class="btn-sm btn-sm-green" onclick="doShare('whatsapp')">&#x1F4AC; واٹس ایپ</button>
-            <button class="btn-sm btn-sm-blue" onclick="doShare('twitter')">&#x1F426; X</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CARD -->
-    <div class="tab-page" id="page-card">
-      <div class="section-header"><span class="icon">&#x1FAA6;</span><div><h2>ڈیجیٹل کارڈ</h2><p>PPP ممبرشپ کارڈ</p></div></div>
-      <div class="card-outer">
-        <div class="card-flag-stripe"><div class="cfs-r"></div><div class="cfs-b"></div><div class="cfs-g"></div></div>
-        <div class="card-body">
-          <div class="card-header">
-            <div class="card-header-left">
-              <div class="card-mini-flag"><div class="cmf-r"></div><div class="cmf-b"></div><div class="cmf-g"></div></div>
-              <div><div class="card-org-name">PPP PULSE ULTRA</div><div class="card-org-sub">پاکستان پیپلز پارٹی</div></div>
-            </div>
-            <div class="card-chip"></div>
-          </div>
-          <div class="card-middle">
-            <div class="card-photo"><div class="card-photo-icon">&#x1F464;</div><div class="card-photo-label">PHOTO</div></div>
-            <div class="card-info">
-              <div class="card-badge-row"><span class="cbadge cb-red">PPP</span><span class="cbadge cb-green">&#x2714; تصدیق شدہ</span><span class="cbadge cb-white">سندھ</span></div>
-              <div class="card-member-name" id="card-name">عبدالرحیم ساریو</div>
-              <div class="card-member-pos" id="card-pos">لیبر کونسلر — TMC سہراب گوٹھ</div>
-              <div class="card-info-row">
-                <div class="card-info-line">&#x1F4CD; <span id="card-area">سہراب گوٹھ، ایسٹ</span></div>
-                <div class="card-info-line">&#x1F5FA; <span id="card-uc">UC-1 جنت گل ٹاؤن</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="card-divider"></div>
-          <div class="card-footer">
-            <div><div class="card-id-lbl">MEMBER ID</div><div class="card-id-val" id="card-mid">PPP-KHI-0786</div></div>
-            <div class="card-verified"><div class="card-vdot"></div><span>VERIFIED</span></div>
-            <div class="card-qr"><svg viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><rect width="25" height="25" fill="white"/><rect x="2" y="2" width="7" height="7" fill="none" stroke="#000" stroke-width="1"/><rect x="3.5" y="3.5" width="4" height="4" fill="#000"/><rect x="16" y="2" width="7" height="7" fill="none" stroke="#000" stroke-width="1"/><rect x="17.5" y="3.5" width="4" height="4" fill="#000"/><rect x="2" y="16" width="7" height="7" fill="none" stroke="#000" stroke-width="1"/><rect x="3.5" y="17.5" width="4" height="4" fill="#000"/><rect x="10" y="2" width="1.5" height="1.5" fill="#000"/><rect x="12" y="4" width="1.5" height="1.5" fill="#000"/><rect x="10" y="8" width="3" height="1.5" fill="#000"/><rect x="2" y="10" width="1.5" height="3" fill="#000"/><rect x="10" y="10" width="1.5" height="1.5" fill="#000"/><rect x="13" y="10" width="3" height="1.5" fill="#000"/><rect x="2" y="13" width="3" height="1.5" fill="#000"/><rect x="10" y="13" width="1.5" height="3" fill="#000"/><rect x="16" y="13" width="3" height="1.5" fill="#000"/><rect x="16" y="16" width="1.5" height="3" fill="#000"/><rect x="19" y="16" width="3" height="1.5" fill="#000"/><rect x="13" y="19" width="3" height="1.5" fill="#000"/></svg></div>
-          </div>
-        </div>
-        <div class="card-flag-stripe-bottom"><div class="cfs-r"></div><div class="cfs-b"></div><div class="cfs-g"></div></div>
-      </div>
-      <div class="btn-row" style="margin-bottom:18px">
-        <button class="btn-sm btn-sm-gold" onclick="doShare('card')">&#x1F4E4; شیئر</button>
-        <button class="btn-sm btn-sm-red" onclick="showAlert('&#x1F4BE;','محفوظ','اسکرین شاٹ لے کر محفوظ کریں')">&#x1F4BE; محفوظ</button>
-      </div>
-    </div>
-
-    <!-- PROFILE -->
-    <div class="tab-page" id="page-profile">
-      <div class="profile-hero">
-        <div class="profile-avatar-large">&#x1F339;</div>
-        <div class="profile-name" id="p-name">عبدالرحیم ساریو</div>
-        <div class="profile-pos">لیبر کونسلر — TMC سہراب گوٹھ</div>
-        <div style="display:flex;gap:5px;justify-content:center;margin-top:9px;flex-wrap:wrap">
-          <span class="badge badge-red" id="p-role-badge">PPP ورکر</span>
-          <span class="badge badge-gold">تصدیق شدہ</span>
-          <span class="badge badge-green">سرگرم</span>
-        </div>
-      </div>
-      <div class="profile-info-grid">
-        <div class="info-item"><div class="info-label">ضلع</div><div class="info-val">کراچی ایسٹ</div></div>
-        <div class="info-item"><div class="info-label">TMC</div><div class="info-val">سہراب گوٹھ</div></div>
-        <div class="info-item"><div class="info-label">عہدہ</div><div class="info-val" id="p-pos">لیبر کونسلر</div></div>
-        <div class="info-item"><div class="info-label">ID</div><div class="info-val" style="font-size:10px;font-family:'Orbitron',sans-serif" id="p-mid">PPP-KHI-0786</div></div>
-      </div>
-      <div class="btn-row" style="margin-bottom:14px">
-        <button class="btn-sm btn-sm-outline" onclick="navTo('card')">&#x1FAA6; میرا کارڈ</button>
-        <button class="btn-sm btn-sm-red" onclick="logout()">&#x1F6AA; لاگ آؤٹ</button>
-      </div>
-      <div id="admin-access-btn" style="display:none;margin-bottom:12px">
-        <button class="btn-primary" onclick="navTo('admin')" style="background:linear-gradient(135deg,#4a0000,#990000)">&#x1F510; ایڈمن پینل کھولیں</button>
-      </div>
-      <div class="card">
-        <div style="font-size:12px;font-weight:600;margin-bottom:11px">&#x2699; ترتیبات</div>
-        <div class="toggle-wrap"><div class="toggle-label">&#x1F514; نوٹیفیکیشن</div><div class="toggle on" onclick="toggleSw(this)"><div class="toggle-knob"></div></div></div>
-        <div class="toggle-wrap" style="border:none"><div class="toggle-label">&#x1F319; ڈارک موڈ</div><div class="toggle on" onclick="toggleSw(this)"><div class="toggle-knob"></div></div></div>
-      </div>
-      <div style="text-align:center;margin-top:14px;font-size:9px;color:rgba(255,255,255,.2)">PPP Pulse Ultra v4.0 — Firebase &#x1F339; جیے بھٹو</div>
-    </div>
-
-    <!-- ADMIN -->
-    <div class="tab-page" id="page-admin">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-        <span style="font-size:22px">&#x1F510;</span>
-        <div style="flex:1"><div style="font-size:15px;font-weight:700">ایڈمن پینل</div><div style="font-size:9px;color:rgba(255,255,255,.4)">Firebase Real-time</div></div>
-        <div style="background:linear-gradient(135deg,#990000,#dd0000);padding:3px 12px;border-radius:20px;font-size:9px;font-weight:700">ADMIN</div>
-      </div>
-      <div class="admin-stat-row">
-        <div class="admin-stat"><div class="admin-stat-num" id="admin-stat-total">0</div><div class="admin-stat-label">کل ممبران</div></div>
-        <div class="admin-stat"><div class="admin-stat-num" id="admin-stat-complaints">0</div><div class="admin-stat-label">شکایات</div></div>
-        <div class="admin-stat"><div class="admin-stat-num" id="admin-stat-pending">0</div><div class="admin-stat-label">زیرِ التوا</div></div>
-      </div>
-      <div style="font-size:12px;font-weight:600;margin-bottom:11px">&#x1F4E2; براڈکاسٹ بھیجیں</div>
-      <div class="bc-composer">
-        <div class="form-group"><label class="form-label">عنوان</label><input type="text" class="form-input" id="bc-title" placeholder="پیغام کا عنوان"></div>
-        <div class="form-group">
-          <label class="form-label">قسم</label>
-          <div class="bc-type-row">
-            <button class="bc-type-btn selected" onclick="selBcType(this,'ایمرجنسی')">&#x1F534; ایمرجنسی</button>
-            <button class="bc-type-btn" onclick="selBcType(this,'مہم')">&#x1F4E3; مہم</button>
-            <button class="bc-type-btn" onclick="selBcType(this,'خبر')">&#x1F4F0; خبر</button>
-            <button class="bc-type-btn" onclick="selBcType(this,'عام')">&#x1F4AC; عام</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">پیغام</label>
-          <textarea class="form-input" id="bc-msg" placeholder="قیادت کا پیغام..." oninput="document.getElementById('char-count').textContent=this.value.length+' / 280'" style="min-height:70px"></textarea>
-          <div class="char-count" id="char-count">0 / 280</div>
-        </div>
-        <div class="btn-row">
-          <button class="btn-sm btn-sm-red" onclick="publishBroadcast()">&#x1F4E4; بھیجیں</button>
-          <button class="btn-sm btn-sm-green" onclick="bcWhatsApp()">&#x1F4AC; WA</button>
-          <button class="btn-sm btn-sm-blue" onclick="bcTwitter()">&#x1F426; X</button>
-        </div>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div style="font-size:12px;font-weight:600">&#x1F465; ممبران</div>
-        <button class="btn-sm btn-sm-outline" style="flex:0;padding:5px 12px" onclick="loadAdminMembers()">&#x1F504; تازہ</button>
-      </div>
-      <div id="admin-members-panel"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">تازہ کریں بٹن دبائیں</div></div>
-      <div style="font-size:12px;font-weight:600;margin:14px 0 10px">&#x1F4CB; شکایات</div>
-      <div id="admin-complaints-panel"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">لوڈ ہو رہا ہے...</div></div>
-    </div>
-
+  <div class="tu" onclick="navTo('pf')">
+   <div><div class="un" id="tnm">ورکر</div><div class="ur" id="trl">لاگ ان</div></div>
+   <div class="av">&#x1F339;</div>
   </div>
-  <div class="bottomnav">
-    <button class="nav-item active" id="nav-dashboard" onclick="navTo('dashboard')"><span class="nav-icon">&#x1F3E0;</span><span class="nav-label">ڈیش بورڈ</span></button>
-    <button class="nav-item" id="nav-reps" onclick="navTo('reps')"><span class="nav-icon">&#x1F3DB;</span><span class="nav-label">نمائندے</span></button>
-    <button class="nav-item" id="nav-complaints" onclick="navTo('complaints')"><span class="nav-icon">&#x1F4DD;</span><span class="nav-label">شکایت</span></button>
-    <button class="nav-item" id="nav-broadcast" onclick="navTo('broadcast')"><span class="nav-icon">&#x1F4E2;</span><span class="nav-label">نشریات</span></button>
-    <button class="nav-item" id="nav-profile" onclick="navTo('profile')"><span class="nav-icon">&#x1F464;</span><span class="nav-label">پروفائل</span></button>
+ </div>
+ <div class="pc">
+
+  <!-- DASHBOARD -->
+  <div class="tp active" id="pd">
+   <div class="tw"><div class="tb2">&#x1F534; LIVE</div><div class="tt2">جیے بھٹو &#x1F339; — PPP سندھ ڈیجیٹل نیٹ ورک — #PPPZindabad &#x1F5F3; — ورکر سے قیادت تک</div></div>
+   <div class="sg">
+    <div class="sc"><div class="si">&#x1F465;</div><div class="sn" id="sw">0</div><div class="sl">کل ممبران</div></div>
+    <div class="sc"><div class="si">&#x1F4CB;</div><div class="sn" id="sc2">0</div><div class="sl">شکایات</div></div>
+    <div class="sc"><div class="si">&#x1F3DB;</div><div class="sn">159</div><div class="sl">PPP نمائندے</div></div>
+    <div class="sc"><div class="si">&#x1F5FA;</div><div class="sn">33</div><div class="sl">سندھ اضلاع</div></div>
+   </div>
+   <div class="bcc">
+    <div class="bt">&#x1F4E2; تازہ ترین پیغام</div>
+    <div class="bm" id="lbm">PPP Pulse Ultra میں خوش آمدید! جیے بھٹو! &#x1F339;</div>
+    <div class="bmt"><span class="bdg br" id="lbt">&#x1F534; خوش آمدید</span><span class="bdg bo">PPP Pulse</span></div>
+    <div class="br2"><button class="bs2 bsg" onclick="SA('&#x2705;','شکریہ','PPP Pulse استعمال کرنے کا شکریہ')">&#x2705; ٹھیک ہے</button><button class="bs2 bso" onclick="doShare('w')">&#x1F4E4; شیئر</button></div>
+   </div>
+   <div style="font-size:12px;font-weight:600;margin-bottom:11px">&#x26A1; فوری اقدامات</div>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px">
+    <button class="card cr" style="cursor:pointer;text-align:center;border:none" onclick="navTo('pc2')"><div style="font-size:26px;margin-bottom:5px">&#x1F4DD;</div><div style="font-size:11px">شکایت درج کریں</div></button>
+    <button class="card cg" style="cursor:pointer;text-align:center;border:none" onclick="navTo('prp')"><div style="font-size:26px;margin-bottom:5px">&#x1F3DB;</div><div style="font-size:11px">PPP نمائندے</div></button>
+    <button class="card cb" style="cursor:pointer;text-align:center;border:none" onclick="navTo('pbc')"><div style="font-size:26px;margin-bottom:5px">&#x1F4E2;</div><div style="font-size:11px">نشریات</div></button>
+    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.04)" onclick="navTo('pch')"><div style="font-size:26px;margin-bottom:5px">&#x1F4AC;</div><div style="font-size:11px">چیٹ روم</div></button>
+   </div>
   </div>
+
+  <!-- REPS -->
+  <div class="tp" id="prp">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px"><span style="font-size:22px">&#x1F3DB;</span><div><div style="font-size:17px;font-weight:600">PPP نمائندے</div><div style="font-size:10px;color:rgba(255,255,255,.5)">سندھ 2024</div></div></div>
+   <div class="sb"><span class="si2">&#x1F50D;</span><input type="text" id="rs2" placeholder="نام یا حلقہ..." oninput="filterR(this.value)"></div>
+   <div class="ct">
+    <button class="ct2 active" onclick="filterRT('سب',this)">سب</button>
+    <button class="ct2" onclick="filterRT('قیادت',this)">قیادت</button>
+    <button class="ct2" onclick="filterRT('MNA',this)">MNA</button>
+    <button class="ct2" onclick="filterRT('MPA',this)">MPA</button>
+    <button class="ct2" onclick="filterRT('میئر',this)">میئر</button>
+    <button class="ct2" onclick="filterRT('چیئرمین',this)">چیئرمین</button>
+    <button class="ct2" onclick="filterRT('ضلع صدر',this)">ضلع</button>
+    <button class="ct2" onclick="filterRT('UC',this)">UC</button>
+   </div>
+   <div id="rl2"></div>
+  </div>
+
+  <!-- COMPLAINTS -->
+  <div class="tp" id="pc2">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px"><span style="font-size:22px">&#x1F4DD;</span><div><div style="font-size:17px;font-weight:600">شکایت درج کریں</div><div style="font-size:10px;color:rgba(255,255,255,.5)">آپ کی آواز قیادت تک</div></div></div>
+   <div class="card">
+    <div class="fg"><label class="fl">&#x1F3DB; محکمہ</label>
+     <div class="dc">
+      <button class="dc2 sel" onclick="selD(this)">پانی</button>
+      <button class="dc2" onclick="selD(this)">بجلی</button>
+      <button class="dc2" onclick="selD(this)">سیوریج</button>
+      <button class="dc2" onclick="selD(this)">سڑک</button>
+      <button class="dc2" onclick="selD(this)">گیس</button>
+      <button class="dc2" onclick="selD(this)">صحت</button>
+      <button class="dc2" onclick="selD(this)">تعلیم</button>
+      <button class="dc2" onclick="selD(this)">دیگر</button>
+     </div>
+    </div>
+    <div class="fg"><label class="fl">&#x1F4CD; ضلع</label><select class="fi" id="cd2"><option value="">ضلع منتخب کریں</option></select></div>
+    <div class="fg"><label class="fl">&#x1F194; CNIC</label><input type="text" class="fi" id="cc" placeholder="42101-XXXXXXX-X" dir="ltr" maxlength="15"></div>
+    <div class="fg"><label class="fl">&#x270D; تفصیل</label><textarea class="fi" id="ct2" placeholder="مسئلے کی مکمل تفصیل..."></textarea></div>
+    <div class="fg"><label class="fl">&#x1F4E1; GPS</label>
+     <button class="bs2 bso" style="width:100%" onclick="getGPS()"><span id="gl">&#x1F4CD; مقام حاصل کریں</span></button>
+     <div id="gr"></div>
+    </div>
+    <button class="bp" id="bsc" onclick="subC()">&#x1F4E4; شکایت جمع کریں</button>
+   </div>
+   <div style="font-size:12px;font-weight:600;margin:14px 0 10px">&#x1F4CB; میری شکایات</div>
+   <div id="mcl"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">ابھی تک کوئی شکایت نہیں</div></div>
+  </div>
+
+  <!-- BROADCAST -->
+  <div class="tp" id="pbc">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px"><span style="font-size:22px">&#x1F4E2;</span><div><div style="font-size:17px;font-weight:600">نشریات</div><div style="font-size:10px;color:rgba(255,255,255,.5)">قیادت کے پیغامات</div></div></div>
+   <div id="bcl">
+    <div class="bcc">
+     <span class="bdg bg" style="margin-bottom:9px;display:inline-block">&#x1F339; خوش آمدید</span>
+     <div class="bt">PPP Pulse Ultra میں خوش آمدید!</div>
+     <div class="bm">یہ سندھ کا پہلا ڈیجیٹل سیاسی نیٹ ورک ہے۔</div>
+     <div class="bmt"><span class="bdg bo">PPP Pulse</span></div>
+     <div class="br2"><button class="bs2 bsg" onclick="doShare('w')">&#x1F4AC; واٹس ایپ</button><button class="bs2 bsb" onclick="doShare('t')">&#x1F426; X</button></div>
+    </div>
+   </div>
+  </div>
+
+  <!-- CARD -->
+  <div class="tp" id="pcd">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px"><span style="font-size:22px">&#x1FAA6;</span><div><div style="font-size:17px;font-weight:600">ڈیجیٹل کارڈ</div><div style="font-size:10px;color:rgba(255,255,255,.5)">PPP ممبرشپ کارڈ</div></div></div>
+   <div class="co">
+    <div class="cf"><div class="cfr"></div><div class="cfb"></div><div class="cfg"></div></div>
+    <div class="cb2">
+     <div class="ch"><div class="chl"><div class="cmf"><div style="background:#cc0000;flex:1"></div><div style="background:#111;flex:1"></div><div style="background:#00bb00;flex:1"></div></div><div><div class="con">PPP PULSE ULTRA</div><div class="cos">پاکستان پیپلز پارٹی</div></div></div><div class="cch"></div></div>
+     <div class="cm">
+      <div class="cp" id="cardPhotoBox"><div class="cpi">&#x1F464;</div><div class="cpl">PHOTO</div></div>
+      <div class="ci">
+       <div class="cbr"><span class="cbg cb3">PPP</span><span class="cbg cb4">&#x2714; تصدیق شدہ</span><span class="cbg cb5">سندھ</span></div>
+       <div class="cmn" id="cnm">عبدالرحیم ساریو</div>
+       <div class="cmp" id="cps">لیبر کونسلر — TMC سہراب گوٹھ</div>
+       <div class="cir"><div class="cil">&#x1F4CD; <span id="car">سہراب گوٹھ، ایسٹ</span></div><div class="cil">&#x1F5FA; <span id="cuc">UC-1 جنت گل ٹاؤن</span></div></div>
+      </div>
+     </div>
+     <div class="cd"></div>
+     <div class="cft">
+      <div><div class="cil2">MEMBER ID</div><div class="civ" id="cmi">PPP-KHI-0786</div></div>
+      <div class="cvf"><div class="cvd"></div><span>VERIFIED</span></div>
+      <div class="cq"><svg viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><rect width="25" height="25" fill="white"/><rect x="2" y="2" width="7" height="7" fill="none" stroke="#000" stroke-width="1"/><rect x="3.5" y="3.5" width="4" height="4" fill="#000"/><rect x="16" y="2" width="7" height="7" fill="none" stroke="#000" stroke-width="1"/><rect x="17.5" y="3.5" width="4" height="4" fill="#000"/><rect x="2" y="16" width="7" height="7" fill="none" stroke="#000" stroke-width="1"/><rect x="3.5" y="17.5" width="4" height="4" fill="#000"/><rect x="10" y="2" width="1.5" height="1.5" fill="#000"/><rect x="12" y="4" width="1.5" height="1.5" fill="#000"/><rect x="10" y="8" width="3" height="1.5" fill="#000"/><rect x="2" y="10" width="1.5" height="3" fill="#000"/><rect x="10" y="10" width="1.5" height="1.5" fill="#000"/><rect x="13" y="10" width="3" height="1.5" fill="#000"/><rect x="2" y="13" width="3" height="1.5" fill="#000"/><rect x="10" y="13" width="1.5" height="3" fill="#000"/><rect x="16" y="13" width="3" height="1.5" fill="#000"/><rect x="16" y="16" width="1.5" height="3" fill="#000"/><rect x="19" y="16" width="3" height="1.5" fill="#000"/><rect x="13" y="19" width="3" height="1.5" fill="#000"/></svg></div>
+     </div>
+    </div>
+    <div class="cf"><div class="cfr"></div><div class="cfb"></div><div class="cfg"></div></div>
+   </div>
+   <div class="br2" style="margin-bottom:18px">
+    <button class="bs2 bso" onclick="doShare('c')">&#x1F4E4; شیئر</button>
+    <button class="bs2 bsr" onclick="SA('&#x1F4BE;','محفوظ','اسکرین شاٹ لے کر محفوظ کریں')">&#x1F4BE; محفوظ</button>
+   </div>
+  </div>
+
+  <!-- CHAT ROOM -->
+  <div class="tp" id="pch">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:22px">&#x1F4AC;</span><div><div style="font-size:17px;font-weight:600">PPP چیٹ روم</div><div style="font-size:10px;color:rgba(255,255,255,.5)">تمام ممبران کی بیٹھک — سلام، گپ شپ، مشورے</div></div></div>
+   <div style="background:rgba(0,200,0,.08);border:1px solid rgba(0,200,0,.25);border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:10px;color:rgba(150,255,150,.8)">&#x2139; یہ چیٹ تمام ممبران کے درمیان مشترک ہے — جو بھی لکھیں گے وہ سب کو نظر آئے گا۔</div>
+   <div id="chatMsgs" style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;margin-bottom:12px;min-height:300px;max-height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:8px"></div>
+   <div style="display:flex;gap:7px">
+    <input type="text" class="fi" id="chatInput" placeholder="پیغام لکھیں..." style="flex:1" onkeypress="if(event.keyCode==13)sendChat()">
+    <button class="bs2 bsr" style="flex:0;padding:11px 16px" onclick="sendChat()">&#x1F4E4;</button>
+   </div>
+  </div>
+
+  <div class="tp" id="pf">
+   <div class="ph2">
+    <div class="pa">&#x1F339;</div>
+    <div class="pn" id="pfn">عبدالرحیم ساریو</div>
+    <div class="pp">لیبر کونسلر — TMC سہراب گوٹھ</div>
+    <div style="display:flex;gap:5px;justify-content:center;margin-top:9px;flex-wrap:wrap">
+     <span class="bdg br" id="prb">PPP ورکر</span><span class="bdg bo">تصدیق شدہ</span><span class="bdg bg">سرگرم</span>
+    </div>
+   </div>
+   <div class="pig">
+    <div class="ii"><div class="il">ضلع</div><div class="iv">کراچی ایسٹ</div></div>
+    <div class="ii"><div class="il">TMC</div><div class="iv">سہراب گوٹھ</div></div>
+    <div class="ii"><div class="il">عہدہ</div><div class="iv">لیبر کونسلر</div></div>
+    <div class="ii"><div class="il">ID</div><div class="iv" style="font-size:10px;font-family:'Orbitron',sans-serif" id="pmid">PPP-KHI-0786</div></div>
+   </div>
+   <div class="br2" style="margin-bottom:14px">
+    <button class="bs2 bso" onclick="navTo('pcd')">&#x1FAA6; میرا کارڈ</button>
+    <button class="bs2 bsr" onclick="logout()">&#x1F6AA; لاگ آؤٹ</button>
+   </div>
+   <div id="aab" style="display:none;margin-bottom:12px">
+    <button class="bp" onclick="navTo('pad')" style="background:linear-gradient(135deg,#4a0000,#990000)">&#x1F510; ایڈمن پینل</button>
+   </div>
+   <div class="card">
+    <div style="font-size:12px;font-weight:600;margin-bottom:11px">&#x2699; ترتیبات</div>
+    <div class="tw3"><div class="tl3">&#x1F514; نوٹیفیکیشن</div><div class="tg on" onclick="tSw(this)"><div class="tk"></div></div></div>
+    <div class="tw3" style="border:none"><div class="tl3">&#x1F319; ڈارک موڈ</div><div class="tg on" onclick="tSw(this)"><div class="tk"></div></div></div>
+   </div>
+   <div style="text-align:center;margin-top:14px;font-size:9px;color:rgba(255,255,255,.2)">PPP Pulse Ultra v4.0 &#x1F339; جیے بھٹو</div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="tp" id="pad">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+    <span style="font-size:22px">&#x1F510;</span>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">ایڈمن پینل</div><div style="font-size:9px;color:rgba(255,255,255,.4)">PPP Pulse Enterprise</div></div>
+    <div style="background:linear-gradient(135deg,#990000,#dd0000);padding:3px 12px;border-radius:20px;font-size:9px;font-weight:700">ADMIN</div>
+   </div>
+   <div class="asr">
+    <div class="as"><div class="asn" id="ast">0</div><div class="asl">کل ممبران</div></div>
+    <div class="as"><div class="asn" id="asc">0</div><div class="asl">شکایات</div></div>
+    <div class="as"><div class="asn" id="asp">0</div><div class="asl">زیرِ التوا</div></div>
+   </div>
+   <div style="font-size:12px;font-weight:600;margin-bottom:11px">&#x1F4E2; براڈکاسٹ</div>
+   <div class="bcc2">
+    <div class="fg"><label class="fl">عنوان</label><input type="text" class="fi" id="bct" placeholder="پیغام کا عنوان"></div>
+    <div class="fg"><label class="fl">قسم</label>
+     <div class="btr">
+      <button class="btb sel" onclick="sBT(this,'ایمرجنسی')">&#x1F534; ایمرجنسی</button>
+      <button class="btb" onclick="sBT(this,'مہم')">&#x1F4E3; مہم</button>
+      <button class="btb" onclick="sBT(this,'خبر')">&#x1F4F0; خبر</button>
+      <button class="btb" onclick="sBT(this,'عام')">&#x1F4AC; عام</button>
+     </div>
+    </div>
+    <div class="fg"><label class="fl">پیغام</label><textarea class="fi" id="bcm" placeholder="قیادت کا پیغام..." oninput="document.getElementById('bcc3').textContent=this.value.length+' / 280'" style="min-height:70px"></textarea><div class="cc" id="bcc3">0 / 280</div></div>
+    <div class="br2">
+     <button class="bs2 bsr" onclick="pubBC()">&#x1F4E4; بھیجیں</button>
+     <button class="bs2 bsg" onclick="bcWA()">&#x1F4AC; WA</button>
+     <button class="bs2 bsb" onclick="bcTW()">&#x1F426; X</button>
+    </div>
+   </div>
+   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="font-size:12px;font-weight:600">&#x1F465; ممبران</div>
+    <button class="bs2 bso" style="flex:0;padding:5px 12px" onclick="loadMembers()">&#x1F504; تازہ</button>
+   </div>
+   <div id="amp"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">تازہ کریں بٹن دبائیں</div></div>
+   <div style="font-size:12px;font-weight:600;margin:14px 0 10px">&#x1F4CB; شکایات</div>
+   <div id="acp"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">کوئی شکایت نہیں</div></div>
+  </div>
+
+ </div>
+ <div class="bn">
+  <button class="ni active" id="nd" onclick="navTo('pd')"><span class="ic">&#x1F3E0;</span><span class="nl">ڈیش بورڈ</span></button>
+  <button class="ni" id="nrp" onclick="navTo('prp')"><span class="ic">&#x1F3DB;</span><span class="nl">نمائندے</span></button>
+  <button class="ni" id="nc2" onclick="navTo('pc2')"><span class="ic">&#x1F4DD;</span><span class="nl">شکایت</span></button>
+  <button class="ni" id="nch" onclick="navTo('pch')"><span class="ic">&#x1F4AC;</span><span class="nl">چیٹ روم</span></button>
+  <button class="ni" id="npf" onclick="navTo('pf')"><span class="ic">&#x1F464;</span><span class="nl">پروفائل</span></button>
+ </div>
 </div>
 
 <!-- REGISTER -->
-<div id="screen-register" class="screen">
-  <div style="background:linear-gradient(180deg,#180000 0%,#080808 50%,#001200 100%);min-height:100vh;padding:18px;padding-bottom:36px;">
-    <div style="display:flex;align-items:center;gap:11px;margin-bottom:22px">
-      <button style="background:transparent;border:none;color:#00ee00;font-size:20px;cursor:pointer" onclick="showScreen('screen-login')">&#x2190;</button>
-      <div><div style="font-family:'Orbitron',sans-serif;font-size:14px;font-weight:900;color:#fff">نئی رجسٹریشن</div><div style="font-size:10px;color:rgba(255,255,255,.4)">PPP ڈیجیٹل ممبر بنیں</div></div>
-    </div>
-    <div class="reg-progress"><div class="reg-step active" id="rs1"></div><div class="reg-step" id="rs2"></div><div class="reg-step" id="rs3"></div><div class="reg-step" id="rs4"></div></div>
-    <div id="reg-step-1">
-      <div style="font-size:13px;color:#fff;margin-bottom:14px;font-weight:600">ذاتی معلومات</div>
-      <div class="form-group"><label class="form-label">&#x1F464; پورا نام (لازمی)</label><input type="text" class="form-input" id="r-name" placeholder="محمد علی احمد"></div>
-      <div class="form-group"><label class="form-label">&#x1F194; CNIC (لازمی)</label><input type="text" class="form-input" id="r-cnic" placeholder="42101-XXXXXXX-X" dir="ltr" maxlength="15"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">&#x1F4F1; موبائل</label><input type="tel" class="form-input" id="r-phone" placeholder="03XX-XXXXXXX" dir="ltr"></div>
-        <div class="form-group"><label class="form-label">&#x1F382; عمر</label><input type="number" class="form-input" id="r-age" placeholder="25" dir="ltr"></div>
-      </div>
-      <button class="btn-primary" onclick="regNext(2)">آگے &#x2192;</button>
-    </div>
-    <div id="reg-step-2" style="display:none">
-      <div style="font-size:13px;color:#fff;margin-bottom:14px;font-weight:600">پارٹی معلومات</div>
-      <div class="form-group"><label class="form-label">&#x1F5FA; ضلع</label><select class="form-input" id="r-district"><option value="">ضلع منتخب کریں</option></select></div>
-      <div class="form-group"><label class="form-label">&#x1F3D8; یونین کونسل</label><input type="text" class="form-input" id="r-uc" placeholder="UC نمبر یا نام"></div>
-      <div class="form-group"><label class="form-label">&#x1F396; پارٹی عہدہ</label>
-        <select class="form-input" id="r-position">
-          <option>عام ممبر</option><option>UC ورکر</option><option>UC سیکریٹری</option>
-          <option>تعلقہ صدر</option><option>ضلع صدر</option><option>سوشل میڈیا ایکٹیوسٹ</option><option>دیگر</option>
-        </select>
-      </div>
-      <div class="btn-row"><button class="btn-sm btn-sm-outline" onclick="regNext(1)">&#x2190; واپس</button><button class="btn-sm btn-sm-red" onclick="regNext(3)">آگے &#x2192;</button></div>
-    </div>
-    <div id="reg-step-3" style="display:none">
-      <div style="font-size:13px;color:#fff;margin-bottom:14px;font-weight:600">سوشل میڈیا</div>
-      <div class="upload-area" onclick="fakePhotoUpload()" style="margin-bottom:14px"><div class="upload-icon" id="photo-icon">&#x1F933;</div><div class="upload-text" id="photo-text">اپنی تصویر لگائیں</div></div>
-      <div class="form-group"><label class="form-label">&#x1F426; X/ٹوئٹر</label><input type="text" class="form-input" id="r-twitter" placeholder="@username" dir="ltr"></div>
-      <div class="form-group"><label class="form-label">&#x1F4D8; فیس بک</label><input type="url" class="form-input" id="r-fb" placeholder="facebook.com/username" dir="ltr"></div>
-      <div class="btn-row"><button class="btn-sm btn-sm-outline" onclick="regNext(2)">&#x2190; واپس</button><button class="btn-sm btn-sm-red" onclick="regNext(4)">آگے &#x2192;</button></div>
-    </div>
-    <div id="reg-step-4" style="display:none">
-      <div style="text-align:center;padding:18px 0">
-        <div style="font-size:56px;margin-bottom:14px">&#x1F339;</div>
-        <div style="font-size:17px;font-weight:700;color:#fff;margin-bottom:7px">تمام معلومات مکمل!</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:22px">Firebase پر محفوظ ہوگا</div>
-        <div class="card" style="text-align:right;margin-bottom:14px">
-          <div style="font-size:13px;font-weight:700" id="preview-name">آپ کا نام</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.5)" id="preview-cnic">CNIC: ———</div>
-          <div style="font-size:10px;color:#00cc00;margin-top:5px" id="preview-district">ضلع: ———</div>
-        </div>
-        <button class="btn-primary" id="btn-complete-reg" onclick="completeReg()">رجسٹریشن مکمل کریں &#x1F389;</button>
-      </div>
-    </div>
+<div id="sr" class="screen">
+ <div style="background:linear-gradient(180deg,#180000,#080808 50%,#001200);min-height:100vh;padding:18px;padding-bottom:36px;">
+  <div style="display:flex;align-items:center;gap:11px;margin-bottom:22px">
+   <button style="background:transparent;border:none;color:#00ee00;font-size:20px;cursor:pointer" onclick="showScreen('sl')">&#x2190;</button>
+   <div><div style="font-family:'Orbitron',sans-serif;font-size:14px;font-weight:900;color:#fff">نئی رجسٹریشن</div><div style="font-size:10px;color:rgba(255,255,255,.4)">PPP ڈیجیٹل ممبر بنیں</div></div>
   </div>
+  <div class="rp"><div class="rs active" id="rs1"></div><div class="rs" id="rs2_"></div><div class="rs" id="rs3"></div><div class="rs" id="rs4"></div></div>
+  <div id="rg1">
+   <div style="font-size:13px;color:#fff;margin-bottom:14px;font-weight:600">ذاتی معلومات</div>
+   <div class="fg"><label class="fl">&#x1F464; پورا نام (لازمی)</label><input type="text" class="fi" id="rn" placeholder="محمد علی احمد"></div>
+   <div class="fg"><label class="fl">&#x1F194; CNIC (لازمی)</label><input type="text" class="fi" id="rc" placeholder="42101-XXXXXXX-X" dir="ltr" maxlength="15"></div>
+   <div class="fr">
+    <div class="fg"><label class="fl">&#x1F4F1; موبائل</label><input type="tel" class="fi" id="rph" placeholder="03XX-XXXXXXX" dir="ltr"></div>
+    <div class="fg"><label class="fl">&#x1F382; عمر</label><input type="number" class="fi" id="ra" placeholder="25" dir="ltr"></div>
+   </div>
+   <button class="bp" onclick="regN(2)">آگے &#x2192;</button>
+  </div>
+  <div id="rg2" style="display:none">
+   <div style="font-size:13px;color:#fff;margin-bottom:14px;font-weight:600">پارٹی معلومات</div>
+   <div class="fg"><label class="fl">&#x1F5FA; ضلع</label><select class="fi" id="rd"><option value="">ضلع منتخب کریں</option></select></div>
+   <div class="fg"><label class="fl">&#x1F3D8; یونین کونسل</label><input type="text" class="fi" id="ru" placeholder="UC نمبر یا نام"></div>
+   <div class="fg"><label class="fl">&#x1F396; پارٹی عہدہ</label>
+    <select class="fi" id="rpo">
+     <option>عام ممبر</option><option>UC ورکر</option><option>UC صدر</option><option>UC جنرل سیکریٹری</option>
+     <option>UC انفارمیشن سیکریٹری</option><option>وارڈ صدر</option><option>وارڈ جنرل سیکریٹری</option>
+     <option>وارڈ انفارمیشن سیکریٹری</option><option>PS صدر</option><option>PS جنرل سیکریٹری</option>
+     <option>PS انفارمیشن سیکریٹری</option><option>ضلع صدر</option><option>ضلع جنرل سیکریٹری</option>
+     <option>ضلع انفارمیشن سیکریٹری</option><option>کونسلر</option><option>چیئرمین</option>
+     <option>وائس چیئرمین</option><option>سوشل میڈیا ایکٹیوسٹ</option><option>دیگر</option>
+    </select>
+   </div>
+   <div class="br2"><button class="bs2 bso" onclick="regN(1)">&#x2190; واپس</button><button class="bs2 bsr" onclick="regN(3)">آگے &#x2192;</button></div>
+  </div>
+  <div id="rg3" style="display:none">
+   <div style="font-size:13px;color:#fff;margin-bottom:14px;font-weight:600">سوشل میڈیا</div>
+   <div class="ua" onclick="document.getElementById('photoFile').click()" style="margin-bottom:14px"><div class="ui" id="pic">&#x1F933;</div><div class="ut" id="ptxt">اپنی تصویر لگائیں (تصویر یا کیمرہ)</div></div>
+   <input type="file" id="photoFile" accept="image/*" style="display:none">
+   <div class="fg"><label class="fl">&#x1F426; X/ٹوئٹر</label><input type="text" class="fi" id="rtw" placeholder="@username" dir="ltr"></div>
+   <div class="fg"><label class="fl">&#x1F4D8; فیس بک</label><input type="url" class="fi" id="rfb" placeholder="facebook.com/username" dir="ltr"></div>
+   <div class="br2"><button class="bs2 bso" onclick="regN(2)">&#x2190; واپس</button><button class="bs2 bsr" onclick="regN(4)">آگے &#x2192;</button></div>
+  </div>
+  <div id="rg4" style="display:none">
+   <div style="text-align:center;padding:18px 0">
+    <div style="font-size:56px;margin-bottom:14px">&#x1F339;</div>
+    <div style="font-size:17px;font-weight:700;color:#fff;margin-bottom:7px">تمام معلومات مکمل!</div>
+    <div class="card" style="text-align:right;margin-bottom:14px">
+     <div style="font-size:13px;font-weight:700" id="pvn">آپ کا نام</div>
+     <div style="font-size:10px;color:rgba(255,255,255,.5)" id="pvc">CNIC: ———</div>
+     <div style="font-size:10px;color:#00cc00;margin-top:5px" id="pvd">ضلع: ———</div>
+    </div>
+    <button class="bp" id="bcr" onclick="compReg()">رجسٹریشن مکمل کریں &#x1F389;</button>
+   </div>
+  </div>
+ </div>
 </div>
 
 <!-- MODAL -->
-<div class="modal-overlay" id="modal">
-  <div class="modal-box">
-    <div class="modal-icon" id="modal-icon">&#x2705;</div>
-    <div class="modal-title" id="modal-title">کامیاب!</div>
-    <div class="modal-msg" id="modal-msg">آپریشن مکمل ہو گیا</div>
-    <div class="modal-id" id="modal-id" style="display:none"></div>
-    <button class="btn-primary" onclick="closeModal()">ٹھیک ہے</button>
-  </div>
+<div class="mo" id="modal">
+ <div class="mb">
+  <div class="mi" id="moi">&#x2705;</div>
+  <div class="mt" id="mot">کامیاب!</div>
+  <div class="mm" id="mom">آپریشن مکمل ہو گیا</div>
+  <div class="mid" id="moid" style="display:none"></div>
+  <button class="bp" onclick="CM()">ٹھیک ہے</button>
+ </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════
-// FIREBASE INIT
-// ═══════════════════════════════════════
+// ═══ FIREBASE INIT (Firestore only — NO Auth/OTP) ═══
 var firebaseConfig = {
   apiKey: "AIzaSyB4eTFXVgD0gdwXqhGgjUHWmNm9GJd4p8s",
   authDomain: "ppp-pulse-48fcb.firebaseapp.com",
@@ -583,248 +513,276 @@ var firebaseConfig = {
   messagingSenderId: "1013111052058",
   appId: "1:1013111052058:web:f910f3e640c2a6bba8fea3"
 };
-firebase.initializeApp(firebaseConfig);
-var db = firebase.firestore();
+var fbReady = false;
+var db = null;
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  fbReady = true;
+} catch (e) {
+  fbReady = false;
+}
 
-// ═══════════════════════════════════════
-// PASSWORDS
-// ═══════════════════════════════════════
-var WORKER_PASS = 'ppp786';
-var ADMIN_PASS = 'tmc786';
+// ═══ PASSWORDS ═══
+var WP = 'ppp786';
+var AP = 'tmc786';
 
-// ═══════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════
-var currentRole = 'ورکر';
-var isAdmin = false;
-var currentUser = '';
-var bcType = 'ایمرجنسی';
-var repTypeFilter = 'سب';
-var gpsLat = null;
-var gpsLng = null;
+// ═══ STATE ═══
+var cRole = 'ورکر';
+var isAdm = false;
+var cUser = '';
+var bcT = 'ایمرجنسی';
+var rTF = 'سب';
+var gLat = null;
+var gLng = null;
+var regPhotoData = null;
 
-// ═══════════════════════════════════════
-// DISTRICTS
-// ═══════════════════════════════════════
-var DISTRICTS = [
+// ═══ DISTRICTS (33 سندھ) ═══
+var DIST = [
   'کراچی سینٹرل','کراچی ایسٹ','کراچی ویسٹ','کراچی ساؤتھ','کراچی ملیر','کورنگی',
   'حیدرآباد','میرپورخاص','عمرکوٹ','تھرپارکر','سانگھڑ','نوابشاہ (شہید بینظیرآباد)',
   'نوشیرو فیروز','خیرپور','سکھر','گھوٹکی','لاڑکانہ','قمبر شہدادکوٹ',
   'شکارپور','جیکب آباد','کشمور','دادو','جامشورو','ٹھٹہ',
-  'سجاول','بدین','ٹنڈو الہیار','ٹنڈو محمد خان','مٹیاری','ملیر','کیمبر','لکی'
+  'سجاول','بدین','ٹنڈو الہیار','مٹیاری','ملیر','کیمبر','لکی'
 ];
 
-// ═══════════════════════════════════════
-// REPS
-// ═══════════════════════════════════════
+// ═══ PPP REPS DATA ═══
 var REPS = [
-  {name:'بلاول بھٹو زرداری',pos:'چیئرمین PPP | MNA لاڑکانہ',con:'NA-194 لاڑکانہ',type:'قیادت',tw:'BBhuttoZardari',v:true,e:'🌹',d:'لاڑکانہ'},
-  {name:'آصف علی زرداری',pos:'صدر پاکستان',con:'صدر ایوان',type:'قیادت',tw:'AAliZardari',v:true,e:'🏛️',d:''},
-  {name:'آصفہ بھٹو زرداری',pos:'MNA نوابشاہ',con:'NA-207',type:'قیادت',tw:'AseefaBZ',v:true,e:'👩',d:'نوابشاہ (شہید بینظیرآباد)'},
-  {name:'مراد علی شاہ',pos:'وزیرِ اعلیٰ سندھ',con:'PS سندھ',type:'قیادت',tw:'MuradAliShahPPP',v:true,e:'🗺️',d:'سندھ'},
-  {name:'شیری رحمان',pos:'سینیٹر | سینئر نائب صدر',con:'سندھ سینیٹ',type:'قیادت',tw:'sherryrehman',v:true,e:'📣',d:''},
-  {name:'مرتضیٰ وہاب',pos:'میئر کراچی',con:'KMC کراچی',type:'میئر',tw:'MurtazaWahab',v:true,e:'🏙️',d:'کراچی سینٹرل'},
-  {name:'شرجیل انعام میمن',pos:'صوبائی وزیر اطلاعات',con:'PS سندھ',type:'MPA',tw:'sharjeelinam',v:true,e:'📺',d:'سندھ'},
-  {name:'PPP آفیشل',pos:'پاکستان پیپلز پارٹی',con:'پاکستان',type:'قیادت',tw:'PPP_Org',v:true,e:'🌹',d:''},
-  {name:'عیجاز احمد جکھرانی',pos:'MNA جیکب آباد',con:'NA-190',type:'MNA',tw:'',v:false,e:'👨',d:'جیکب آباد'},
-  {name:'شہریار خان مہر',pos:'MNA شکارپور',con:'NA-193',type:'MNA',tw:'ShahryarMahar',v:false,e:'👨',d:'شکارپور'},
-  {name:'اویس قادر شاہ',pos:'اسپیکر سندھ اسمبلی',con:'PS سندھ',type:'MPA',tw:'AwaisQadirShah',v:false,e:'🏛️',d:'سندھ'},
-  {name:'ضیاء الحسن لنجار',pos:'صوبائی وزیر قانون',con:'PS سندھ',type:'MPA',tw:'ZiaUlHassanLanjar',v:false,e:'⚖️',d:'سندھ'},
-  {name:'عبدالرحیم ساریو',pos:'لیبر کونسلر TMC سہراب گوٹھ',con:'UC-1 جنت گل ٹاؤن',type:'چیئرمین',tw:'',v:false,e:'🌹',d:'کراچی ایسٹ'}
+  // قیادت
+  {n:'بلاول بھٹو زرداری',p:'چیئرمین PPP | MNA لاڑکانہ',c:'NA-194',t:'قیادت',tw:'BBhuttoZardari',v:true,e:'🌹',d:'لاڑکانہ'},
+  {n:'آصف علی زرداری',p:'صدر پاکستان | PPP شریک چیئرمین',c:'صدر ایوان',t:'قیادت',tw:'AAliZardari',v:true,e:'🏛️',d:''},
+  {n:'آصفہ بھٹو زرداری',p:'MNA نوابشاہ',c:'NA-207',t:'قیادت',tw:'AseefaBZ',v:true,e:'👩',d:'نوابشاہ (شہید بینظیرآباد)'},
+  {n:'مراد علی شاہ',p:'وزیرِ اعلیٰ سندھ',c:'PS سندھ',t:'قیادت',tw:'MuradAliShahPPP',v:true,e:'🗺️',d:'سندھ'},
+  {n:'شیری رحمان',p:'سینیٹر | سینئر نائب صدر PPP',c:'سندھ سینیٹ',t:'قیادت',tw:'sherryrehman',v:true,e:'📣',d:''},
+  {n:'سید ناصر حسین شاہ',p:'صوبائی وزیر اطلاعات سندھ',c:'PS سندھ',t:'قیادت',tw:'NasirHShahPPP',v:true,e:'🏗️',d:'سندھ'},
+  {n:'نفیسہ شاہ',p:'MNA سانگھڑ',c:'NA سانگھڑ',t:'قیادت',tw:'NafeesaShah1',v:true,e:'👩',d:'سانگھڑ'},
+  {n:'PPP آفیشل',p:'پاکستان پیپلز پارٹی',c:'پاکستان',t:'قیادت',tw:'PPP_Org',v:true,e:'🌹',d:''},
+  // میئر
+  {n:'مرتضیٰ وہاب',p:'میئر کراچی',c:'KMC کراچی',t:'میئر',tw:'MurtazaWahab',v:true,e:'🏙️',d:'کراچی سینٹرل'},
+  // MNA
+  {n:'عیجاز احمد جکھرانی',p:'MNA جیکب آباد',c:'NA-190',t:'MNA',tw:'',v:false,e:'👨',d:'جیکب آباد'},
+  {n:'شہریار خان مہر',p:'MNA شکارپور',c:'NA-193',t:'MNA',tw:'',v:false,e:'👨',d:'شکارپور'},
+  {n:'سردار خالد لند',p:'MNA گھوٹکی',c:'NA-198',t:'MNA',tw:'',v:false,e:'👨',d:'گھوٹکی'},
+  {n:'اسد عالم نیازی',p:'MNA کراچی ایسٹ',c:'NA-237',t:'MNA',tw:'',v:false,e:'👨',d:'کراچی ایسٹ'},
+  {n:'آغا رفیع اللہ',p:'MNA کراچی ملیر',c:'NA-230',t:'MNA',tw:'AghaRafiullah',v:false,e:'👨',d:'کراچی ملیر'},
+  // MPA
+  {n:'شرجیل انعام میمن',p:'صوبائی وزیر اطلاعات',c:'PS سندھ',t:'MPA',tw:'sharjeelinam',v:true,e:'📺',d:'سندھ'},
+  {n:'اویس قادر شاہ',p:'اسپیکر سندھ اسمبلی',c:'PS سندھ',t:'MPA',tw:'AwaisQadirShah',v:false,e:'🏛️',d:'سندھ'},
+  {n:'ضیاء الحسن لنجار',p:'صوبائی وزیر قانون',c:'PS سندھ',t:'MPA',tw:'ZiaUlHassanLanjar',v:false,e:'⚖️',d:'سندھ'},
+  // چیئرمین / کونسلر
+  {n:'عبدالرحیم ساریو',p:'لیبر کونسلر TMC سہراب گوٹھ',c:'UC-1 جنت گل ٹاؤن',t:'چیئرمین',tw:'',v:false,e:'🌹',d:'کراچی ایسٹ'},
+  // ضلع صدر (کراچی اضلاع)
+  {n:'ضلع صدر کراچی سینٹرل',p:'ضلع صدر PPP',c:'کراچی سینٹرل',t:'ضلع صدر',tw:'',v:false,e:'👤',d:'کراچی سینٹرل'},
+  {n:'ضلع صدر کراچی ایسٹ',p:'ضلع صدر PPP',c:'کراچی ایسٹ',t:'ضلع صدر',tw:'',v:false,e:'👤',d:'کراچی ایسٹ'},
+  {n:'ضلع صدر حیدرآباد',p:'ضلع صدر PPP',c:'حیدرآباد',t:'ضلع صدر',tw:'',v:false,e:'👤',d:'حیدرآباد'},
+  {n:'ضلع صدر لاڑکانہ',p:'ضلع صدر PPP',c:'لاڑکانہ',t:'ضلع صدر',tw:'',v:false,e:'👤',d:'لاڑکانہ'},
+  {n:'ضلع صدر سکھر',p:'ضلع صدر PPP',c:'سکھر',t:'ضلع صدر',tw:'',v:false,e:'👤',d:'سکھر'},
+  {n:'ضلع صدر میرپورخاص',p:'ضلع صدر PPP',c:'میرپورخاص',t:'ضلع صدر',tw:'',v:false,e:'👤',d:'میرپورخاص'},
+  // UC لیول
+  {n:'UC صدر UC-1 جنت گل ٹاؤن',p:'UC صدر PPP',c:'UC-1 جنت گل ٹاؤن',t:'UC',tw:'',v:false,e:'🏘️',d:'کراچی ایسٹ'},
+  {n:'UC صدر UC-2 کوئٹہ ٹاؤن',p:'UC صدر PPP',c:'UC-2 کوئٹہ ٹاؤن',t:'UC',tw:'',v:false,e:'🏘️',d:'کراچی ایسٹ'},
+  {n:'UC صدر UC-3 سکھیا گوٹھ',p:'UC صدر PPP',c:'UC-3 سکھیا گوٹھ',t:'UC',tw:'',v:false,e:'🏘️',d:'کراچی ایسٹ'},
+  {n:'UC صدر UC-4 ایوب گوٹھ',p:'UC صدر PPP',c:'UC-4 ایوب گوٹھ',t:'UC',tw:'',v:false,e:'🏘️',d:'کراچی ایسٹ'},
+  {n:'UC صدر UC-5 خادم حسین سولنگی',p:'UC صدر PPP',c:'UC-5',t:'UC',tw:'',v:false,e:'🏘️',d:'کراچی ایسٹ'},
+  {n:'UC صدر UC-6 احسن آباد',p:'UC صدر PPP',c:'UC-6 احسن آباد',t:'UC',tw:'',v:false,e:'🏘️',d:'کراچی ایسٹ'},
+  {n:'UC صدر UC-7 یوسف صاحب خان گوٹھ',p:'UC صدر PPP',c:'UC-7',t:'UC',tw:'',v:false,e:'🏘️',d:'کراچی ایسٹ'},
+  {n:'UC صدر UC-8 نئی سبزی منڈی',p:'UC صدر PPP',c:'UC-8 نئی سبزی منڈی',t:'UC',tw:'',v:false,e:'🏘️',d:'کراچی ایسٹ'}
 ];
 
-// ═══════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════
+// ═══ INIT ═══
 window.onload = function() {
   var opts = '<option value="">ضلع منتخب کریں</option>';
-  for (var i = 0; i < DISTRICTS.length; i++) {
-    opts += '<option>' + DISTRICTS[i] + '</option>';
-  }
-  var cd = document.getElementById('c-district');
-  var rd = document.getElementById('r-district');
+  for (var i = 0; i < DIST.length; i++) opts += '<option>' + DIST[i] + '</option>';
+  var cd = document.getElementById('cd2');
+  var rd = document.getElementById('rd');
   if (cd) cd.innerHTML = opts;
   if (rd) rd.innerHTML = opts;
   renderReps(REPS);
+  loadStats();
+  setupPhotoInput();
 };
 
-// ═══════════════════════════════════════
-// LOGIN (پاس ورڈ - کوئی OTP نہیں)
-// ═══════════════════════════════════════
-function setRole(role, btn) {
-  currentRole = role;
-  var tabs = document.querySelectorAll('.role-tab');
-  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+// ═══ LOGIN ═══
+function setRole(r, btn) {
+  cRole = r;
+  var ts = document.querySelectorAll('.rt');
+  for (var i = 0; i < ts.length; i++) ts[i].classList.remove('active');
   btn.classList.add('active');
 }
 
 function doLogin() {
-  var user = document.getElementById('loginUser').value.trim();
-  var pass = document.getElementById('loginPass').value.trim();
+  var u = document.getElementById('lu').value.trim();
+  var p = document.getElementById('lp').value.trim();
+  if (!u) { SA('⚠️','نامکمل','یوزر نام درج کریں'); return; }
+  if (!p) { SA('⚠️','نامکمل','پاس ورڈ درج کریں'); return; }
 
-  if (!user) { showAlert('⚠️', 'نامکمل', 'یوزر نام درج کریں'); return; }
-  if (!pass) { showAlert('⚠️', 'نامکمل', 'پاس ورڈ درج کریں'); return; }
+  // Check shared admin password first
+  if (p === AP) { completeLogin(u, true, null); return; }
 
-  var validPass = false;
-  if (currentRole === 'ایڈمن' && pass === ADMIN_PASS) {
-    validPass = true;
-    isAdmin = true;
-  } else if (currentRole !== 'ایڈمن' && pass === WORKER_PASS) {
-    validPass = true;
-    isAdmin = false;
-  } else if (pass === ADMIN_PASS) {
-    validPass = true;
-    isAdmin = true;
-  }
+  // Check shared worker password (legacy/quick access)
+  if (p === WP) { completeLogin(u, false, null); return; }
 
-  if (!validPass) {
-    showAlert('❌', 'پاس ورڈ غلط', 'پاس ورڈ درست نہیں۔\nورکر: ppp786\nایڈمن: tmc786');
-    return;
-  }
+  // Check individual member password from Firestore
+  var btn = document.getElementById('blb');
+  btn.innerHTML = '⏳ تصدیق ہو رہی ہے...';
+  btn.disabled = true;
 
-  currentUser = user;
-  document.getElementById('topbar-name').textContent = user.split(' ')[0];
-  document.getElementById('topbar-role').textContent = isAdmin ? 'ایڈمن' : currentRole;
-  document.getElementById('topbar-subtitle').textContent = isAdmin ? 'ایڈمن کنٹرول' : 'سندھ نیٹ ورک';
-  document.getElementById('p-name').textContent = user;
-  document.getElementById('card-name').textContent = user;
-
-  if (isAdmin) {
-    document.getElementById('admin-access-btn').style.display = 'block';
-    document.getElementById('p-role-badge').textContent = 'ایڈمن';
-  }
-
-  loadDashboardStats();
-  listenComplaints();
-  showScreen('screen-app');
-  navTo('dashboard');
-}
-
-// ═══════════════════════════════════════
-// FIREBASE DATA
-// ═══════════════════════════════════════
-function loadDashboardStats() {
-  db.collection('members').get().then(function(s) {
-    document.getElementById('stat-workers').textContent = s.size;
-    document.getElementById('admin-stat-total').textContent = s.size;
-  }).catch(function() {});
-  db.collection('complaints').get().then(function(s) {
-    document.getElementById('stat-complaints').textContent = s.size;
-    document.getElementById('admin-stat-complaints').textContent = s.size;
-  }).catch(function() {});
-}
-
-function listenComplaints() {
-  db.collection('complaints').orderBy('createdAt','desc').onSnapshot(function(snapshot) {
-    var list = document.getElementById('my-complaints-list');
-    if (!list) return;
-    list.innerHTML = '';
-    var count = 0;
-    var pending = 0;
-    snapshot.forEach(function(d) {
-      var data = d.data();
-      if (data.status !== 'حل ہو گئی') pending++;
-      if (count < 10) {
-        var bc = data.status === 'حل ہو گئی' ? 'badge-green' : 'badge-gold';
-        var div = document.createElement('div');
-        div.className = 'card';
-        div.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px"><span style="font-size:11px">' + (data.dept||'') + ' — ' + (data.district||'') + '</span><span class="badge ' + bc + '">' + (data.status||'زیرِ کارروائی') + '</span></div><div style="font-size:9px;color:rgba(255,255,255,.4)">ID: ' + (data.complaintId||'') + '</div>';
-        list.appendChild(div);
-        count++;
+  if (fbReady && db) {
+    db.collection('members').where('password', '==', p).limit(1).get().then(function(snap) {
+      btn.innerHTML = '🔑 داخل ہوں';
+      btn.disabled = false;
+      if (!snap.empty) {
+        var m = snap.docs[0].data();
+        if (m.status === 'منظور') {
+          completeLogin(m.name || u, false, m);
+        } else {
+          SA('⏳','منظوری باقی ہے','آپ کی درخواست ابھی ایڈمن کی منظوری کا انتظار کر رہی ہے');
+        }
+      } else {
+        checkLocalMemberPassword(u, p, btn);
       }
+    }).catch(function() {
+      btn.innerHTML = '🔑 داخل ہوں';
+      btn.disabled = false;
+      checkLocalMemberPassword(u, p, btn);
     });
-    if (count === 0) list.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">ابھی تک کوئی شکایت نہیں</div>';
-    document.getElementById('admin-stat-pending').textContent = pending;
-    if (isAdmin) renderAdminComplaints(snapshot);
-  }, function() {});
+  } else {
+    checkLocalMemberPassword(u, p, btn);
+  }
 }
 
-function renderAdminComplaints(snapshot) {
-  var panel = document.getElementById('admin-complaints-panel');
-  if (!panel) return;
-  panel.innerHTML = '';
-  snapshot.forEach(function(docSnap) {
-    var d = docSnap.data();
-    var row = document.createElement('div');
-    row.className = 'complaint-row';
-    row.innerHTML = '<div class="complaint-row-header"><span class="complaint-id">' + (d.complaintId||'') + '</span><select class="status-select" onchange="updateComplaintStatus(\'' + docSnap.id + '\',this.value)"><option' + (d.status==='زیرِ کارروائی'?' selected':'') + '>زیرِ کارروائی</option><option' + (d.status==='حل ہو گئی'?' selected':'') + '>حل ہو گئی</option><option' + (d.status==='مسترد'?' selected':'') + '>مسترد</option></select></div><div style="font-size:11px;margin-bottom:3px">' + (d.dept||'') + ' — ' + (d.district||'') + '</div><div style="font-size:10px;color:rgba(255,255,255,.6);margin-bottom:3px">' + (d.text||'').substring(0,50) + '</div><div style="font-size:9px;color:rgba(255,255,255,.4)">CNIC: ' + (d.cnic||'') + '</div>';
-    panel.appendChild(row);
-  });
-  if (!snapshot.size) panel.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">کوئی شکایت نہیں</div>';
+function checkLocalMemberPassword(u, p, btn) {
+  var local = JSON.parse(localStorage.getItem('ppp_members') || '[]');
+  for (var i = 0; i < local.length; i++) {
+    if (local[i].password === p) {
+      if (local[i].status === 'منظور') {
+        completeLogin(local[i].name || u, false, local[i]);
+        return;
+      } else {
+        SA('⏳','منظوری باقی ہے','آپ کی درخواست ابھی ایڈمن کی منظوری کا انتظار کر رہی ہے');
+        return;
+      }
+    }
+  }
+  SA('❌','پاس ورڈ غلط','یہ پاس ورڈ درست نہیں۔ اگر آپ نے رجسٹریشن کی ہے، ایڈمن کی منظوری اور پاس ورڈ کا انتظار کریں۔');
 }
 
-function updateComplaintStatus(docId, status) {
-  db.collection('complaints').doc(docId).update({status: status})
-    .then(function() { showAlert('✅','اپڈیٹ','حالت تبدیل ہو گئی'); })
-    .catch(function() { showAlert('❌','خرابی','اپڈیٹ نہ ہو سکی'); });
+function completeLogin(name, adminFlag, memberData) {
+  cUser = name;
+  isAdm = adminFlag;
+  document.getElementById('tnm').textContent = name.split(' ')[0];
+  document.getElementById('trl').textContent = isAdm ? 'ایڈمن' : cRole;
+  document.getElementById('tsu').textContent = isAdm ? 'ایڈمن کنٹرول' : 'سندھ نیٹ ورک';
+  document.getElementById('pfn').textContent = name;
+  document.getElementById('cnm').textContent = name;
+  if (memberData) {
+    if (memberData.position) document.getElementById('cps').textContent = memberData.position;
+    if (memberData.district) document.getElementById('car').textContent = memberData.district;
+    if (memberData.uc) document.getElementById('cuc').textContent = memberData.uc;
+    if (memberData.memberId) { document.getElementById('cmi').textContent = memberData.memberId; document.getElementById('pmid').textContent = memberData.memberId; }
+    if (memberData.photo) document.getElementById('cardPhotoBox').innerHTML = '<img src="' + memberData.photo + '" style="width:100%;height:100%;object-fit:cover;border-radius:6px">';
+  }
+  if (isAdm) {
+    document.getElementById('aab').style.display = 'block';
+    document.getElementById('prb').textContent = 'ایڈمن';
+  }
+  showScreen('sa');
+  navTo('pd');
 }
 
-// ═══════════════════════════════════════
-// REPS
-// ═══════════════════════════════════════
+// ═══ STATS (localStorage) ═══
+function loadStats() {
+  if (fbReady && db) {
+    db.collection('members').get().then(function(snap) {
+      document.getElementById('sw').textContent = snap.size;
+      document.getElementById('ast').textContent = snap.size;
+    }).catch(function() { loadStatsLocalFallback(); });
+    db.collection('complaints').get().then(function(snap) {
+      document.getElementById('sc2').textContent = snap.size;
+      document.getElementById('asc').textContent = snap.size;
+      var pnd = 0;
+      snap.forEach(function(doc) { if (doc.data().status !== 'حل ہو گئی') pnd++; });
+      document.getElementById('asp').textContent = pnd;
+    }).catch(function() { loadStatsLocalFallback(); });
+  } else {
+    loadStatsLocalFallback();
+  }
+}
+
+function loadStatsLocalFallback() {
+  var m = JSON.parse(localStorage.getItem('ppp_members') || '[]');
+  var c = JSON.parse(localStorage.getItem('ppp_complaints') || '[]');
+  document.getElementById('sw').textContent = m.length;
+  document.getElementById('sc2').textContent = c.length;
+  document.getElementById('ast').textContent = m.length;
+  document.getElementById('asc').textContent = c.length;
+  var pnd = 0;
+  for (var i = 0; i < c.length; i++) if (c[i].status !== 'حل ہو گئی') pnd++;
+  document.getElementById('asp').textContent = pnd;
+}
+
+// ═══ REPS ═══
 function renderReps(data) {
-  var el = document.getElementById('reps-list');
+  var el = document.getElementById('rl2');
   if (!el) return;
   if (!data.length) { el.innerHTML = '<div style="text-align:center;padding:28px;color:rgba(255,255,255,.4)">کوئی نتیجہ نہیں</div>'; return; }
   el.innerHTML = '';
-  var typeMap = {'MNA':'type-mna','MPA':'type-mpa','میئر':'type-mayor','چیئرمین':'type-chairman','قیادت':'type-leader'};
+  var tm = {'MNA':'tm','MPA':'tp2','میئر':'tmy','چیئرمین':'tc','قیادت':'tl2','ضلع صدر':'tw2','UC':'tw2'};
   for (var i = 0; i < data.length; i++) {
     var r = data[i];
-    var tc = typeMap[r.type] || 'type-leader';
-    var twBtn = r.tw ? '<a href="https://x.com/' + r.tw + '" target="_blank" style="display:inline-flex;align-items:center;gap:3px;background:rgba(29,155,240,.15);border:1px solid rgba(29,155,240,.4);border-radius:10px;padding:3px 9px;font-size:9px;color:#66aaff;text-decoration:none;margin-top:5px">🐦 @' + r.tw + (r.v?' ✓':'') + '</a>' : '<span style="font-size:8px;color:rgba(255,255,255,.2);display:block;margin-top:3px">X اکاؤنٹ نہیں</span>';
+    var tc = tm[r.t] || 'tl2';
+    var tw = r.tw ? '<a href="https://x.com/'+r.tw+'" target="_blank" style="display:inline-flex;align-items:center;gap:3px;background:rgba(29,155,240,.15);border:1px solid rgba(29,155,240,.4);border-radius:10px;padding:3px 9px;font-size:9px;color:#66aaff;text-decoration:none;margin-top:5px">🐦 @'+r.tw+(r.v?' ✓':'')+'</a>' : '';
     var card = document.createElement('div');
-    card.className = 'rep-card';
-    card.innerHTML = '<div class="rep-avatar">' + r.e + (r.v ? '<span style="position:absolute;bottom:-2px;right:-2px;background:#1d9bf0;border-radius:50%;width:13px;height:13px;font-size:8px;display:flex;align-items:center;justify-content:center;color:#fff">✓</span>' : '') + '</div><div class="rep-info"><div class="rep-name">' + r.name + '</div><div class="rep-pos">' + r.pos + '</div><div style="font-size:9px;color:rgba(255,255,255,.5)">' + r.con + '</div>' + (r.d ? '<div style="font-size:9px;color:rgba(0,200,0,.6)">📍 ' + r.d + '</div>' : '') + '<span class="rep-type-badge ' + tc + '">' + r.type + '</span>' + twBtn + '</div>';
+    card.className = 'rc';
+    card.innerHTML = '<div class="ra">'+r.e+(r.v?'<span style="position:absolute;bottom:-2px;right:-2px;background:#1d9bf0;border-radius:50%;width:13px;height:13px;font-size:8px;display:flex;align-items:center;justify-content:center;color:#fff">✓</span>':'')+'</div><div class="ri"><div class="rn">'+r.n+'</div><div class="rp2">'+r.p+'</div><div style="font-size:9px;color:rgba(255,255,255,.5)">'+r.c+'</div>'+(r.d?'<div style="font-size:9px;color:rgba(0,200,0,.6)">📍 '+r.d+'</div>':'')+'<span class="rtb '+tc+'">'+r.t+'</span>'+tw+'</div>';
     el.appendChild(card);
   }
 }
 
-function filterReps(q) {
-  var filtered = [];
+function filterR(q) {
+  var f = [];
   for (var i = 0; i < REPS.length; i++) {
     var r = REPS[i];
-    if (r.name.indexOf(q) !== -1 || r.con.indexOf(q) !== -1 || r.d.indexOf(q) !== -1) {
-      if (repTypeFilter === 'سب' || r.type === repTypeFilter) filtered.push(r);
+    if (r.n.indexOf(q) !== -1 || r.c.indexOf(q) !== -1 || r.d.indexOf(q) !== -1) {
+      if (rTF === 'سب' || r.t === rTF) f.push(r);
     }
   }
-  renderReps(filtered);
+  renderReps(f);
 }
 
-function filterRepsByType(type, btn) {
-  var tabs = document.querySelectorAll('.cat-tab');
-  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+function filterRT(type, btn) {
+  var ts = document.querySelectorAll('.ct2');
+  for (var i = 0; i < ts.length; i++) ts[i].classList.remove('active');
   btn.classList.add('active');
-  repTypeFilter = type;
-  var q = document.getElementById('rep-search').value || '';
-  var filtered = [];
+  rTF = type;
+  var q = document.getElementById('rs2').value || '';
+  var f = [];
   for (var j = 0; j < REPS.length; j++) {
     var r = REPS[j];
-    if (type === 'سب' || r.type === type) {
-      if (!q || r.name.indexOf(q) !== -1 || r.con.indexOf(q) !== -1) filtered.push(r);
+    if (type === 'سب' || r.t === type) {
+      if (!q || r.n.indexOf(q) !== -1 || r.c.indexOf(q) !== -1) f.push(r);
     }
   }
-  renderReps(filtered);
+  renderReps(f);
 }
 
-// ═══════════════════════════════════════
-// COMPLAINT
-// ═══════════════════════════════════════
-function selectDept(el) {
-  var chips = document.querySelectorAll('.dept-chip');
-  for (var i = 0; i < chips.length; i++) chips[i].classList.remove('selected');
-  el.classList.add('selected');
+// ═══ COMPLAINT ═══
+function selD(el) {
+  var cs = document.querySelectorAll('.dc2');
+  for (var i = 0; i < cs.length; i++) cs[i].classList.remove('sel');
+  el.classList.add('sel');
 }
 
 function getGPS() {
-  var lbl = document.getElementById('gps-label');
-  var res = document.getElementById('gps-result');
+  var lbl = document.getElementById('gl');
+  var res = document.getElementById('gr');
   lbl.innerHTML = '⏳ مقام معلوم ہو رہا ہے...';
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(pos) {
-      gpsLat = pos.coords.latitude;
-      gpsLng = pos.coords.longitude;
+      gLat = pos.coords.latitude;
+      gLng = pos.coords.longitude;
       lbl.textContent = '✅ مقام موصول';
-      res.textContent = '📍 ' + gpsLat.toFixed(4) + ', ' + gpsLng.toFixed(4);
+      res.textContent = '📍 ' + gLat.toFixed(4) + ', ' + gLng.toFixed(4);
     }, function() {
       lbl.textContent = '📍 مقام حاصل کریں';
       res.textContent = '⚠️ مقام کی اجازت نہیں';
@@ -834,230 +792,495 @@ function getGPS() {
   }
 }
 
-function submitComplaint() {
-  var cnic = document.getElementById('c-cnic').value.trim();
-  var text = document.getElementById('c-text').value.trim();
-  var district = document.getElementById('c-district').value;
-  var deptEl = document.querySelector('.dept-chip.selected');
-  var dept = deptEl ? deptEl.textContent : '';
-  if (!cnic || cnic.length < 13) { showAlert('⚠️','CNIC','CNIC نمبر لازمی ہے'); return; }
-  if (!text || text.length < 10) { showAlert('⚠️','تفصیل','کم از کم 10 حروف لکھیں'); return; }
-  if (!district) { showAlert('⚠️','ضلع','ضلع منتخب کریں'); return; }
-  var btn = document.getElementById('btn-submit-complaint');
+function subC() {
+  var cnic = document.getElementById('cc').value.trim();
+  var text = document.getElementById('ct2').value.trim();
+  var dist = document.getElementById('cd2').value;
+  var dEl = document.querySelector('.dc2.sel');
+  var dept = dEl ? dEl.textContent : '';
+  if (!cnic || cnic.length < 13) { SA('⚠️','CNIC','CNIC نمبر لازمی ہے'); return; }
+  if (!text || text.length < 10) { SA('⚠️','تفصیل','کم از کم 10 حروف لکھیں'); return; }
+  if (!dist) { SA('⚠️','ضلع','ضلع منتخب کریں'); return; }
+  var cid = 'PPP-' + Date.now().toString().slice(-6);
+  var entry = {id: cid, cnic: cnic, text: text, district: dist, dept: dept, status: 'زیرِ کارروائی', user: cUser, lat: gLat, lng: gLng, time: new Date().toISOString()};
+  var btn = document.getElementById('bsc');
   btn.innerHTML = '⏳ جمع ہو رہی ہے...';
   btn.disabled = true;
-  var cid = 'PPP-' + Date.now().toString().slice(-6);
-  db.collection('complaints').add({
-    complaintId: cid, cnic: cnic, text: text, district: district, dept: dept,
-    status: 'زیرِ کارروائی', user: currentUser, lat: gpsLat, lng: gpsLng,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(function() {
-    showAlertId('✅','شکایت درج ہو گئی','Firebase پر محفوظ', cid);
-    document.getElementById('c-text').value = '';
-    document.getElementById('c-cnic').value = '';
-    document.getElementById('gps-result').textContent = '';
-    gpsLat = null; gpsLng = null;
+
+  function afterSubmit() {
+    SAI('✅','شکایت درج ہو گئی','تمام ایڈمن کو نظر آئے گی', cid);
+    document.getElementById('ct2').value = '';
+    document.getElementById('cc').value = '';
+    document.getElementById('gr').textContent = '';
+    gLat = null; gLng = null;
     btn.innerHTML = '📤 شکایت جمع کریں';
     btn.disabled = false;
-  }).catch(function(e) {
-    showAlert('❌','خرابی', e.message);
-    btn.innerHTML = '📤 شکایت جمع کریں';
-    btn.disabled = false;
-  });
+    loadComplaints();
+    loadStats();
+  }
+
+  if (fbReady && db) {
+    db.collection('complaints').add(entry).then(afterSubmit).catch(function() {
+      saveLocalComplaint(entry);
+      afterSubmit();
+    });
+  } else {
+    saveLocalComplaint(entry);
+    afterSubmit();
+  }
 }
 
-// ═══════════════════════════════════════
-// REGISTRATION
-// ═══════════════════════════════════════
-function regNext(step) {
+function saveLocalComplaint(entry) {
+  var complaints = JSON.parse(localStorage.getItem('ppp_complaints') || '[]');
+  complaints.unshift(entry);
+  localStorage.setItem('ppp_complaints', JSON.stringify(complaints));
+}
+
+function loadComplaints() {
+  var list = document.getElementById('mcl');
+  var complaints = JSON.parse(localStorage.getItem('ppp_complaints') || '[]');
+  if (!complaints.length) { list.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">ابھی تک کوئی شکایت نہیں</div>'; return; }
+  list.innerHTML = '';
+  for (var i = 0; i < Math.min(complaints.length, 10); i++) {
+    var d = complaints[i];
+    var bc = d.status === 'حل ہو گئی' ? 'bg' : 'bo';
+    var div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px"><span style="font-size:11px">'+(d.dept||'')+' — '+(d.district||'')+'</span><span class="bdg '+bc+'">'+(d.status||'زیرِ کارروائی')+'</span></div><div style="font-size:9px;color:rgba(255,255,255,.4)">ID: '+(d.id||'')+' • '+(d.time||'').slice(0,10)+'</div>';
+    list.appendChild(div);
+  }
+}
+
+function loadAdminComplaints() {
+  var acp = document.getElementById('acp');
+  acp.innerHTML = '<div style="text-align:center;padding:20px"><div class="sp"></div></div>';
+  var local = JSON.parse(localStorage.getItem('ppp_complaints') || '[]');
+  if (fbReady && db) {
+    db.collection('complaints').orderBy('time', 'desc').limit(50).get().then(function(snap) {
+      var fsComplaints = [];
+      snap.forEach(function(doc) { var c = doc.data(); c._docId = doc.id; fsComplaints.push(c); });
+      renderAdminComplaints(fsComplaints, true);
+    }).catch(function() { renderAdminComplaints(local, false); });
+  } else {
+    renderAdminComplaints(local, false);
+  }
+}
+
+function renderAdminComplaints(complaints, isFirestore) {
+  var acp = document.getElementById('acp');
+  if (!complaints.length) { acp.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">کوئی شکایت نہیں</div>'; return; }
+  acp.innerHTML = '';
+  window._complaintsCache = complaints;
+  window._complaintsCacheIsFS = isFirestore;
+  for (var j = 0; j < complaints.length; j++) {
+    var c = complaints[j];
+    var row2 = document.createElement('div');
+    row2.className = 'cr2';
+    row2.innerHTML = '<div class="crh"><span class="cid">'+(c.id||c.complaintId||'')+'</span><select class="ss" onchange="updCS('+j+',this.value)"><option'+(c.status==='زیرِ کارروائی'?' selected':'')+'>زیرِ کارروائی</option><option'+(c.status==='حل ہو گئی'?' selected':'')+'>حل ہو گئی</option><option'+(c.status==='مسترد'?' selected':'')+'>مسترد</option></select></div><div style="font-size:11px;margin-bottom:3px">'+(c.dept||'')+' — '+(c.district||'')+'</div><div style="font-size:10px;color:rgba(255,255,255,.6);margin-bottom:3px">'+(c.text||'').substring(0,50)+'</div><div style="font-size:9px;color:rgba(255,255,255,.4)">CNIC: '+(c.cnic||'')+'</div>';
+    acp.appendChild(row2);
+  }
+}
+
+// ═══ REGISTRATION ═══
+function regN(step) {
   for (var i = 1; i <= 4; i++) {
-    var el = document.getElementById('reg-step-' + i);
+    var el = document.getElementById('rg' + i);
     if (el) el.style.display = (i === step) ? 'block' : 'none';
-    var rs = document.getElementById('rs' + i);
-    if (rs) { rs.className = 'reg-step'; if (i < step) rs.classList.add('done'); else if (i === step) rs.classList.add('active'); }
+    var rs = document.getElementById('rs' + (i === 2 ? '2_' : i));
+    if (rs) { rs.className = 'rs'; if (i < step) rs.classList.add('done'); else if (i === step) rs.classList.add('active'); }
   }
   if (step === 4) {
-    document.getElementById('preview-name').textContent = document.getElementById('r-name').value || 'آپ کا نام';
-    document.getElementById('preview-cnic').textContent = 'CNIC: ' + (document.getElementById('r-cnic').value || '———');
-    document.getElementById('preview-district').textContent = 'ضلع: ' + (document.getElementById('r-district').value || '———');
+    document.getElementById('pvn').textContent = document.getElementById('rn').value || 'آپ کا نام';
+    document.getElementById('pvc').textContent = 'CNIC: ' + (document.getElementById('rc').value || '———');
+    document.getElementById('pvd').textContent = 'ضلع: ' + (document.getElementById('rd').value || '———');
   }
 }
 
-function completeReg() {
-  var name = document.getElementById('r-name').value.trim();
-  var cnic = document.getElementById('r-cnic').value.trim();
-  var phone = document.getElementById('r-phone').value.trim();
-  if (!name || !cnic || !phone) { showAlert('⚠️','نامکمل','نام، CNIC اور موبائل لازمی ہیں'); return; }
-  var btn = document.getElementById('btn-complete-reg');
-  btn.innerHTML = '⏳ رجسٹر ہو رہا ہے...';
-  btn.disabled = true;
-  var mid = 'PPP-' + Date.now().toString().slice(-4);
-  db.collection('members').add({
+function compReg() {
+  var name = document.getElementById('rn').value.trim();
+  var cnic = document.getElementById('rc').value.trim();
+  var phone = document.getElementById('rph').value.trim();
+  if (!name || !cnic || !phone) { SA('⚠️','نامکمل','نام، CNIC اور موبائل لازمی ہیں'); return; }
+  var mid = 'PPP-' + Date.now().toString().slice(-5);
+  var memberData = {
     memberId: mid, name: name, cnic: cnic, phone: phone,
-    age: document.getElementById('r-age').value,
-    district: document.getElementById('r-district').value,
-    uc: document.getElementById('r-uc').value,
-    position: document.getElementById('r-position').value,
-    twitter: document.getElementById('r-twitter').value,
-    fb: document.getElementById('r-fb').value,
+    age: document.getElementById('ra').value,
+    district: document.getElementById('rd').value,
+    uc: document.getElementById('ru').value,
+    position: document.getElementById('rpo').value,
+    twitter: document.getElementById('rtw').value,
+    fb: document.getElementById('rfb').value,
+    photo: regPhotoData || null,
     status: 'زیرِ کارروائی',
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(function() {
-    document.getElementById('card-name').textContent = name;
-    document.getElementById('card-pos').textContent = document.getElementById('r-position').value;
-    document.getElementById('card-area').textContent = document.getElementById('r-district').value;
-    document.getElementById('card-uc').textContent = document.getElementById('r-uc').value;
-    document.getElementById('card-mid').textContent = mid;
-    document.getElementById('p-mid').textContent = mid;
-    showAlert('🎉','رجسٹریشن مکمل','Firebase پر محفوظ ہو گیا');
-    btn.innerHTML = 'رجسٹریشن مکمل کریں 🎉';
-    btn.disabled = false;
-    setTimeout(function() { showScreen('screen-app'); navTo('card'); }, 1500);
-  }).catch(function(e) {
-    showAlert('❌','خرابی', e.message);
-    btn.innerHTML = 'رجسٹریشن مکمل کریں 🎉';
-    btn.disabled = false;
-  });
-}
+    password: null,
+    time: new Date().toISOString()
+  };
+  var btn = document.getElementById('bcr');
+  btn.innerHTML = '⏳ بھیجا جا رہا ہے...';
+  btn.disabled = true;
 
-// ═══════════════════════════════════════
-// ADMIN
-// ═══════════════════════════════════════
-function loadAdminMembers() {
-  var panel = document.getElementById('admin-members-panel');
-  panel.innerHTML = '<div style="text-align:center;padding:20px"><div class="spin"></div></div>';
-  db.collection('members').orderBy('createdAt','desc').get().then(function(snap) {
-    panel.innerHTML = '';
-    snap.forEach(function(docSnap) {
-      var d = docSnap.data();
-      var row = document.createElement('div');
-      row.className = 'activist-card';
-      row.innerHTML = '<div class="activist-avatar">👤</div><div class="activist-info"><div class="activist-name">' + (d.name||'') + '</div><div class="activist-pos">' + (d.position||'') + '</div><div class="activist-district">' + (d.district||'') + ' | ' + (d.uc||'') + '</div><div class="activist-constituency">📱 ' + (d.phone||'') + '</div></div><div><span class="badge ' + (d.status==='منظور'?'badge-green':'badge-gold') + '">' + (d.status||'زیرِ کارروائی') + '</span><br><button style="font-size:9px;margin-top:5px;background:rgba(0,200,0,.2);border:1px solid rgba(0,200,0,.4);border-radius:8px;padding:3px 8px;color:#44ff88;cursor:pointer" onclick="approveMember(\'' + docSnap.id + '\')">✅ منظور</button></div>';
-      panel.appendChild(row);
+  function afterSave() {
+    document.getElementById('cnm').textContent = name;
+    document.getElementById('cps').textContent = document.getElementById('rpo').value;
+    document.getElementById('car').textContent = document.getElementById('rd').value;
+    document.getElementById('cuc').textContent = document.getElementById('ru').value;
+    document.getElementById('cmi').textContent = mid;
+    if (regPhotoData) {
+      document.getElementById('cardPhotoBox').innerHTML = '<img src="' + regPhotoData + '" style="width:100%;height:100%;object-fit:cover;border-radius:6px">';
+    }
+    btn.innerHTML = 'رجسٹریشن مکمل کریں 🎉';
+    btn.disabled = false;
+    SA('🎉','درخواست بھیج دی گئی','ایڈمن کی منظوری کے بعد آپ کو پاس ورڈ موصول ہوگا۔\nرکن ID: ' + mid);
+    setTimeout(function() { showScreen('sl'); }, 1800);
+  }
+
+  if (fbReady && db) {
+    db.collection('members').add(memberData).then(afterSave).catch(function(err) {
+      saveLocalMember(memberData);
+      afterSave();
     });
-    if (snap.size === 0) panel.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">کوئی ممبر نہیں</div>';
-  }).catch(function(e) { panel.innerHTML = '<div style="color:#ff6666;padding:12px">' + e.message + '</div>'; });
+  } else {
+    saveLocalMember(memberData);
+    afterSave();
+  }
 }
 
-function approveMember(docId) {
-  db.collection('members').doc(docId).update({status:'منظور'})
-    .then(function() { showAlert('✅','منظور','ممبر منظور ہو گیا'); loadAdminMembers(); })
-    .catch(function() { showAlert('❌','خرابی','اپڈیٹ نہ ہو سکی'); });
+function saveLocalMember(memberData) {
+  var members = JSON.parse(localStorage.getItem('ppp_members') || '[]');
+  members.unshift(memberData);
+  localStorage.setItem('ppp_members', JSON.stringify(members));
 }
 
-function selBcType(btn, type) {
-  var btns = document.querySelectorAll('.bc-type-btn');
-  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('selected');
-  btn.classList.add('selected');
-  bcType = type;
+// ═══ ADMIN ═══
+function loadMembers() {
+  var panel = document.getElementById('amp');
+  panel.innerHTML = '<div style="text-align:center;padding:20px"><div class="sp"></div></div>';
+  if (fbReady && db) {
+    db.collection('members').orderBy('time', 'desc').get().then(function(snap) {
+      var members = [];
+      snap.forEach(function(doc) {
+        var m = doc.data();
+        m._docId = doc.id;
+        members.push(m);
+      });
+      renderMembersList(members, true);
+    }).catch(function() {
+      renderMembersList(JSON.parse(localStorage.getItem('ppp_members') || '[]'), false);
+    });
+  } else {
+    renderMembersList(JSON.parse(localStorage.getItem('ppp_members') || '[]'), false);
+  }
 }
 
-function publishBroadcast() {
-  var title = document.getElementById('bc-title').value.trim();
-  var msg = document.getElementById('bc-msg').value.trim();
-  if (!title || !msg) { showAlert('⚠️','نامکمل','عنوان اور پیغام لازمی ہیں'); return; }
-  db.collection('broadcasts').add({
-    title: title, msg: msg, type: bcType,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(function() {
-    document.getElementById('latest-broadcast-msg').textContent = msg;
-    var card = document.createElement('div');
-    card.className = 'broadcast-card';
-    card.innerHTML = '<span class="badge badge-red" style="margin-bottom:9px;display:inline-block">📢 ' + bcType + '</span><div class="broadcast-title">' + title + '</div><div class="broadcast-msg">' + msg + '</div><div class="broadcast-meta"><span class="badge badge-gold">🌹 ایڈمن</span></div><div class="btn-row"><button class="btn-sm btn-sm-red" onclick="showAlert(\'✅\',\'پڑھ لیا\',\'\')">✅ پڑھ لیا</button><button class="btn-sm btn-sm-outline" onclick="doShare(\'whatsapp\')">📤 شیئر</button></div>';
-    document.getElementById('broadcast-list').insertBefore(card, document.getElementById('broadcast-list').firstChild);
-    document.getElementById('bc-title').value = '';
-    document.getElementById('bc-msg').value = '';
-    showAlert('✅','بھیج دیا','Firebase پر محفوظ ہو گیا');
-  }).catch(function(e) { showAlert('❌','خرابی',e.message); });
+function renderMembersList(members, isFirestore) {
+  var panel = document.getElementById('amp');
+  if (!members.length) { panel.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">کوئی ممبر نہیں</div>'; return; }
+  panel.innerHTML = '';
+  for (var i = 0; i < members.length; i++) {
+    var d = members[i];
+    var row = document.createElement('div');
+    row.className = 'ac';
+    var statusBadge = d.status === 'منظور' ? '<span class="bdg bg">منظور ✓</span><div style="font-size:8px;color:#ffd060;margin-top:3px;font-family:\'Orbitron\',sans-serif">پاس: ' + (d.password || '—') + '</div>' : '<button style="font-size:9px;margin-top:0;background:rgba(0,200,0,.2);border:1px solid rgba(0,200,0,.4);border-radius:8px;padding:5px 10px;color:#44ff88;cursor:pointer" onclick="approveMember(' + i + ',\'' + (isFirestore ? d._docId : '') + '\',' + (isFirestore ? 'true' : 'false') + ')">✅ منظور کریں</button>';
+    row.innerHTML = '<div class="aa">' + (d.photo ? '<img src="' + d.photo + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover">' : '👤') + '</div><div class="ai"><div class="an">' + (d.name || '') + '</div><div class="ap">' + (d.position || '') + '</div><div class="ad">' + (d.district || '') + ' | ' + (d.uc || '') + '</div><div class="aq">📱 ' + (d.phone || '') + ' | ID: ' + (d.memberId || d.id || '') + '</div></div><div style="text-align:center">' + statusBadge + '</div>';
+    panel.appendChild(row);
+  }
+  window._membersCache = members;
+  window._membersCacheIsFS = isFirestore;
 }
 
-function bcWhatsApp() {
-  var msg = document.getElementById('bc-msg').value.trim();
-  if (!msg) { showAlert('⚠️','پیغام لکھیں',''); return; }
+function approveMember(idx, docId, isFirestore) {
+  var members = window._membersCache || [];
+  var m = members[idx];
+  if (!m) return;
+  var pass = generateMemberPassword(m);
+  if (isFirestore && fbReady && db && docId) {
+    db.collection('members').doc(docId).update({status: 'منظور', password: pass}).then(function() {
+      SA('✅', 'ممبر منظور ہو گیا', 'پاس ورڈ: ' + pass + '\n\nیہ پاس ورڈ ممبر کو واٹس ایپ یا کال پر بھیجیں۔');
+      loadMembers();
+      loadStats();
+    }).catch(function() {
+      SA('❌', 'خرابی', 'منظوری میں مسئلہ ہوا، دوبارہ کوشش کریں');
+    });
+  } else {
+    var local = JSON.parse(localStorage.getItem('ppp_members') || '[]');
+    for (var i = 0; i < local.length; i++) {
+      if (local[i].memberId === m.memberId) { local[i].status = 'منظور'; local[i].password = pass; break; }
+    }
+    localStorage.setItem('ppp_members', JSON.stringify(local));
+    SA('✅', 'ممبر منظور ہو گیا', 'پاس ورڈ: ' + pass + '\n\nیہ پاس ورڈ ممبر کو واٹس ایپ یا کال پر بھیجیں۔');
+    loadMembers();
+    loadStats();
+  }
+}
+
+function generateMemberPassword(m) {
+  var phoneDigits = (m.phone || '').replace(/[^0-9]/g, '');
+  var last4 = phoneDigits.slice(-4) || Math.floor(1000 + Math.random() * 9000).toString();
+  var rand = Math.floor(10 + Math.random() * 90);
+  return 'ppp' + last4 + rand;
+}
+
+function updCS(idx, status) {
+  var complaints = window._complaintsCache || [];
+  var c = complaints[idx];
+  if (!c) return;
+  if (window._complaintsCacheIsFS && fbReady && db && c._docId) {
+    db.collection('complaints').doc(c._docId).update({status: status}).then(function() {
+      SA('✅','اپڈیٹ','حالت تبدیل ہو گئی');
+      loadStats();
+    }).catch(function() { SA('❌','خرابی','اپڈیٹ نہ ہو سکا'); });
+  } else {
+    var local = JSON.parse(localStorage.getItem('ppp_complaints') || '[]');
+    for (var i = 0; i < local.length; i++) {
+      if (local[i].id === c.id) { local[i].status = status; break; }
+    }
+    localStorage.setItem('ppp_complaints', JSON.stringify(local));
+    SA('✅','اپڈیٹ','حالت تبدیل ہو گئی');
+    loadStats();
+  }
+}
+
+function sBT(btn, type) {
+  var bs = document.querySelectorAll('.btb');
+  for (var i = 0; i < bs.length; i++) bs[i].classList.remove('sel');
+  btn.classList.add('sel');
+  bcT = type;
+}
+
+function pubBC() {
+  var title = document.getElementById('bct').value.trim();
+  var msg = document.getElementById('bcm').value.trim();
+  if (!title || !msg) { SA('⚠️','نامکمل','عنوان اور پیغام لازمی ہیں'); return; }
+  var bcs = JSON.parse(localStorage.getItem('ppp_broadcasts') || '[]');
+  bcs.unshift({title:title, msg:msg, type:bcT, time:new Date().toISOString()});
+  localStorage.setItem('ppp_broadcasts', JSON.stringify(bcs));
+  document.getElementById('lbm').textContent = msg;
+  var card = document.createElement('div');
+  card.className = 'bcc';
+  card.innerHTML = '<span class="bdg br" style="margin-bottom:9px;display:inline-block">📢 '+bcT+'</span><div class="bt">'+title+'</div><div class="bm">'+msg+'</div><div class="bmt"><span class="bdg bo">🌹 ایڈمن</span></div><div class="br2"><button class="bs2 bsr" onclick="SA(\'✅\',\'پڑھ لیا\',\'\')">✅ پڑھ لیا</button><button class="bs2 bso" onclick="doShare(\'w\')">📤 شیئر</button></div>';
+  document.getElementById('bcl').insertBefore(card, document.getElementById('bcl').firstChild);
+  document.getElementById('bct').value = '';
+  document.getElementById('bcm').value = '';
+  SA('✅','بھیج دیا','نشریات محفوظ ہو گئی');
+}
+
+function bcWA() {
+  var msg = document.getElementById('bcm').value.trim();
+  if (!msg) { SA('⚠️','پیغام لکھیں',''); return; }
   window.open('https://wa.me/?text=' + encodeURIComponent('🌹 PPP Pulse\n\n' + msg + '\n\n#PPPZindabad'), '_blank');
 }
 
-function bcTwitter() {
-  var msg = document.getElementById('bc-msg').value.trim();
-  if (!msg) { showAlert('⚠️','پیغام لکھیں',''); return; }
+function bcTW() {
+  var msg = document.getElementById('bcm').value.trim();
+  if (!msg) { SA('⚠️','پیغام لکھیں',''); return; }
   window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(msg + ' 🌹 #PPPZindabad'), '_blank');
 }
 
-// ═══════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════
+// ═══ CHAT ROOM (Firebase real-time, with localStorage fallback) ═══
+var chatUnsub = null;
+
+function loadChat() {
+  var box = document.getElementById('chatMsgs');
+  if (fbReady && db) {
+    box.innerHTML = '<div style="text-align:center;padding:30px"><div class="sp"></div></div>';
+    if (chatUnsub) { chatUnsub(); chatUnsub = null; }
+    chatUnsub = db.collection('chat').orderBy('time', 'asc').limitToLast(150).onSnapshot(function(snap) {
+      renderChatMsgs(snap.docs.map(function(d) { return d.data(); }));
+    }, function(err) {
+      renderChatLocal();
+    });
+  } else {
+    renderChatLocal();
+  }
+}
+
+function renderChatLocal() {
+  var msgs = JSON.parse(localStorage.getItem('ppp_chat') || '[]');
+  renderChatMsgs(msgs);
+}
+
+function renderChatMsgs(msgs) {
+  var box = document.getElementById('chatMsgs');
+  if (!msgs.length) {
+    box.innerHTML = '<div style="text-align:center;padding:30px;font-size:11px;color:rgba(255,255,255,.35)">ابھی تک کوئی پیغام نہیں — سلام کرنے والے پہلے بنیں! 🌹</div>';
+    return;
+  }
+  box.innerHTML = '';
+  for (var i = 0; i < msgs.length; i++) {
+    var m = msgs[i];
+    var mine = m.user === cUser;
+    var bubble = document.createElement('div');
+    bubble.style.cssText = 'max-width:80%;align-self:' + (mine ? 'flex-end' : 'flex-start') + ';background:' + (mine ? 'linear-gradient(135deg,#7a0000,#aa0000)' : 'rgba(255,255,255,.07)') + ';border-radius:12px;padding:8px 12px;';
+    bubble.innerHTML = (mine ? '' : '<div style="font-size:9px;color:#00dd00;margin-bottom:2px;font-weight:600">' + escapeHtml(m.user) + '</div>') + '<div style="font-size:12px;color:#fff;line-height:1.6">' + escapeHtml(m.text) + '</div><div style="font-size:8px;color:rgba(255,255,255,.35);margin-top:3px;text-align:left">' + formatChatTime(m.time) + '</div>';
+    box.appendChild(bubble);
+  }
+  box.scrollTop = box.scrollHeight;
+}
+
+function sendChat() {
+  var input = document.getElementById('chatInput');
+  var text = input.value.trim();
+  if (!text) return;
+  var entry = {user: cUser || 'ورکر', text: text, time: new Date().toISOString()};
+  input.value = '';
+  if (fbReady && db) {
+    db.collection('chat').add(entry).catch(function(err) {
+      saveLocalChat(entry);
+      SA('⚠️','نوٹ','انٹرنیٹ کا مسئلہ — پیغام صرف اس فون پر محفوظ ہوا');
+    });
+  } else {
+    saveLocalChat(entry);
+  }
+}
+
+function saveLocalChat(entry) {
+  var msgs = JSON.parse(localStorage.getItem('ppp_chat') || '[]');
+  msgs.push(entry);
+  if (msgs.length > 200) msgs = msgs.slice(msgs.length - 200);
+  localStorage.setItem('ppp_chat', JSON.stringify(msgs));
+  renderChatLocal();
+}
+
+function formatChatTime(iso) {
+  try {
+    var d = new Date(iso);
+    var h = d.getHours();
+    var m = d.getMinutes();
+    return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+  } catch (e) { return ''; }
+}
+
+function escapeHtml(s) {
+  var div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
+
 function showScreen(id) {
-  var screens = document.querySelectorAll('.screen');
-  for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+  var ss = document.querySelectorAll('.screen');
+  for (var i = 0; i < ss.length; i++) ss[i].classList.remove('active');
   document.getElementById(id).classList.add('active');
 }
 
 function navTo(page) {
-  var pages = document.querySelectorAll('.tab-page');
-  for (var i = 0; i < pages.length; i++) pages[i].classList.remove('active');
-  var navs = document.querySelectorAll('.nav-item');
-  for (var j = 0; j < navs.length; j++) navs[j].classList.remove('active');
-  var pe = document.getElementById('page-' + page);
-  var ne = document.getElementById('nav-' + page);
+  var ps = document.querySelectorAll('.tp');
+  for (var i = 0; i < ps.length; i++) ps[i].classList.remove('active');
+  var ns = document.querySelectorAll('.ni');
+  for (var j = 0; j < ns.length; j++) ns[j].classList.remove('active');
+  var pe = document.getElementById(page);
+  var ne = document.getElementById('n' + page.slice(1));
   if (pe) pe.classList.add('active');
   if (ne) ne.classList.add('active');
-  var pc = document.querySelector('.page-content');
+  var pc = document.querySelector('.pc');
   if (pc) pc.scrollTop = 0;
-  if (page === 'admin' && isAdmin) loadAdminMembers();
+  if (page === 'pad' && isAdm) { loadMembers(); loadAdminComplaints(); }
+  if (page === 'pc2') loadComplaints();
+  if (page === 'pch') loadChat();
 }
 
-// ═══════════════════════════════════════
-// LOGOUT
-// ═══════════════════════════════════════
+// ═══ LOGOUT ═══
 function logout() {
   if (!confirm('کیا آپ واقعی لاگ آؤٹ کرنا چاہتے ہیں؟')) return;
-  isAdmin = false;
-  currentUser = '';
-  document.getElementById('admin-access-btn').style.display = 'none';
-  document.getElementById('loginUser').value = '';
-  document.getElementById('loginPass').value = '';
-  var tabs = document.querySelectorAll('.role-tab');
-  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
-  tabs[0].classList.add('active');
-  currentRole = 'ورکر';
-  showScreen('screen-login');
+  isAdm = false;
+  cUser = '';
+  document.getElementById('aab').style.display = 'none';
+  document.getElementById('lu').value = '';
+  document.getElementById('lp').value = '';
+  var ts = document.querySelectorAll('.rt');
+  for (var i = 0; i < ts.length; i++) ts[i].classList.remove('active');
+  ts[0].classList.add('active');
+  cRole = 'ورکر';
+  showScreen('sl');
 }
 
-// ═══════════════════════════════════════
-// SHARE
-// ═══════════════════════════════════════
+// ═══ SHARE ═══
 function doShare(type) {
   var msg = '';
-  if (type === 'whatsapp' || type === 'broadcast') msg = document.getElementById('latest-broadcast-msg').textContent + '\n\n🌹 PPP Pulse Ultra\n#PPPZindabad';
-  else if (type === 'card') msg = 'میں PPP Pulse Ultra کا تصدیق شدہ ممبر ہوں 🌹 #PPPZindabad';
-  else if (type === 'twitter') { window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('جیے بھٹو 🌹 #PPPZindabad'), '_blank'); return; }
-  if (navigator.share) { navigator.share({text: msg}).catch(function() {}); }
-  else window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  if (type === 'w') msg = document.getElementById('lbm').textContent + '\n\n🌹 PPP Pulse Ultra\n#PPPZindabad';
+  else if (type === 'c') msg = 'میں PPP Pulse Ultra کا تصدیق شدہ ممبر ہوں 🌹\nنام: ' + (document.getElementById('cnm').textContent||'') + '\nID: ' + (document.getElementById('cmi').textContent||'') + '\n#PPPZindabad';
+  else if (type === 't') { window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('جیے بھٹو 🌹 #PPPZindabad'), '_blank'); return; }
+
+  if (navigator.share) {
+    navigator.share({text: msg}).catch(function() { copyToClipboard(msg); });
+  } else {
+    copyToClipboard(msg);
+  }
 }
 
-// ═══════════════════════════════════════
-// MODAL
-// ═══════════════════════════════════════
-function showAlert(icon, title, msg) {
-  document.getElementById('modal-icon').textContent = icon;
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-msg').textContent = msg;
-  document.getElementById('modal-id').style.display = 'none';
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      SA('📋','کاپی ہو گیا','پیغام کاپی ہو گیا — اب WhatsApp، X یا Facebook میں Paste کریں');
+    }).catch(function() { fallbackCopy(text); });
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    SA('📋','کاپی ہو گیا','پیغام کاپی ہو گیا — اب WhatsApp، X یا Facebook میں Paste کریں');
+  } catch (e) {
+    SA('⚠️','کاپی نہیں ہوا','پیغام منتخب کر کے خود کاپی کریں');
+  }
+  document.body.removeChild(ta);
+}
+
+// ═══ MODAL ═══
+function SA(icon, title, msg) {
+  document.getElementById('moi').textContent = icon;
+  document.getElementById('mot').textContent = title;
+  document.getElementById('mom').textContent = msg;
+  document.getElementById('moid').style.display = 'none';
   document.getElementById('modal').classList.add('open');
 }
-function showAlertId(icon, title, msg, id) {
-  showAlert(icon, title, msg);
-  document.getElementById('modal-id').textContent = id;
-  document.getElementById('modal-id').style.display = 'block';
+function SAI(icon, title, msg, id) {
+  SA(icon, title, msg);
+  document.getElementById('moid').textContent = id;
+  document.getElementById('moid').style.display = 'block';
 }
-function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function CM() { document.getElementById('modal').classList.remove('open'); }
 
-// ═══════════════════════════════════════
-// MISC
-// ═══════════════════════════════════════
-function fakeUpload() { document.getElementById('upload-icon').textContent = '✅'; document.getElementById('upload-text').textContent = 'فائل منسلک ہو گئی'; }
-function fakePhotoUpload() { document.getElementById('photo-icon').textContent = '✅'; document.getElementById('photo-text').textContent = 'تصویر اپلوڈ ہو گئی'; }
-function toggleSw(el) { el.classList.toggle('on'); el.classList.toggle('off'); }
+// ═══ MISC ═══
+function setupPhotoInput() {
+  var inp = document.getElementById('photoFile');
+  if (!inp) return;
+  inp.addEventListener('change', function(ev) {
+    var files = ev.target.files;
+    if (!files || !files.length) {
+      SA('⚠️','تصویر منتخب نہیں ہوئی','دوبارہ کوشش کریں');
+      return;
+    }
+    var file = files[0];
+    if (file.size > 3000000) { SA('⚠️','فائل بڑی ہے','3MB سے کم تصویر منتخب کریں'); return; }
+    if (!window.FileReader) {
+      SA('⚠️','معاون نہیں','یہ براؤزر تصویر اپلوڈ سپورٹ نہیں کرتا');
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      regPhotoData = e.target.result;
+      var picEl = document.getElementById('pic');
+      var ptxtEl = document.getElementById('ptxt');
+      if (picEl) picEl.innerHTML = '<img src="' + regPhotoData + '" style="width:46px;height:46px;border-radius:8px;object-fit:cover">';
+      if (ptxtEl) ptxtEl.textContent = '✅ تصویر اپلوڈ ہو گئی — تبدیل کرنے کے لیے دوبارہ دبائیں';
+    };
+    reader.onerror = function() {
+      SA('❌','خرابی','تصویر پڑھنے میں مسئلہ ہوا، دوبارہ کوشش کریں');
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function tSw(el) { el.classList.toggle('on'); el.classList.toggle('off'); }
 </script>
 </body>
 </html>
