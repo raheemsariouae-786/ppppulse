@@ -237,7 +237,7 @@ textarea.fi{resize:vertical;min-height:80px;}
     <div class="sc"><div class="si">&#x1F465;</div><div class="sn" id="sw">0</div><div class="sl">کل ممبران</div></div>
     <div class="sc"><div class="si">&#x1F4CB;</div><div class="sn" id="sc2">0</div><div class="sl">شکایات</div></div>
     <div class="sc"><div class="si">&#x1F3DB;</div><div class="sn">159</div><div class="sl">PPP نمائندے</div></div>
-    <div class="sc"><div class="si">&#x1F5FA;</div><div class="sn">33</div><div class="sl">سندھ اضلاع</div></div>
+    <div class="sc"><div class="si">&#x1F5FA;</div><div class="sn" id="sdist">33</div><div class="sl">سندھ اضلاع</div></div>
    </div>
    <div class="bcc">
     <div class="bt">&#x1F4E2; تازہ ترین پیغام</div>
@@ -249,8 +249,10 @@ textarea.fi{resize:vertical;min-height:80px;}
    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px">
     <button class="card cr" style="cursor:pointer;text-align:center;border:none" onclick="navTo('pc2')"><div style="font-size:26px;margin-bottom:5px">&#x1F4DD;</div><div style="font-size:11px">شکایت درج کریں</div></button>
     <button class="card cg" style="cursor:pointer;text-align:center;border:none" onclick="navTo('prp')"><div style="font-size:26px;margin-bottom:5px">&#x1F3DB;</div><div style="font-size:11px">PPP نمائندے</div></button>
-    <button class="card cb" style="cursor:pointer;text-align:center;border:none" onclick="navTo('pbc')"><div style="font-size:26px;margin-bottom:5px">&#x1F4E2;</div><div style="font-size:11px">نشریات</div></button>
+    <button class="card cb" style="cursor:pointer;text-align:center;border:none" onclick="navTo('pkf')"><div style="font-size:26px;margin-bottom:5px">&#x1F4F0;</div><div style="font-size:11px">کارکن فیڈ</div></button>
     <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.04)" onclick="navTo('pch')"><div style="font-size:26px;margin-bottom:5px">&#x1F4AC;</div><div style="font-size:11px">چیٹ روم</div></button>
+    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,200,0,.06);border:1px solid rgba(255,200,0,.2)" onclick="navTo('paf')"><div style="font-size:26px;margin-bottom:5px">&#x1F426;</div><div style="font-size:11px">ایکٹیوسٹ فارم</div></button>
+    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.04)" onclick="navTo('pbc')"><div style="font-size:26px;margin-bottom:5px">&#x1F4E2;</div><div style="font-size:11px">نشریات</div></button>
    </div>
   </div>
 
@@ -345,6 +347,40 @@ textarea.fi{resize:vertical;min-height:80px;}
    </div>
   </div>
 
+  <!-- ACTIVIST SELF-REGISTRATION FORM -->
+  <div class="tp" id="paf">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:22px">&#x1F426;</span><div><div style="font-size:17px;font-weight:600">ایکٹیوسٹ فارم</div><div style="font-size:10px;color:rgba(255,255,255,.5)">سوشل میڈیا ایکٹیوسٹ کی معلومات درج کریں</div></div></div>
+   <div style="background:rgba(255,200,0,.08);border:1px solid rgba(255,200,0,.25);border-radius:10px;padding:9px 12px;margin-bottom:14px;font-size:10px;color:rgba(255,220,150,.85)">&#x2139; یہ فارم بھر کر اپنا نام اور Twitter/X ID شامل کریں — ایڈمن کی تصدیق کے بعد آپ "PPP نمائندے" کی فہرست میں نظر آئیں گے۔ صرف سندھ کے PPP کارکن، عہدیدار اور سوشل میڈیا ایکٹیوسٹ شامل کریں۔</div>
+   <div class="card">
+    <div class="fg"><label class="fl">&#x1F464; پورا نام (لازمی)</label><input type="text" class="fi" id="af-name" placeholder="آپ کا نام"></div>
+    <div class="fg"><label class="fl">&#x1F396; عہدہ</label>
+     <select class="fi" id="af-pos">
+      <option>سوشل میڈیا ایکٹیوسٹ</option><option>UC چیئرمین</option><option>UC وائس چیئرمین</option>
+      <option>UC صدر</option><option>UC جنرل سیکریٹری</option><option>UC انفارمیشن سیکریٹری</option>
+      <option>وارڈ صدر</option><option>ضلع صدر</option><option>ضلع جنرل سیکریٹری</option>
+      <option>ضلع انفارمیشن سیکریٹری</option><option>کونسلر</option><option>عام ممبر</option><option>دیگر</option>
+     </select>
+    </div>
+    <div class="fg"><label class="fl">&#x1F5FA; ضلع (سندھ)</label><select class="fi" id="af-dist"><option value="">ضلع منتخب کریں</option></select></div>
+    <div class="fg"><label class="fl">&#x1F3D8; UC / حلقہ (اختیاری)</label><input type="text" class="fi" id="af-uc" placeholder="مثلاً UC-1 جنت گل ٹاؤن"></div>
+    <div class="fg"><label class="fl">&#x1F426; Twitter/X ID</label><input type="text" class="fi" id="af-tw" placeholder="@username (بغیر @ بھی لکھ سکتے ہیں)" dir="ltr"></div>
+    <div class="fg"><label class="fl">&#x1F4F1; فیس بک (اختیاری)</label><input type="text" class="fi" id="af-fb" placeholder="facebook.com/username" dir="ltr"></div>
+    <div class="fg"><label class="fl">&#x1F3B5; ٹک ٹاک (اختیاری)</label><input type="text" class="fi" id="af-tt" placeholder="@username" dir="ltr"></div>
+    <button class="bp" id="af-btn" onclick="submitActivist()">&#x1F4E4; جمع کریں</button>
+   </div>
+  </div>
+
+  <!-- KARKAN FEED -->
+  <div class="tp" id="pkf">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:22px">&#x1F4F0;</span><div><div style="font-size:17px;font-weight:600">کارکن فیڈ</div><div style="font-size:10px;color:rgba(255,255,255,.5)">تمام کارکنوں کی پوسٹیں — قیادت بھی دیکھتی ہے</div></div></div>
+   <div class="card" style="margin-bottom:14px">
+    <textarea class="fi" id="kf-text" placeholder="اپنی بات، خبر یا پیغام لکھیں..." style="min-height:70px" oninput="document.getElementById('kf-count').textContent=this.value.length+' / 500'" maxlength="500"></textarea>
+    <div class="cc" id="kf-count">0 / 500</div>
+    <button class="bp" id="kf-btn" onclick="postKarkan()" style="margin-top:8px">&#x1F4E4; پوسٹ کریں</button>
+   </div>
+   <div id="kfList"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">لوڈ ہو رہا ہے...</div></div>
+  </div>
+
   <!-- CHAT ROOM -->
   <div class="tp" id="pch">
    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:22px">&#x1F4AC;</span><div><div style="font-size:17px;font-weight:600">PPP چیٹ روم</div><div style="font-size:10px;color:rgba(255,255,255,.5)">تمام ممبران کی بیٹھک — سلام، گپ شپ، مشورے</div></div></div>
@@ -423,6 +459,11 @@ textarea.fi{resize:vertical;min-height:80px;}
    <div id="amp"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">تازہ کریں بٹن دبائیں</div></div>
    <div style="font-size:12px;font-weight:600;margin:14px 0 10px">&#x1F4CB; شکایات</div>
    <div id="acp"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">کوئی شکایت نہیں</div></div>
+   <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 10px">
+    <div style="font-size:12px;font-weight:600">&#x1F426; ایکٹیوسٹ درخواستیں</div>
+    <button class="bs2 bso" style="flex:0;padding:5px 12px" onclick="loadActivistQueue()">&#x1F504; تازہ</button>
+   </div>
+   <div id="aaq"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">تازہ کریں بٹن دبائیں</div></div>
   </div>
 
  </div>
@@ -543,7 +584,7 @@ var DIST = [
   'حیدرآباد','میرپورخاص','عمرکوٹ','تھرپارکر','سانگھڑ','نوابشاہ (شہید بینظیرآباد)',
   'نوشیرو فیروز','خیرپور','سکھر','گھوٹکی','لاڑکانہ','قمبر شہدادکوٹ',
   'شکارپور','جیکب آباد','کشمور','دادو','جامشورو','ٹھٹہ',
-  'سجاول','بدین','ٹنڈو الہیار','مٹیاری','ملیر','کیمبر','لکی'
+  'سجاول','بدین','ٹنڈو الہیار','ٹنڈو محمد خان','مٹیاری','ملیر','کیمبر','لکی','شہید بینظیرآباد'
 ];
 
 // ═══ PPP REPS DATA ═══
@@ -595,11 +636,18 @@ window.onload = function() {
   for (var i = 0; i < DIST.length; i++) opts += '<option>' + DIST[i] + '</option>';
   var cd = document.getElementById('cd2');
   var rd = document.getElementById('rd');
+  var afd = document.getElementById('af-dist');
   if (cd) cd.innerHTML = opts;
   if (rd) rd.innerHTML = opts;
+  if (afd) afd.innerHTML = opts;
+  renderReps(REPS);
+  var approvedReps = JSON.parse(localStorage.getItem('ppp_approved_reps') || '[]');
+  for (var k = 0; k < approvedReps.length; k++) REPS.push(approvedReps[k]);
   renderReps(REPS);
   loadStats();
   setupPhotoInput();
+  var sdEl = document.getElementById('sdist');
+  if (sdEl) sdEl.textContent = DIST.length;
 };
 
 // ═══ LOGIN ═══
@@ -1076,6 +1124,169 @@ function bcTW() {
   window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(msg + ' 🌹 #PPPZindabad'), '_blank');
 }
 
+// ═══ ACTIVIST QUEUE (ADMIN) ═══
+function loadActivistQueue() {
+  var panel = document.getElementById('aaq');
+  panel.innerHTML = '<div style="text-align:center;padding:20px"><div class="sp"></div></div>';
+  if (fbReady && db) {
+    db.collection('activists').orderBy('time', 'desc').limit(50).get().then(function(snap) {
+      var acts = [];
+      snap.forEach(function(doc) { var a = doc.data(); a._docId = doc.id; acts.push(a); });
+      renderActivistQueue(acts, true);
+    }).catch(function() {
+      renderActivistQueue(JSON.parse(localStorage.getItem('ppp_activists') || '[]'), false);
+    });
+  } else {
+    renderActivistQueue(JSON.parse(localStorage.getItem('ppp_activists') || '[]'), false);
+  }
+}
+
+function renderActivistQueue(acts, isFS) {
+  var panel = document.getElementById('aaq');
+  if (!acts.length) { panel.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">کوئی درخواست نہیں</div>'; return; }
+  panel.innerHTML = '';
+  window._activistCache = acts;
+  window._activistCacheIsFS = isFS;
+  for (var i = 0; i < acts.length; i++) {
+    var a = acts[i];
+    var row = document.createElement('div');
+    row.className = 'ac';
+    var statusBadge = a.status === 'منظور' ? '<span class="bdg bg">منظور ✓</span>' : '<button style="font-size:9px;background:rgba(0,200,0,.2);border:1px solid rgba(0,200,0,.4);border-radius:8px;padding:5px 10px;color:#44ff88;cursor:pointer" onclick="approveActivist(' + i + ')">✅ نمائندوں میں شامل کریں</button>';
+    row.innerHTML = '<div class="aa">👤</div><div class="ai"><div class="an">' + (a.name||'') + '</div><div class="ap">' + (a.position||'') + '</div><div class="ad">' + (a.district||'') + (a.uc ? ' | ' + a.uc : '') + '</div><div class="aq">' + (a.twitter ? '🐦 @' + a.twitter : 'Twitter نہیں') + '</div></div><div>' + statusBadge + '</div>';
+    panel.appendChild(row);
+  }
+}
+
+function approveActivist(idx) {
+  var acts = window._activistCache || [];
+  var a = acts[idx];
+  if (!a) return;
+  // Add to REPS array (in-memory, for this session) and persist to localStorage so it survives reload
+  var newRep = {n: a.name, p: a.position || 'سوشل میڈیا ایکٹیوسٹ', c: a.uc || a.district, t: (a.position === 'UC چیئرمین' ? 'چیئرمین' : (a.position === 'ضلع صدر' ? 'ضلع صدر' : (a.position && a.position.indexOf('UC') === 0 ? 'UC' : 'قیادت'))), tw: a.twitter || '', v: false, e: '👤', d: a.district || ''};
+  REPS.push(newRep);
+  var approvedList = JSON.parse(localStorage.getItem('ppp_approved_reps') || '[]');
+  approvedList.push(newRep);
+  localStorage.setItem('ppp_approved_reps', JSON.stringify(approvedList));
+
+  function afterApprove() {
+    SA('✅', 'شامل ہو گیا', a.name + ' اب PPP نمائندوں کی فہرست میں نظر آئیں گے');
+    loadActivistQueue();
+  }
+  if (window._activistCacheIsFS && fbReady && db && a._docId) {
+    db.collection('activists').doc(a._docId).update({status: 'منظور'}).then(afterApprove).catch(afterApprove);
+  } else {
+    var local = JSON.parse(localStorage.getItem('ppp_activists') || '[]');
+    for (var i = 0; i < local.length; i++) { if (local[i].name === a.name && local[i].time === a.time) { local[i].status = 'منظور'; break; } }
+    localStorage.setItem('ppp_activists', JSON.stringify(local));
+    afterApprove();
+  }
+}
+
+// ═══ ACTIVIST SELF-REGISTRATION ═══
+function submitActivist() {
+  var name = document.getElementById('af-name').value.trim();
+  var pos = document.getElementById('af-pos').value;
+  var dist = document.getElementById('af-dist').value;
+  var uc = document.getElementById('af-uc').value.trim();
+  var tw = document.getElementById('af-tw').value.trim().replace('@', '').replace('https://twitter.com/', '').replace('https://x.com/', '');
+  var fb = document.getElementById('af-fb').value.trim();
+  var tt = document.getElementById('af-tt').value.trim();
+  if (!name) { SA('⚠️','نامکمل','نام لازمی ہے'); return; }
+  if (!dist) { SA('⚠️','نامکمل','ضلع منتخب کریں'); return; }
+  var btn = document.getElementById('af-btn');
+  btn.innerHTML = '⏳ جمع ہو رہا ہے...';
+  btn.disabled = true;
+  var entry = {name: name, position: pos, district: dist, uc: uc, twitter: tw, fb: fb, tiktok: tt, status: 'زیرِ تصدیق', submittedBy: cUser, time: new Date().toISOString()};
+
+  function afterSubmit() {
+    btn.innerHTML = '📤 جمع کریں';
+    btn.disabled = false;
+    document.getElementById('af-name').value = '';
+    document.getElementById('af-uc').value = '';
+    document.getElementById('af-tw').value = '';
+    document.getElementById('af-fb').value = '';
+    document.getElementById('af-tt').value = '';
+    SA('✅','جمع ہو گیا','ایڈمن کی تصدیق کے بعد آپ "PPP نمائندے" کی فہرست میں نظر آئیں گے');
+  }
+
+  if (fbReady && db) {
+    db.collection('activists').add(entry).then(afterSubmit).catch(function() {
+      var list = JSON.parse(localStorage.getItem('ppp_activists') || '[]');
+      list.unshift(entry);
+      localStorage.setItem('ppp_activists', JSON.stringify(list));
+      afterSubmit();
+    });
+  } else {
+    var list = JSON.parse(localStorage.getItem('ppp_activists') || '[]');
+    list.unshift(entry);
+    localStorage.setItem('ppp_activists', JSON.stringify(list));
+    afterSubmit();
+  }
+}
+
+// ═══ KARKAN FEED ═══
+function loadKarkanFeed() {
+  var box = document.getElementById('kfList');
+  box.innerHTML = '<div style="text-align:center;padding:20px"><div class="sp"></div></div>';
+  if (fbReady && db) {
+    db.collection('karkanFeed').orderBy('time', 'desc').limit(50).get().then(function(snap) {
+      var posts = [];
+      snap.forEach(function(doc) { posts.push(doc.data()); });
+      renderKarkanFeed(posts);
+    }).catch(function() {
+      renderKarkanFeed(JSON.parse(localStorage.getItem('ppp_karkan') || '[]'));
+    });
+  } else {
+    renderKarkanFeed(JSON.parse(localStorage.getItem('ppp_karkan') || '[]'));
+  }
+}
+
+function renderKarkanFeed(posts) {
+  var box = document.getElementById('kfList');
+  if (!posts.length) { box.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">ابھی تک کوئی پوسٹ نہیں — پہلی پوسٹ آپ کریں! 🌹</div>'; return; }
+  box.innerHTML = '';
+  for (var i = 0; i < posts.length; i++) {
+    var p = posts[i];
+    var card = document.createElement('div');
+    card.className = 'card';
+    card.style.marginBottom = '10px';
+    card.innerHTML = '<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px"><div class="av" style="width:28px;height:28px;font-size:11px">' + (p.user ? p.user.charAt(0) : '👤') + '</div><div><div style="font-size:11px;font-weight:600">' + escapeHtml(p.user || 'کارکن') + '</div><div style="font-size:8px;color:rgba(255,255,255,.4)">' + formatChatTime(p.time) + ' • ' + (p.time||'').slice(0,10) + '</div></div></div><div style="font-size:12px;color:#eee;line-height:1.8">' + escapeHtml(p.text || '') + '</div>';
+    box.appendChild(card);
+  }
+}
+
+function postKarkan() {
+  var input = document.getElementById('kf-text');
+  var text = input.value.trim();
+  if (!text) { SA('⚠️','خالی','کچھ لکھیں'); return; }
+  var btn = document.getElementById('kf-btn');
+  btn.innerHTML = '⏳ پوسٹ ہو رہی ہے...';
+  btn.disabled = true;
+  var entry = {user: cUser || 'کارکن', text: text, time: new Date().toISOString()};
+
+  function afterPost() {
+    input.value = '';
+    document.getElementById('kf-count').textContent = '0 / 500';
+    btn.innerHTML = '📤 پوسٹ کریں';
+    btn.disabled = false;
+    loadKarkanFeed();
+  }
+
+  if (fbReady && db) {
+    db.collection('karkanFeed').add(entry).then(afterPost).catch(function() {
+      var list = JSON.parse(localStorage.getItem('ppp_karkan') || '[]');
+      list.unshift(entry);
+      localStorage.setItem('ppp_karkan', JSON.stringify(list));
+      afterPost();
+    });
+  } else {
+    var list = JSON.parse(localStorage.getItem('ppp_karkan') || '[]');
+    list.unshift(entry);
+    localStorage.setItem('ppp_karkan', JSON.stringify(list));
+    afterPost();
+  }
+}
+
 // ═══ CHAT ROOM (Firebase real-time, with localStorage fallback) ═══
 var chatUnsub = null;
 
@@ -1174,9 +1385,12 @@ function navTo(page) {
   if (ne) ne.classList.add('active');
   var pc = document.querySelector('.pc');
   if (pc) pc.scrollTop = 0;
-  if (page === 'pad' && isAdm) { loadMembers(); loadAdminComplaints(); }
+  if (page === 'pad' && isAdm) { loadMembers(); loadAdminComplaints(); loadActivistQueue(); }
   if (page === 'pc2') loadComplaints();
   if (page === 'pch') loadChat();
+  if (page === 'prp') renderReps(REPS);
+  if (page === 'pd') loadStats();
+  if (page === 'pkf') loadKarkanFeed();
 }
 
 // ═══ LOGOUT ═══
