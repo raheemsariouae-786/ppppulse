@@ -220,6 +220,7 @@ textarea.fi{resize:vertical;min-height:80px;}
 <div id="sa" class="screen" style="flex-direction:column;">
  <div class="tb">
   <div class="tbl">
+   <button id="backBtn" onclick="goBack()" style="display:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;width:32px;height:32px;color:#fff;font-size:16px;cursor:pointer;margin-left:2px">&#x2192;</button>
    <div class="tf"><div style="background:#cc0000;flex:1"></div><div style="background:#111;flex:1"></div><div style="background:#00bb00;flex:1"></div></div>
    <div><div class="tt">PPP PULSE</div><div class="ts" id="tsu">سندھ نیٹ ورک</div></div>
   </div>
@@ -648,6 +649,21 @@ window.onload = function() {
   setupPhotoInput();
   var sdEl = document.getElementById('sdist');
   if (sdEl) sdEl.textContent = DIST.length;
+
+  if (window.history && window.history.pushState) {
+    window.history.pushState({pppPulse: true}, '', '');
+    window.addEventListener('popstate', function(ev) {
+      if (navHistory.length > 1) {
+        navHistory.pop();
+        var prev = navHistory[navHistory.length - 1];
+        navHistory.pop();
+        navTo(prev);
+        window.history.pushState({pppPulse: true}, '', '');
+      } else {
+        window.history.pushState({pppPulse: true}, '', '');
+      }
+    });
+  }
 };
 
 // ═══ LOGIN ═══
@@ -1374,6 +1390,8 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
+var navHistory = ['pd'];
+
 function navTo(page) {
   var ps = document.querySelectorAll('.tp');
   for (var i = 0; i < ps.length; i++) ps[i].classList.remove('active');
@@ -1391,6 +1409,25 @@ function navTo(page) {
   if (page === 'prp') renderReps(REPS);
   if (page === 'pd') loadStats();
   if (page === 'pkf') loadKarkanFeed();
+
+  if (navHistory[navHistory.length - 1] !== page) navHistory.push(page);
+  updateBackBtn();
+}
+
+function updateBackBtn() {
+  var btn = document.getElementById('backBtn');
+  if (!btn) return;
+  btn.style.display = (navHistory.length > 1) ? 'flex' : 'none';
+  if (navHistory.length > 1) { btn.style.alignItems = 'center'; btn.style.justifyContent = 'center'; }
+}
+
+function goBack() {
+  if (navHistory.length > 1) {
+    navHistory.pop();
+    var prev = navHistory[navHistory.length - 1];
+    navHistory.pop();
+    navTo(prev);
+  }
 }
 
 // ═══ LOGOUT ═══
