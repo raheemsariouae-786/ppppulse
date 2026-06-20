@@ -254,7 +254,15 @@ textarea.fi{resize:vertical;min-height:80px;}
     <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.04)" onclick="navTo('pch')"><div style="font-size:26px;margin-bottom:5px">&#x1F4AC;</div><div style="font-size:11px">چیٹ روم</div></button>
     <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,200,0,.06);border:1px solid rgba(255,200,0,.2)" onclick="navTo('paf')"><div style="font-size:26px;margin-bottom:5px">&#x1F426;</div><div style="font-size:11px">ایکٹیوسٹ فارم</div></button>
     <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.04)" onclick="navTo('pbc')"><div style="font-size:26px;margin-bottom:5px">&#x1F4E2;</div><div style="font-size:11px">نشریات</div></button>
+    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(0,180,255,.08);border:1px solid rgba(0,180,255,.25)" onclick="navTo('psmc')"><div style="font-size:26px;margin-bottom:5px">&#x1F4E3;</div><div style="font-size:11px">سوشل میڈیا مہم</div></button>
    </div>
+  </div>
+
+  <!-- SOCIAL MEDIA CAMPAIGN -->
+  <div class="tp" id="psmc">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:22px">&#x1F4E3;</span><div><div style="font-size:17px;font-weight:600">سوشل میڈیا مہم</div><div style="font-size:10px;color:rgba(255,255,255,.5)">قیادت کی فوری ہدایات — اپنے اکاؤنٹس پر پھیلائیں</div></div></div>
+   <div style="background:rgba(0,180,255,.08);border:1px solid rgba(0,180,255,.25);border-radius:10px;padding:9px 12px;margin-bottom:14px;font-size:10px;color:rgba(150,220,255,.85)">&#x2139; جب بھی نیا ٹاسک آئے، نیچے دیے گئے بٹن سے سیدھا اپنے Twitter/Facebook/TikTok پر پوسٹ یا شیئر کریں۔</div>
+   <div id="smcList"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">لوڈ ہو رہا ہے...</div></div>
   </div>
 
   <!-- REPS -->
@@ -350,10 +358,24 @@ textarea.fi{resize:vertical;min-height:80px;}
 
   <!-- ACTIVIST SELF-REGISTRATION FORM -->
   <div class="tp" id="paf">
-   <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:22px">&#x1F426;</span><div><div style="font-size:17px;font-weight:600">ایکٹیوسٹ فارم</div><div style="font-size:10px;color:rgba(255,255,255,.5)">سوشل میڈیا ایکٹیوسٹ کی معلومات درج کریں</div></div></div>
-   <div style="background:rgba(255,200,0,.08);border:1px solid rgba(255,200,0,.25);border-radius:10px;padding:9px 12px;margin-bottom:14px;font-size:10px;color:rgba(255,220,150,.85)">&#x2139; یہ فارم بھر کر اپنا نام اور Twitter/X ID شامل کریں — ایڈمن کی تصدیق کے بعد آپ "PPP نمائندے" کی فہرست میں نظر آئیں گے۔ صرف سندھ کے PPP کارکن، عہدیدار اور سوشل میڈیا ایکٹیوسٹ شامل کریں۔</div>
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:22px">&#x1F426;</span><div><div style="font-size:17px;font-weight:600">PPP Pulse رکنیت فارم</div><div style="font-size:10px;color:rgba(255,255,255,.5)">ڈیجیٹل اندراج — کارکن و ایکٹیوسٹ کی معلومات</div></div></div>
+   <div style="background:rgba(255,200,0,.08);border:1px solid rgba(255,200,0,.25);border-radius:10px;padding:9px 12px;margin-bottom:14px;font-size:10px;color:rgba(255,220,150,.85)">&#x2139; یہ PPP Pulse کا اپنا ڈیجیٹل فارم ہے (پارٹی کی رسمی دستاویز نہیں)۔ مکمل بھر کر جمع کریں — ایڈمن کی تصدیق کے بعد آپ "PPP نمائندے" کی فہرست میں نظر آئیں گے۔</div>
    <div class="card">
+    <div style="font-size:12px;font-weight:600;color:#ffd060;margin-bottom:10px">&#x1F464; ذاتی معلومات</div>
     <div class="fg"><label class="fl">&#x1F464; پورا نام (لازمی)</label><input type="text" class="fi" id="af-name" placeholder="آپ کا نام"></div>
+    <div class="fg"><label class="fl">&#x1F46A; والد/شوہر کا نام</label><input type="text" class="fi" id="af-father" placeholder="والد یا شوہر کا نام"></div>
+    <div class="fg"><label class="fl">&#x1F194; CNIC نمبر</label><input type="text" class="fi" id="af-cnic" placeholder="42101-XXXXXXX-X" dir="ltr" maxlength="15"></div>
+    <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+     <div class="fg"><label class="fl">&#x1F382; تاریخ پیدائش/عمر</label><input type="text" class="fi" id="af-dob" placeholder="عمر یا تاریخ"></div>
+     <div class="fg"><label class="fl">&#x1F4F1; موبائل نمبر</label><input type="tel" class="fi" id="af-phone" placeholder="03XX-XXXXXXX" dir="ltr"></div>
+    </div>
+    <div class="fg"><label class="fl">&#x1F393; تعلیم</label><input type="text" class="fi" id="af-edu" placeholder="تعلیمی قابلیت"></div>
+    <div class="fg"><label class="fl">&#x1F4BC; پیشہ</label><input type="text" class="fi" id="af-prof" placeholder="موجودہ پیشہ/کام"></div>
+    <div class="fg"><label class="fl">&#x1F3E0; رہائشی پتہ</label><textarea class="fi" id="af-addr" placeholder="مکمل پتہ" style="min-height:55px"></textarea></div>
+
+    <div style="font-size:12px;font-weight:600;color:#ffd060;margin:16px 0 10px">&#x1F396; پارٹی معلومات</div>
+    <div class="fg"><label class="fl">&#x1F5FA; ضلع (سندھ)</label><select class="fi" id="af-dist"><option value="">ضلع منتخب کریں</option></select></div>
+    <div class="fg"><label class="fl">&#x1F3D8; KMC/TMC/UC / حلقہ</label><input type="text" class="fi" id="af-uc" placeholder="مثلاً UC-1 جنت گل ٹاؤن"></div>
     <div class="fg"><label class="fl">&#x1F396; عہدہ</label>
      <select class="fi" id="af-pos">
       <option>سوشل میڈیا ایکٹیوسٹ</option><option>UC چیئرمین</option><option>UC وائس چیئرمین</option>
@@ -362,12 +384,16 @@ textarea.fi{resize:vertical;min-height:80px;}
       <option>ضلع انفارمیشن سیکریٹری</option><option>کونسلر</option><option>عام ممبر</option><option>دیگر</option>
      </select>
     </div>
-    <div class="fg"><label class="fl">&#x1F5FA; ضلع (سندھ)</label><select class="fi" id="af-dist"><option value="">ضلع منتخب کریں</option></select></div>
-    <div class="fg"><label class="fl">&#x1F3D8; UC / حلقہ (اختیاری)</label><input type="text" class="fi" id="af-uc" placeholder="مثلاً UC-1 جنت گل ٹاؤن"></div>
+    <div class="fg"><label class="fl">&#x1F4C5; پارٹی سے وابستگی کب سے</label><input type="text" class="fi" id="af-since" placeholder="مثلاً 2018 سے"></div>
+    <div class="fg"><label class="fl">&#x1F4CB; پہلے کس جماعت میں رہے (اگر کوئی)</label><input type="text" class="fi" id="af-prevparty" placeholder="اگر لاگو ہو تو لکھیں، ورنہ خالی رہنے دیں"></div>
+
+    <div style="font-size:12px;font-weight:600;color:#ffd060;margin:16px 0 10px">&#x1F4F1; سوشل میڈیا سرگرمی</div>
+    <div class="fg"><label class="fl">&#x1F4AC; واٹس ایپ نمبر</label><input type="text" class="fi" id="af-wa" placeholder="03XX-XXXXXXX" dir="ltr"></div>
+    <div class="fg"><label class="fl">&#x1F4D8; فیس بک</label><input type="text" class="fi" id="af-fb" placeholder="facebook.com/username" dir="ltr"></div>
     <div class="fg"><label class="fl">&#x1F426; Twitter/X ID</label><input type="text" class="fi" id="af-tw" placeholder="@username (بغیر @ بھی لکھ سکتے ہیں)" dir="ltr"></div>
-    <div class="fg"><label class="fl">&#x1F4F1; فیس بک (اختیاری)</label><input type="text" class="fi" id="af-fb" placeholder="facebook.com/username" dir="ltr"></div>
     <div class="fg"><label class="fl">&#x1F3B5; ٹک ٹاک (اختیاری)</label><input type="text" class="fi" id="af-tt" placeholder="@username" dir="ltr"></div>
-    <button class="bp" id="af-btn" onclick="submitActivist()">&#x1F4E4; جمع کریں</button>
+
+    <button class="bp" id="af-btn" onclick="submitActivist()" style="margin-top:6px">&#x1F4E4; فارم جمع کریں</button>
    </div>
   </div>
 
@@ -452,6 +478,13 @@ textarea.fi{resize:vertical;min-height:80px;}
      <button class="bs2 bsg" onclick="bcWA()">&#x1F4AC; WA</button>
      <button class="bs2 bsb" onclick="bcTW()">&#x1F426; X</button>
     </div>
+   </div>
+   <div style="font-size:12px;font-weight:600;margin-bottom:11px">&#x1F4E3; سوشل میڈیا مہم بھیجیں</div>
+   <div class="bcc2" style="border-color:rgba(0,180,255,.3)">
+    <div class="fg"><label class="fl">مہم کا عنوان</label><input type="text" class="fi" id="smc-title" placeholder="مثلاً: آج کا ٹرینڈ"></div>
+    <div class="fg"><label class="fl">ہدایت / پیغام جو سب نے پھیلانا ہے</label><textarea class="fi" id="smc-text" placeholder="یہ پیغام اپنے Twitter/Facebook/TikTok پر شیئر کریں..." oninput="document.getElementById('smc-count').textContent=this.value.length+' / 500'" maxlength="500" style="min-height:80px"></textarea><div class="cc" id="smc-count">0 / 500</div></div>
+    <div class="fg"><label class="fl">ہیش ٹیگ (اختیاری)</label><input type="text" class="fi" id="smc-hashtag" placeholder="#PPPZindabad" dir="ltr"></div>
+    <button class="bp" id="smc-btn" onclick="sendCampaign()" style="background:linear-gradient(135deg,#004a7a,#0099dd)">&#x1F4E3; مہم تمام ایکٹیوسٹس کو بھیجیں</button>
    </div>
    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
     <div style="font-size:12px;font-weight:600">&#x1F465; ممبران</div>
@@ -599,6 +632,14 @@ var REPS = [
   {n:'سید ناصر حسین شاہ',p:'صوبائی وزیر اطلاعات سندھ',c:'PS سندھ',t:'قیادت',tw:'NasirHShahPPP',v:true,e:'🏗️',d:'سندھ'},
   {n:'نفیسہ شاہ',p:'MNA سانگھڑ',c:'NA سانگھڑ',t:'قیادت',tw:'NafeesaShah1',v:true,e:'👩',d:'سانگھڑ'},
   {n:'PPP آفیشل',p:'پاکستان پیپلز پارٹی',c:'پاکستان',t:'قیادت',tw:'PPP_Org',v:true,e:'🌹',d:''},
+  // سندھ سطح عہدیداران (تصدیق شدہ)
+  {n:'نثار احمد کھوڑو',p:'صدر PPP سندھ | سینیٹر',c:'سندھ',t:'قیادت',tw:'',v:false,e:'👤',d:'سندھ'},
+  {n:'سید وقار مہدی',p:'جنرل سیکریٹری PPP سندھ | سینیٹر',c:'سندھ',t:'قیادت',tw:'',v:false,e:'✍️',d:'سندھ'},
+  {n:'عاجز ڈمرہ',p:'انفارمیشن سیکریٹری PPP سندھ | سینیٹر',c:'سندھ',t:'قیادت',tw:'',v:false,e:'📢',d:'سندھ'},
+  // کراچی ڈویژن عہدیداران (تصدیق شدہ)
+  {n:'سعید غنی',p:'صدر PPP کراچی ڈویژن | صوبائی وزیر',c:'کراچی ڈویژن',t:'قیادت',tw:'SaeedGhani1',v:true,e:'👤',d:'کراچی ایسٹ'},
+  {n:'عبدالرؤف نگوری',p:'جنرل سیکریٹری PPP کراچی ڈویژن',c:'کراچی ڈویژن',t:'قیادت',tw:'',v:false,e:'✍️',d:'کراچی سینٹرل'},
+  {n:'شرمیلہ فاروقی',p:'انفارمیشن سیکریٹری PPP کراچی ڈویژن',c:'کراچی ڈویژن',t:'قیادت',tw:'',v:false,e:'📢',d:'کراچی سینٹرل'},
   // میئر
   {n:'مرتضیٰ وہاب',p:'میئر کراچی',c:'KMC کراچی',t:'میئر',tw:'MurtazaWahab',v:true,e:'🏙️',d:'کراچی سینٹرل'},
   // MNA
@@ -1261,6 +1302,93 @@ function bcTW() {
   window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(msg + ' 🌹 #PPPZindabad'), '_blank');
 }
 
+// ═══ SOCIAL MEDIA CAMPAIGN ═══
+function sendCampaign() {
+  var title = document.getElementById('smc-title').value.trim();
+  var text = document.getElementById('smc-text').value.trim();
+  var hashtag = document.getElementById('smc-hashtag').value.trim();
+  if (!title || !text) { SA('⚠️','نامکمل','عنوان اور پیغام دونوں لازمی ہیں'); return; }
+  var btn = document.getElementById('smc-btn');
+  btn.innerHTML = '⏳ بھیجا جا رہا ہے...';
+  btn.disabled = true;
+  var entry = {title: title, text: text, hashtag: hashtag, sentBy: cUser, time: new Date().toISOString()};
+
+  function afterSend() {
+    btn.innerHTML = '📣 مہم تمام ایکٹیوسٹس کو بھیجیں';
+    btn.disabled = false;
+    document.getElementById('smc-title').value = '';
+    document.getElementById('smc-text').value = '';
+    document.getElementById('smc-hashtag').value = '';
+    document.getElementById('smc-count').textContent = '0 / 500';
+    SA('✅','مہم بھیج دی گئی','تمام ایکٹیوسٹس کو فوری نظر آئے گی');
+  }
+
+  if (fbReady && db) {
+    db.collection('campaigns').add(entry).then(afterSend).catch(function() {
+      var list = JSON.parse(localStorage.getItem('ppp_campaigns') || '[]');
+      list.unshift(entry);
+      localStorage.setItem('ppp_campaigns', JSON.stringify(list));
+      afterSend();
+    });
+  } else {
+    var list = JSON.parse(localStorage.getItem('ppp_campaigns') || '[]');
+    list.unshift(entry);
+    localStorage.setItem('ppp_campaigns', JSON.stringify(list));
+    afterSend();
+  }
+}
+
+var campaignUnsub = null;
+
+function loadCampaigns() {
+  var list = document.getElementById('smcList');
+  if (fbReady && db) {
+    list.innerHTML = '<div style="text-align:center;padding:20px"><div class="sp"></div></div>';
+    if (campaignUnsub) { campaignUnsub(); campaignUnsub = null; }
+    campaignUnsub = db.collection('campaigns').orderBy('time', 'desc').limit(30).onSnapshot(function(snap) {
+      var camps = [];
+      snap.forEach(function(doc) { camps.push(doc.data()); });
+      renderCampaigns(camps);
+    }, function() {
+      renderCampaigns(JSON.parse(localStorage.getItem('ppp_campaigns') || '[]'));
+    });
+  } else {
+    renderCampaigns(JSON.parse(localStorage.getItem('ppp_campaigns') || '[]'));
+  }
+}
+
+function renderCampaigns(camps) {
+  var list = document.getElementById('smcList');
+  if (!camps.length) { list.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">ابھی تک کوئی مہم نہیں</div>'; return; }
+  list.innerHTML = '';
+  for (var i = 0; i < camps.length; i++) {
+    var c = camps[i];
+    var fullText = c.text + (c.hashtag ? '\n\n' + c.hashtag : '');
+    var card = document.createElement('div');
+    card.className = 'bcc';
+    card.style.borderColor = 'rgba(0,180,255,.4)';
+    card.innerHTML = '<span class="bdg bb" style="margin-bottom:9px;display:inline-block">📣 مہم</span><div class="bt">' + escapeHtml(c.title||'') + '</div><div class="bm">' + escapeHtml(c.text||'') + '</div>' + (c.hashtag ? '<div style="font-size:10px;color:#66ccff;margin-bottom:8px" dir="ltr">' + escapeHtml(c.hashtag) + '</div>' : '') + '<div class="br2"><button class="bs2 bsg" onclick="campaignShareWA(' + i + ')">💬 WhatsApp</button><button class="bs2 bsb" onclick="campaignShareTW(' + i + ')">🐦 X</button><button class="bs2 bso" onclick="campaignCopy(' + i + ')">📋 کاپی</button></div>';
+    list.appendChild(card);
+  }
+  window._campaignsCache = camps;
+}
+
+function campaignShareWA(idx) {
+  var c = window._campaignsCache[idx];
+  var msg = c.text + (c.hashtag ? '\n\n' + c.hashtag : '') + '\n\n🌹 PPP Pulse';
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
+function campaignShareTW(idx) {
+  var c = window._campaignsCache[idx];
+  var msg = c.text + (c.hashtag ? ' ' + c.hashtag : '');
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(msg), '_blank');
+}
+function campaignCopy(idx) {
+  var c = window._campaignsCache[idx];
+  var msg = c.text + (c.hashtag ? '\n\n' + c.hashtag : '');
+  copyToClipboard(msg);
+}
+
 // ═══ ACTIVIST QUEUE (ADMIN) ═══
 function loadActivistQueue() {
   var panel = document.getElementById('aaq');
@@ -1289,7 +1417,7 @@ function renderActivistQueue(acts, isFS) {
     var row = document.createElement('div');
     row.className = 'ac';
     var statusBadge = a.status === 'منظور' ? '<span class="bdg bg">منظور ✓</span>' : '<button style="font-size:9px;background:rgba(0,200,0,.2);border:1px solid rgba(0,200,0,.4);border-radius:8px;padding:5px 10px;color:#44ff88;cursor:pointer" onclick="approveActivist(' + i + ')">✅ نمائندوں میں شامل کریں</button>';
-    row.innerHTML = '<div class="aa">👤</div><div class="ai"><div class="an">' + (a.name||'') + '</div><div class="ap">' + (a.position||'') + '</div><div class="ad">' + (a.district||'') + (a.uc ? ' | ' + a.uc : '') + '</div><div class="aq">' + (a.twitter ? '🐦 @' + a.twitter : 'Twitter نہیں') + '</div></div><div>' + statusBadge + '</div>';
+    row.innerHTML = '<div class="aa">👤</div><div class="ai"><div class="an">' + (a.name||'') + '</div><div class="ap">' + (a.position||'') + '</div><div class="ad">' + (a.district||'') + (a.uc ? ' | ' + a.uc : '') + '</div><div class="aq">' + (a.phone ? '📱 ' + a.phone + ' | ' : '') + (a.twitter ? '🐦 @' + a.twitter : 'Twitter نہیں') + '</div></div><div>' + statusBadge + '</div>';
     panel.appendChild(row);
   }
 }
@@ -1322,9 +1450,19 @@ function approveActivist(idx) {
 // ═══ ACTIVIST SELF-REGISTRATION ═══
 function submitActivist() {
   var name = document.getElementById('af-name').value.trim();
+  var father = document.getElementById('af-father').value.trim();
+  var cnic = document.getElementById('af-cnic').value.trim();
+  var dob = document.getElementById('af-dob').value.trim();
+  var phone = document.getElementById('af-phone').value.trim();
+  var edu = document.getElementById('af-edu').value.trim();
+  var prof = document.getElementById('af-prof').value.trim();
+  var addr = document.getElementById('af-addr').value.trim();
   var pos = document.getElementById('af-pos').value;
   var dist = document.getElementById('af-dist').value;
   var uc = document.getElementById('af-uc').value.trim();
+  var since = document.getElementById('af-since').value.trim();
+  var prevparty = document.getElementById('af-prevparty').value.trim();
+  var wa = document.getElementById('af-wa').value.trim();
   var tw = document.getElementById('af-tw').value.trim().replace('@', '').replace('https://twitter.com/', '').replace('https://x.com/', '');
   var fb = document.getElementById('af-fb').value.trim();
   var tt = document.getElementById('af-tt').value.trim();
@@ -1333,16 +1471,18 @@ function submitActivist() {
   var btn = document.getElementById('af-btn');
   btn.innerHTML = '⏳ جمع ہو رہا ہے...';
   btn.disabled = true;
-  var entry = {name: name, position: pos, district: dist, uc: uc, twitter: tw, fb: fb, tiktok: tt, status: 'زیرِ تصدیق', submittedBy: cUser, time: new Date().toISOString()};
+  var entry = {
+    name: name, father: father, cnic: cnic, dob: dob, phone: phone, education: edu, profession: prof, address: addr,
+    position: pos, district: dist, uc: uc, since: since, prevParty: prevparty,
+    whatsapp: wa, twitter: tw, fb: fb, tiktok: tt,
+    status: 'زیرِ تصدیق', submittedBy: cUser, time: new Date().toISOString()
+  };
 
   function afterSubmit() {
-    btn.innerHTML = '📤 جمع کریں';
+    btn.innerHTML = '📤 فارم جمع کریں';
     btn.disabled = false;
-    document.getElementById('af-name').value = '';
-    document.getElementById('af-uc').value = '';
-    document.getElementById('af-tw').value = '';
-    document.getElementById('af-fb').value = '';
-    document.getElementById('af-tt').value = '';
+    var ids = ['af-name','af-father','af-cnic','af-dob','af-phone','af-edu','af-prof','af-addr','af-uc','af-since','af-prevparty','af-wa','af-tw','af-fb','af-tt'];
+    for (var i = 0; i < ids.length; i++) { var el = document.getElementById(ids[i]); if (el) el.value = ''; }
     SA('✅','جمع ہو گیا','ایڈمن کی تصدیق کے بعد آپ "PPP نمائندے" کی فہرست میں نظر آئیں گے');
   }
 
@@ -1530,6 +1670,7 @@ function navTo(page) {
   if (page === 'prp') renderReps(REPS);
   if (page === 'pd') loadStats();
   if (page === 'pkf') loadKarkanFeed();
+  if (page === 'psmc') loadCampaigns();
 
   if (page === 'pd') {
     navHistory = ['pd'];
