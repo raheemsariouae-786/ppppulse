@@ -1928,7 +1928,7 @@ function sendAiMessage() {
     contents.push({role: geminiRole, parts: [{text: aiHistory[i].text}]});
   }
 
-  var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_API_KEY;
+  var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=' + GEMINI_API_KEY;
 
   fetch(url, {
     method: 'POST',
@@ -1938,10 +1938,18 @@ function sendAiMessage() {
     btn.innerHTML = '📤';
     btn.disabled = false;
     var replyText = '';
-    try {
-      replyText = data.candidates[0].content.parts[0].text;
-    } catch (e) {
-      replyText = '';
+    if (data && data.error) {
+      replyText = 'Gemini Error: ' + (data.error.message || JSON.stringify(data.error));
+    } else {
+      try {
+        replyText = data.candidates[0].content.parts[0].text;
+      } catch (e) {
+        if (data && data.candidates && data.candidates[0] && data.candidates[0].finishReason) {
+          replyText = 'رک گیا (' + data.candidates[0].finishReason + ') — دوبارہ مختلف الفاظ میں پوچھیں۔';
+        } else {
+          replyText = 'Debug: ' + JSON.stringify(data).substring(0, 300);
+        }
+      }
     }
     if (!replyText) replyText = 'معذرت، ابھی جواب نہیں مل سکا۔ دوبارہ کوشش کریں۔';
     aiHistory.push({role: 'assistant', text: replyText});
