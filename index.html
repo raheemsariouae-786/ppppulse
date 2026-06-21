@@ -1881,9 +1881,10 @@ function SAI(icon, title, msg, id) {
 }
 function CM() { document.getElementById('modal').classList.remove('open'); }
 
-// ═══ AI ASSISTANT ═══
+// ═══ AI ASSISTANT (Google Gemini) ═══
+var GEMINI_API_KEY = "AIzaSyA6X94S9pqOL9ya0XXmYQ7oIYaNuMzcVPg";
 var aiHistory = [];
-var aiSystemPrompt = "You are a helpful assistant embedded inside 'PPP Pulse', a digital app for party workers and activists in Sindh, Pakistan. Your ONLY two jobs are: (1) Help users understand how to use this app. App features: dashboard, PPP Numainday (representatives directory), Shikayat (complaint filing), Chat Room (group chat), Activist form (membership registration), Nashriyat (broadcasts from leadership), Social Media Campaign (tasks to share on own accounts), Profile, and Admin Panel (admin only - approving members/complaints). (2) Answer general non-political knowledge questions (math, general facts, language help, how-to questions). You must NEVER give opinions, claims, predictions, or commentary about Pakistani politics, political parties, politicians, elections, policy positions, or political controversies. For ANY political topic, politely say you cannot discuss political matters and suggest asking local party leadership instead. Always reply in Urdu by default unless user writes in English. Keep replies concise, 2-4 sentences typically, warm and respectful tone.";
+var aiSystemPrompt = "آپ 'PPP Pulse' نامی ایپ کے اندر ایک مددگار اسسٹنٹ ہیں — یہ سندھ، پاکستان کے پارٹی کارکنوں اور ایکٹیوسٹس کے لیے ایک ڈیجیٹل ایپ ہے۔ آپ کے صرف دو کام ہیں: (1) لوگوں کو یہ ایپ استعمال کرنے میں مدد دینا۔ ایپ کے فیچرز یہ ہیں: ڈیش بورڈ، PPP نمائندے (نمائندوں کی فہرست)، شکایت (شکایت درج کرنا)، چیٹ روم (گروپ چیٹ)، ایکٹیوسٹ فارم (رکنیت کا اندراج)، نشریات (قیادت کے پیغامات)، سوشل میڈیا مہم (اپنے اکاؤنٹس پر شیئر کرنے کے ٹاسک)، پروفائل، اور ایڈمن پینل (صرف ایڈمن کے لیے — ممبران/شکایات کی منظوری)۔ (2) عام، غیر سیاسی معلوماتی سوالات کا جواب دینا (ریاضی، عام معلومات، زبان میں مدد، عمومی سوالات)۔ آپ کبھی بھی پاکستانی سیاست، سیاسی جماعتوں، سیاستدانوں، انتخابات، پالیسی، یا سیاسی تنازعات پر رائے، دعویٰ، پیشن گوئی، یا تبصرہ نہیں دیں گے۔ کسی بھی سیاسی موضوع پر شائستگی سے کہیں کہ آپ سیاسی معاملات پر بات نہیں کر سکتے اور مقامی پارٹی قیادت سے پوچھنے کا مشورہ دیں۔ ہمیشہ اردو میں جواب دیں جب تک صارف انگریزی میں نہ لکھے۔ جوابات مختصر (2-4 جملے)، گرمجوش اور احترام والے لہجے میں رکھیں۔";
 
 function loadAiChat() {
   var box = document.getElementById('aiChatMsgs');
@@ -1919,28 +1920,28 @@ function sendAiMessage() {
   btn.innerHTML = '⏳';
   btn.disabled = true;
 
-  var apiMessages = [];
+  var contents = [];
+  contents.push({role: 'user', parts: [{text: aiSystemPrompt}]});
+  contents.push({role: 'model', parts: [{text: 'سمجھ گیا، میں اس ہدایت کے مطابق جواب دوں گا۔'}]});
   for (var i = 0; i < aiHistory.length; i++) {
-    apiMessages.push({role: aiHistory[i].role, content: aiHistory[i].text});
+    var geminiRole = aiHistory[i].role === 'user' ? 'user' : 'model';
+    contents.push({role: geminiRole, parts: [{text: aiHistory[i].text}]});
   }
 
-  fetch('https://api.anthropic.com/v1/messages', {
+  var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_API_KEY;
+
+  fetch(url, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1000,
-      system: aiSystemPrompt,
-      messages: apiMessages
-    })
+    body: JSON.stringify({contents: contents})
   }).then(function(res) { return res.json(); }).then(function(data) {
     btn.innerHTML = '📤';
     btn.disabled = false;
     var replyText = '';
-    if (data && data.content) {
-      for (var j = 0; j < data.content.length; j++) {
-        if (data.content[j].type === 'text') replyText += data.content[j].text;
-      }
+    try {
+      replyText = data.candidates[0].content.parts[0].text;
+    } catch (e) {
+      replyText = '';
     }
     if (!replyText) replyText = 'معذرت، ابھی جواب نہیں مل سکا۔ دوبارہ کوشش کریں۔';
     aiHistory.push({role: 'assistant', text: replyText});
