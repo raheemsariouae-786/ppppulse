@@ -248,13 +248,25 @@ textarea.fi{resize:vertical;min-height:80px;}
    </div>
    <div style="font-size:12px;font-weight:600;margin-bottom:11px">&#x26A1; فوری اقدامات</div>
    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px">
-    <button class="card cr" style="cursor:pointer;text-align:center;border:none" onclick="navTo('pc2')"><div style="font-size:26px;margin-bottom:5px">&#x1F4DD;</div><div style="font-size:11px">شکایت درج کریں</div></button>
-    <button class="card cg" style="cursor:pointer;text-align:center;border:none" onclick="navTo('prp')"><div style="font-size:26px;margin-bottom:5px">&#x1F3DB;</div><div style="font-size:11px">PPP نمائندے</div></button>
-    <button class="card cb" style="cursor:pointer;text-align:center;border:none" onclick="navTo('pkf')"><div style="font-size:26px;margin-bottom:5px">&#x1F4F0;</div><div style="font-size:11px">کارکن فیڈ</div></button>
-    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.04)" onclick="navTo('pch')"><div style="font-size:26px;margin-bottom:5px">&#x1F4AC;</div><div style="font-size:11px">چیٹ روم</div></button>
-    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,200,0,.06);border:1px solid rgba(255,200,0,.2)" onclick="navTo('paf')"><div style="font-size:26px;margin-bottom:5px">&#x1F426;</div><div style="font-size:11px">ایکٹیوسٹ فارم</div></button>
-    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.04)" onclick="navTo('pbc')"><div style="font-size:26px;margin-bottom:5px">&#x1F4E2;</div><div style="font-size:11px">نشریات</div></button>
-    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(0,180,255,.08);border:1px solid rgba(0,180,255,.25)" onclick="navTo('psmc')"><div style="font-size:26px;margin-bottom:5px">&#x1F4E3;</div><div style="font-size:11px">سوشل میڈیا مہم</div></button>
+    <button class="card cr" style="cursor:pointer;text-align:center;border:none" onclick="navTo('pc2')"><div style="font-size:26px;margin-bottom:5px">&#x1F4DD;</div><div style="font-size:11px">شکایت درج کریں</div><div style="font-size:8.5px;color:rgba(255,255,255,.45);margin-top:2px">مسئلہ/مشکل رپورٹ کریں</div></button>
+    <button class="card cg" style="cursor:pointer;text-align:center;border:none" onclick="navTo('prp')"><div style="font-size:26px;margin-bottom:5px">&#x1F3DB;</div><div style="font-size:11px">PPP نمائندے</div><div style="font-size:8.5px;color:rgba(255,255,255,.45);margin-top:2px">قیادت و عہدیداران کی فہرست</div></button>
+    <button class="card cb" style="cursor:pointer;text-align:center;border:none" onclick="navTo('pkf')"><div style="font-size:26px;margin-bottom:5px">&#x1F4F0;</div><div style="font-size:11px">کارکن فیڈ</div><div style="font-size:8.5px;color:rgba(255,255,255,.45);margin-top:2px">ممبران کی پوسٹس دیکھیں/لکھیں</div></button>
+    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.04)" onclick="navTo('pch')"><div style="font-size:26px;margin-bottom:5px">&#x1F4AC;</div><div style="font-size:11px">چیٹ روم</div><div style="font-size:8.5px;color:rgba(255,255,255,.45);margin-top:2px">سب ممبران سے بات چیت</div></button>
+    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,200,0,.06);border:1px solid rgba(255,200,0,.2)" onclick="navTo('paf')"><div style="font-size:26px;margin-bottom:5px">&#x1F426;</div><div style="font-size:11px">ایکٹیوسٹ فارم</div><div style="font-size:8.5px;color:rgba(255,255,255,.45);margin-top:2px">رکنیت کے لیے فارم بھریں</div></button>
+    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.04)" onclick="navTo('pbc')"><div style="font-size:26px;margin-bottom:5px">&#x1F4E2;</div><div style="font-size:11px">نشریات</div><div style="font-size:8.5px;color:rgba(255,255,255,.45);margin-top:2px">قیادت کے پیغامات پڑھیں</div></button>
+    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(0,180,255,.08);border:1px solid rgba(0,180,255,.25)" onclick="navTo('psmc')"><div style="font-size:26px;margin-bottom:5px">&#x1F4E3;</div><div style="font-size:11px">سوشل میڈیا مہم</div><div style="font-size:8.5px;color:rgba(255,255,255,.45);margin-top:2px">ٹاسک اپنے اکاؤنٹس پر شیئر کریں</div></button>
+    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(150,0,220,.08);border:1px solid rgba(150,0,220,.25)" onclick="navTo('pai')"><div style="font-size:26px;margin-bottom:5px">&#x1F916;</div><div style="font-size:11px">AI اسسٹنٹ</div><div style="font-size:8.5px;color:rgba(255,255,255,.45);margin-top:2px">app کے استعمال میں مدد لیں</div></button>
+   </div>
+  </div>
+
+  <!-- AI ASSISTANT -->
+  <div class="tp" id="pai" style="display:flex;flex-direction:column;height:calc(100vh - 200px)">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-shrink:0"><span style="font-size:22px">&#x1F916;</span><div><div style="font-size:17px;font-weight:600">AI اسسٹنٹ</div><div style="font-size:10px;color:rgba(255,255,255,.5)">PPP Pulse استعمال میں مدد + عام معلومات</div></div></div>
+   <div style="background:rgba(150,0,220,.08);border:1px solid rgba(150,0,220,.25);border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:10px;color:rgba(220,180,255,.85);flex-shrink:0">&#x2139; یہ اسسٹنٹ app استعمال کرنے میں مدد دیتا ہے اور عام سوالات کا جواب دیتا ہے۔ یہ کسی سیاسی موضوع پر رائے یا دعویٰ نہیں دیتا۔</div>
+   <div id="aiChatMsgs" style="flex:1;overflow-y:auto;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;margin-bottom:10px;display:flex;flex-direction:column;gap:8px"></div>
+   <div style="display:flex;gap:7px;flex-shrink:0;padding-bottom:14px">
+    <input type="text" class="fi" id="aiInput" placeholder="اپنا سوال لکھیں..." style="flex:1" onkeypress="if(event.keyCode==13)sendAiMessage()">
+    <button class="bs2 bsr" style="flex:0;padding:11px 16px;background:linear-gradient(135deg,#5a0099,#9933dd)" onclick="sendAiMessage()" id="aiSendBtn">&#x1F4E4;</button>
    </div>
   </div>
 
@@ -377,12 +389,42 @@ textarea.fi{resize:vertical;min-height:80px;}
     <div class="fg"><label class="fl">&#x1F5FA; ضلع (سندھ)</label><select class="fi" id="af-dist"><option value="">ضلع منتخب کریں</option></select></div>
     <div class="fg"><label class="fl">&#x1F3D8; KMC/TMC/UC / حلقہ</label><input type="text" class="fi" id="af-uc" placeholder="مثلاً UC-1 جنت گل ٹاؤن"></div>
     <div class="fg"><label class="fl">&#x1F396; عہدہ</label>
-     <select class="fi" id="af-pos">
-      <option>سوشل میڈیا ایکٹیوسٹ</option><option>UC چیئرمین</option><option>UC وائس چیئرمین</option>
-      <option>UC صدر</option><option>UC جنرل سیکریٹری</option><option>UC انفارمیشن سیکریٹری</option>
-      <option>وارڈ صدر</option><option>ضلع صدر</option><option>ضلع جنرل سیکریٹری</option>
-      <option>ضلع انفارمیشن سیکریٹری</option><option>کونسلر</option><option>عام ممبر</option><option>دیگر</option>
+     <select class="fi" id="af-pos" onchange="toggleCustomPos('af-pos','af-pos-custom')">
+      <optgroup label="UC سطح">
+       <option>UC چیئرمین</option><option>UC وائس چیئرمین</option>
+       <option>UC صدر</option><option>UC جنرل سیکریٹری</option><option>UC انفارمیشن سیکریٹری</option>
+      </optgroup>
+      <optgroup label="وارڈ سطح">
+       <option>وارڈ صدر</option><option>وارڈ جنرل سیکریٹری</option><option>وارڈ انفارمیشن سیکریٹری</option>
+      </optgroup>
+      <optgroup label="تعلقہ (PS) سطح">
+       <option>PS صدر</option><option>PS جنرل سیکریٹری</option><option>PS انفارمیشن سیکریٹری</option>
+      </optgroup>
+      <optgroup label="ضلع سطح">
+       <option>ضلع صدر</option><option>ضلع جنرل سیکریٹری</option><option>ضلع انفارمیشن سیکریٹری</option>
+      </optgroup>
+      <optgroup label="ڈویژن/سندھ سطح">
+       <option>ڈویژن صدر</option><option>ڈویژن جنرل سیکریٹری</option><option>ڈویژن انفارمیشن سیکریٹری</option>
+       <option>سندھ صدر</option><option>سندھ جنرل سیکریٹری</option><option>سندھ انفارمیشن سیکریٹری</option>
+      </optgroup>
+      <optgroup label="کونسلر/منتخب نمائندہ">
+       <option>کونسلر</option>
+      </optgroup>
+      <optgroup label="شعبہ جاتی تنظیمیں (ونگز)">
+       <option>PSF صدر</option><option>PSF جنرل سیکریٹری</option><option>PSF انفارمیشن سیکریٹری</option>
+       <option>یوتھ ونگ صدر</option><option>یوتھ ونگ جنرل سیکریٹری</option><option>یوتھ ونگ انفارمیشن سیکریٹری</option>
+       <option>لیبر ونگ صدر</option><option>لیبر ونگ جنرل سیکریٹری</option>
+       <option>ویمن ونگ صدر</option><option>ویمن ونگ جنرل سیکریٹری</option>
+       <option>لائرز فورم صدر</option><option>لائرز فورم جنرل سیکریٹری</option>
+       <option>پیرامیڈیکل ونگ صدر</option><option>پیرامیڈیکل ونگ جنرل سیکریٹری</option>
+       <option>کلچرل ونگ صدر</option><option>کلچرل ونگ جنرل سیکریٹری</option>
+      </optgroup>
+      <optgroup label="عام">
+       <option>سوشل میڈیا ایکٹیوسٹ</option><option>عام ممبر</option>
+       <option value="__custom__">دیگر / اپنا عہدہ خود لکھیں ✍️</option>
+      </optgroup>
      </select>
+     <input type="text" class="fi" id="af-pos-custom" placeholder="اپنا عہدہ یہاں لکھیں" style="display:none;margin-top:8px">
     </div>
     <div class="fg"><label class="fl">&#x1F4C5; پارٹی سے وابستگی کب سے</label><input type="text" class="fi" id="af-since" placeholder="مثلاً 2018 سے"></div>
     <div class="fg"><label class="fl">&#x1F4CB; پہلے کس جماعت میں رہے (اگر کوئی)</label><input type="text" class="fi" id="af-prevparty" placeholder="اگر لاگو ہو تو لکھیں، ورنہ خالی رہنے دیں"></div>
@@ -533,14 +575,42 @@ textarea.fi{resize:vertical;min-height:80px;}
    <div class="fg"><label class="fl">&#x1F5FA; ضلع</label><select class="fi" id="rd"><option value="">ضلع منتخب کریں</option></select></div>
    <div class="fg"><label class="fl">&#x1F3D8; یونین کونسل</label><input type="text" class="fi" id="ru" placeholder="UC نمبر یا نام"></div>
    <div class="fg"><label class="fl">&#x1F396; پارٹی عہدہ</label>
-    <select class="fi" id="rpo">
-     <option>عام ممبر</option><option>UC ورکر</option><option>UC صدر</option><option>UC جنرل سیکریٹری</option>
-     <option>UC انفارمیشن سیکریٹری</option><option>وارڈ صدر</option><option>وارڈ جنرل سیکریٹری</option>
-     <option>وارڈ انفارمیشن سیکریٹری</option><option>PS صدر</option><option>PS جنرل سیکریٹری</option>
-     <option>PS انفارمیشن سیکریٹری</option><option>ضلع صدر</option><option>ضلع جنرل سیکریٹری</option>
-     <option>ضلع انفارمیشن سیکریٹری</option><option>کونسلر</option><option>چیئرمین</option>
-     <option>وائس چیئرمین</option><option>سوشل میڈیا ایکٹیوسٹ</option><option>دیگر</option>
+    <select class="fi" id="rpo" onchange="toggleCustomPos('rpo','rpo-custom')">
+     <optgroup label="UC سطح">
+      <option>UC چیئرمین</option><option>UC وائس چیئرمین</option>
+      <option>UC صدر</option><option>UC جنرل سیکریٹری</option><option>UC انفارمیشن سیکریٹری</option>
+     </optgroup>
+     <optgroup label="وارڈ سطح">
+      <option>وارڈ صدر</option><option>وارڈ جنرل سیکریٹری</option><option>وارڈ انفارمیشن سیکریٹری</option>
+     </optgroup>
+     <optgroup label="تعلقہ (PS) سطح">
+      <option>PS صدر</option><option>PS جنرل سیکریٹری</option><option>PS انفارمیشن سیکریٹری</option>
+     </optgroup>
+     <optgroup label="ضلع سطح">
+      <option>ضلع صدر</option><option>ضلع جنرل سیکریٹری</option><option>ضلع انفارمیشن سیکریٹری</option>
+     </optgroup>
+     <optgroup label="ڈویژن/سندھ سطح">
+      <option>ڈویژن صدر</option><option>ڈویژن جنرل سیکریٹری</option><option>ڈویژن انفارمیشن سیکریٹری</option>
+      <option>سندھ صدر</option><option>سندھ جنرل سیکریٹری</option><option>سندھ انفارمیشن سیکریٹری</option>
+     </optgroup>
+     <optgroup label="کونسلر/منتخب نمائندہ">
+      <option>کونسلر</option>
+     </optgroup>
+     <optgroup label="شعبہ جاتی تنظیمیں (ونگز)">
+      <option>PSF صدر</option><option>PSF جنرل سیکریٹری</option><option>PSF انفارمیشن سیکریٹری</option>
+      <option>یوتھ ونگ صدر</option><option>یوتھ ونگ جنرل سیکریٹری</option><option>یوتھ ونگ انفارمیشن سیکریٹری</option>
+      <option>لیبر ونگ صدر</option><option>لیبر ونگ جنرل سیکریٹری</option>
+      <option>ویمن ونگ صدر</option><option>ویمن ونگ جنرل سیکریٹری</option>
+      <option>لائرز فورم صدر</option><option>لائرز فورم جنرل سیکریٹری</option>
+      <option>پیرامیڈیکل ونگ صدر</option><option>پیرامیڈیکل ونگ جنرل سیکریٹری</option>
+      <option>کلچرل ونگ صدر</option><option>کلچرل ونگ جنرل سیکریٹری</option>
+     </optgroup>
+     <optgroup label="عام">
+      <option>سوشل میڈیا ایکٹیوسٹ</option><option>عام ممبر</option>
+      <option value="__custom__">دیگر / اپنا عہدہ خود لکھیں ✍️</option>
+     </optgroup>
     </select>
+    <input type="text" class="fi" id="rpo-custom" placeholder="اپنا عہدہ یہاں لکھیں" style="display:none;margin-top:8px">
    </div>
    <div class="br2"><button class="bs2 bso" onclick="regN(1)">&#x2190; واپس</button><button class="bs2 bsr" onclick="regN(3)">آگے &#x2192;</button></div>
   </div>
@@ -860,7 +930,7 @@ function doLogin() {
       if (!snap.empty) {
         var m = snap.docs[0].data();
         if (m.status === 'منظور') {
-          completeLogin(m.name || u, false, m);
+          completeLogin(m.name || u, !!m.isAdmin, m);
         } else {
           SA('⏳','منظوری باقی ہے','آپ کی درخواست ابھی ایڈمن کی منظوری کا انتظار کر رہی ہے');
         }
@@ -882,7 +952,7 @@ function checkLocalMemberPassword(u, p, btn) {
   for (var i = 0; i < local.length; i++) {
     if (local[i].password === p) {
       if (local[i].status === 'منظور') {
-        completeLogin(local[i].name || u, false, local[i]);
+        completeLogin(local[i].name || u, !!local[i].isAdmin, local[i]);
         return;
       } else {
         SA('⏳','منظوری باقی ہے','آپ کی درخواست ابھی ایڈمن کی منظوری کا انتظار کر رہی ہے');
@@ -1133,7 +1203,7 @@ function compReg() {
     age: document.getElementById('ra').value,
     district: document.getElementById('rd').value,
     uc: document.getElementById('ru').value,
-    position: document.getElementById('rpo').value,
+    position: getPosValue('rpo', 'rpo-custom'),
     twitter: document.getElementById('rtw').value,
     fb: document.getElementById('rfb').value,
     photo: regPhotoData || null,
@@ -1206,12 +1276,42 @@ function renderMembersList(members, isFirestore) {
     var d = members[i];
     var row = document.createElement('div');
     row.className = 'ac';
-    var statusBadge = d.status === 'منظور' ? '<span class="bdg bg">منظور ✓</span><div style="font-size:8px;color:#ffd060;margin-top:3px;font-family:\'Orbitron\',sans-serif">پاس: ' + (d.password || '—') + '</div>' : '<button style="font-size:9px;margin-top:0;background:rgba(0,200,0,.2);border:1px solid rgba(0,200,0,.4);border-radius:8px;padding:5px 10px;color:#44ff88;cursor:pointer" onclick="approveMember(' + i + ',\'' + (isFirestore ? d._docId : '') + '\',' + (isFirestore ? 'true' : 'false') + ')">✅ منظور کریں</button>';
+    var statusBadge;
+    if (d.status === 'منظور') {
+      var adminBadge = d.isAdmin ? '<span class="bdg br" style="margin-top:4px;display:inline-block">🔐 ایڈمن</span>' : '';
+      var adminBtn = d.isAdmin
+        ? '<button style="font-size:9px;margin-top:4px;background:rgba(200,0,0,.2);border:1px solid rgba(220,0,0,.4);border-radius:8px;padding:4px 9px;color:#ff8888;cursor:pointer;display:block" onclick="toggleMemberAdmin(' + i + ',\'' + (isFirestore ? d._docId : '') + '\',' + (isFirestore ? 'true' : 'false') + ',false)">🚫 ایڈمن ہٹائیں</button>'
+        : '<button style="font-size:9px;margin-top:4px;background:rgba(0,100,200,.2);border:1px solid rgba(0,120,220,.4);border-radius:8px;padding:4px 9px;color:#88bbff;cursor:pointer;display:block" onclick="toggleMemberAdmin(' + i + ',\'' + (isFirestore ? d._docId : '') + '\',' + (isFirestore ? 'true' : 'false') + ',true)">🔐 ایڈمن بنائیں</button>';
+      statusBadge = '<span class="bdg bg">منظور ✓</span><div style="font-size:8px;color:#ffd060;margin-top:3px;font-family:\'Orbitron\',sans-serif">پاس: ' + (d.password || '—') + '</div>' + adminBadge + adminBtn;
+    } else {
+      statusBadge = '<button style="font-size:9px;margin-top:0;background:rgba(0,200,0,.2);border:1px solid rgba(0,200,0,.4);border-radius:8px;padding:5px 10px;color:#44ff88;cursor:pointer" onclick="approveMember(' + i + ',\'' + (isFirestore ? d._docId : '') + '\',' + (isFirestore ? 'true' : 'false') + ')">✅ منظور کریں</button>';
+    }
     row.innerHTML = '<div class="aa">' + (d.photo ? '<img src="' + d.photo + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover">' : '👤') + '</div><div class="ai"><div class="an">' + (d.name || '') + '</div><div class="ap">' + (d.position || '') + '</div><div class="ad">' + (d.district || '') + ' | ' + (d.uc || '') + '</div><div class="aq">📱 ' + (d.phone || '') + ' | ID: ' + (d.memberId || d.id || '') + '</div></div><div style="text-align:center">' + statusBadge + '</div>';
     panel.appendChild(row);
   }
   window._membersCache = members;
   window._membersCacheIsFS = isFirestore;
+}
+
+function toggleMemberAdmin(idx, docId, isFirestore, makeAdmin) {
+  var members = window._membersCache || [];
+  var m = members[idx];
+  if (!m) return;
+  var msg = makeAdmin ? (m.name + ' کو ایڈمن بنا دیا گیا — اب وہ ایڈمن پینل اپنے پاس ورڈ سے کھول سکیں گے۔') : (m.name + ' سے ایڈمن کا درجہ ہٹا دیا گیا۔');
+  if (isFirestore && fbReady && db && docId) {
+    db.collection('members').doc(docId).update({isAdmin: makeAdmin}).then(function() {
+      SA(makeAdmin ? '🔐' : '✅', makeAdmin ? 'ایڈمن بنا دیا' : 'ایڈمن ہٹایا گیا', msg);
+      loadMembers();
+    }).catch(function() { SA('❌','خرابی','اپڈیٹ نہ ہو سکا'); });
+  } else {
+    var local = JSON.parse(localStorage.getItem('ppp_members') || '[]');
+    for (var i = 0; i < local.length; i++) {
+      if (local[i].memberId === m.memberId) { local[i].isAdmin = makeAdmin; break; }
+    }
+    localStorage.setItem('ppp_members', JSON.stringify(local));
+    SA(makeAdmin ? '🔐' : '✅', makeAdmin ? 'ایڈمن بنا دیا' : 'ایڈمن ہٹایا گیا', msg);
+    loadMembers();
+  }
 }
 
 function approveMember(idx, docId, isFirestore) {
@@ -1457,7 +1557,7 @@ function submitActivist() {
   var edu = document.getElementById('af-edu').value.trim();
   var prof = document.getElementById('af-prof').value.trim();
   var addr = document.getElementById('af-addr').value.trim();
-  var pos = document.getElementById('af-pos').value;
+  var pos = getPosValue('af-pos', 'af-pos-custom');
   var dist = document.getElementById('af-dist').value;
   var uc = document.getElementById('af-uc').value.trim();
   var since = document.getElementById('af-since').value.trim();
@@ -1540,14 +1640,27 @@ function postKarkan() {
   btn.innerHTML = '⏳ پوسٹ ہو رہی ہے...';
   btn.disabled = true;
   var entry = {user: cUser || 'کارکن', text: text, time: new Date().toISOString()};
+  var done = false;
 
   function afterPost() {
+    if (done) return;
+    done = true;
     input.value = '';
     document.getElementById('kf-count').textContent = '0 / 500';
     btn.innerHTML = '📤 پوسٹ کریں';
     btn.disabled = false;
     loadKarkanFeed();
   }
+
+  // Safety timeout: if Firestore hangs (e.g. rules block silently), fall back after 6 seconds
+  setTimeout(function() {
+    if (!done) {
+      var list = JSON.parse(localStorage.getItem('ppp_karkan') || '[]');
+      list.unshift(entry);
+      localStorage.setItem('ppp_karkan', JSON.stringify(list));
+      afterPost();
+    }
+  }, 6000);
 
   if (fbReady && db) {
     db.collection('karkanFeed').add(entry).then(afterPost).catch(function() {
@@ -1671,6 +1784,7 @@ function navTo(page) {
   if (page === 'pd') loadStats();
   if (page === 'pkf') loadKarkanFeed();
   if (page === 'psmc') loadCampaigns();
+  if (page === 'pai') loadAiChat();
 
   if (page === 'pd') {
     navHistory = ['pd'];
@@ -1767,7 +1881,93 @@ function SAI(icon, title, msg, id) {
 }
 function CM() { document.getElementById('modal').classList.remove('open'); }
 
+// ═══ AI ASSISTANT ═══
+var aiHistory = [];
+var aiSystemPrompt = "You are a helpful assistant embedded inside 'PPP Pulse', a digital app for party workers and activists in Sindh, Pakistan. Your ONLY two jobs are: (1) Help users understand how to use this app. App features: dashboard, PPP Numainday (representatives directory), Shikayat (complaint filing), Chat Room (group chat), Activist form (membership registration), Nashriyat (broadcasts from leadership), Social Media Campaign (tasks to share on own accounts), Profile, and Admin Panel (admin only - approving members/complaints). (2) Answer general non-political knowledge questions (math, general facts, language help, how-to questions). You must NEVER give opinions, claims, predictions, or commentary about Pakistani politics, political parties, politicians, elections, policy positions, or political controversies. For ANY political topic, politely say you cannot discuss political matters and suggest asking local party leadership instead. Always reply in Urdu by default unless user writes in English. Keep replies concise, 2-4 sentences typically, warm and respectful tone.";
+
+function loadAiChat() {
+  var box = document.getElementById('aiChatMsgs');
+  if (aiHistory.length === 0) {
+    box.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">السلام علیکم! 🌹 میں آپ کی مدد کے لیے حاضر ہوں۔ app کے استعمال میں سوال پوچھیں یا کوئی عام سوال کریں۔</div>';
+  } else {
+    renderAiChat();
+  }
+}
+
+function renderAiChat() {
+  var box = document.getElementById('aiChatMsgs');
+  box.innerHTML = '';
+  for (var i = 0; i < aiHistory.length; i++) {
+    var m = aiHistory[i];
+    var mine = m.role === 'user';
+    var bubble = document.createElement('div');
+    bubble.style.cssText = 'max-width:85%;align-self:' + (mine ? 'flex-end' : 'flex-start') + ';background:' + (mine ? 'linear-gradient(135deg,#5a0099,#9933dd)' : 'rgba(255,255,255,.07)') + ';border-radius:12px;padding:9px 13px;';
+    bubble.innerHTML = '<div style="font-size:12px;color:#fff;line-height:1.7;white-space:pre-wrap">' + escapeHtml(m.text) + '</div>';
+    box.appendChild(bubble);
+  }
+  box.scrollTop = box.scrollHeight;
+}
+
+function sendAiMessage() {
+  var input = document.getElementById('aiInput');
+  var text = input.value.trim();
+  if (!text) return;
+  aiHistory.push({role: 'user', text: text});
+  input.value = '';
+  renderAiChat();
+  var btn = document.getElementById('aiSendBtn');
+  btn.innerHTML = '⏳';
+  btn.disabled = true;
+
+  var apiMessages = [];
+  for (var i = 0; i < aiHistory.length; i++) {
+    apiMessages.push({role: aiHistory[i].role, content: aiHistory[i].text});
+  }
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1000,
+      system: aiSystemPrompt,
+      messages: apiMessages
+    })
+  }).then(function(res) { return res.json(); }).then(function(data) {
+    btn.innerHTML = '📤';
+    btn.disabled = false;
+    var replyText = '';
+    if (data && data.content) {
+      for (var j = 0; j < data.content.length; j++) {
+        if (data.content[j].type === 'text') replyText += data.content[j].text;
+      }
+    }
+    if (!replyText) replyText = 'معذرت، ابھی جواب نہیں مل سکا۔ دوبارہ کوشش کریں۔';
+    aiHistory.push({role: 'assistant', text: replyText});
+    renderAiChat();
+  }).catch(function() {
+    btn.innerHTML = '📤';
+    btn.disabled = false;
+    aiHistory.push({role: 'assistant', text: 'معذرت، انٹرنیٹ یا سرور کا مسئلہ ہے۔ دوبارہ کوشش کریں۔'});
+    renderAiChat();
+  });
+}
+
 // ═══ MISC ═══
+function toggleCustomPos(selectId, customId) {
+  var sel = document.getElementById(selectId);
+  var custom = document.getElementById(customId);
+  if (!sel || !custom) return;
+  custom.style.display = (sel.value === '__custom__') ? 'block' : 'none';
+  if (sel.value === '__custom__') custom.focus();
+}
+function getPosValue(selectId, customId) {
+  var sel = document.getElementById(selectId);
+  var custom = document.getElementById(customId);
+  if (sel && sel.value === '__custom__' && custom) return custom.value.trim() || 'دیگر';
+  return sel ? sel.value : '';
+}
+
 function setupPhotoInput() {
   var inp = document.getElementById('photoFile');
   if (!inp) return;
