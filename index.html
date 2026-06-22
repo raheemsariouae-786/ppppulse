@@ -7,6 +7,7 @@
 <meta name="theme-color" content="#080808">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <style>
 :root{--red:#dd0000;--rd:#990000;--black:#080808;--gb:#00ee00;--w:#f0f0f0;--tl:#dddddd;}
@@ -191,6 +192,11 @@ textarea.fi{resize:vertical;min-height:80px;}
 #gr{font-size:10px;color:var(--gb);margin-top:5px;}
 .sp{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;}
 @keyframes sp{to{transform:rotate(360deg)}}
+.forum-topic{background:rgba(255,255,255,.05);border-radius:10px;padding:12px;margin-bottom:10px;cursor:pointer;border:1px solid rgba(255,255,255,.1);}
+.forum-topic:hover{background:rgba(204,0,0,.1);border-color:var(--red);}
+.forum-title{font-size:13px;font-weight:600;margin-bottom:5px;}
+.forum-meta{font-size:9px;color:rgba(255,255,255,.4);display:flex;justify-content:space-between;}
+.topic-badge{padding:2px 8px;border-radius:10px;font-size:8px;background:rgba(0,200,100,.2);color:#44ff88;}
 @media(max-width:360px){.fr{grid-template-columns:1fr;}.asr{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
@@ -208,11 +214,12 @@ textarea.fi{resize:vertical;min-height:80px;}
    <button class="rt" onclick="setRole('ضلع',this)">ضلع</button>
    <button class="rt" onclick="setRole('ایڈمن',this)">ایڈمن</button>
   </div>
-  <div class="fg"><label class="fl">&#x1F464; یوزر نام</label><input type="text" class="fi" id="lu" placeholder="اپنا نام لکھیں"></div>
+  <div class="fg"><label class="fl">&#x1F4E7; ای میل</label><input type="email" class="fi" id="lu" placeholder="apkaemail@example.com" dir="ltr"></div>
   <div class="fg"><label class="fl">&#x1F510; پاس ورڈ</label><input type="password" class="fi" id="lp" placeholder="پاس ورڈ" dir="ltr" onkeypress="if(event.keyCode==13)doLogin()"></div>
-  <button class="bp" id="blb" onclick="doLogin()">&#x1F511; داخل ہوں</button>
+  <button class="bp" id="blb" onclick="doLogin()">&#x1F511; لاگ ان کریں</button>
   <div class="rl" style="margin-top:0"></div>
   <div class="rl">ابھی تک رجسٹرڈ نہیں؟ <a onclick="showScreen('sr')">نیا اکاؤنٹ بنائیں</a></div>
+  <div class="ph">Firebase Authentication کے ذریعے محفوظ لاگ ان</div>
  </div>
 </div>
 
@@ -256,6 +263,7 @@ textarea.fi{resize:vertical;min-height:80px;}
     <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.04)" onclick="navTo('pbc')"><div style="font-size:26px;margin-bottom:5px">&#x1F4E2;</div><div style="font-size:11px">نشریات</div><div style="font-size:8.5px;color:rgba(255,255,255,.45);margin-top:2px">قیادت کے پیغامات پڑھیں</div></button>
     <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(0,180,255,.08);border:1px solid rgba(0,180,255,.25)" onclick="navTo('psmc')"><div style="font-size:26px;margin-bottom:5px">&#x1F4E3;</div><div style="font-size:11px">سوشل میڈیا مہم</div><div style="font-size:8.5px;color:rgba(255,255,255,.45);margin-top:2px">ٹاسک اپنے اکاؤنٹس پر شیئر کریں</div></button>
     <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(150,0,220,.08);border:1px solid rgba(150,0,220,.25)" onclick="navTo('pai')"><div style="font-size:26px;margin-bottom:5px">&#x1F916;</div><div style="font-size:11px">AI اسسٹنٹ</div><div style="font-size:8.5px;color:rgba(255,255,255,.45);margin-top:2px">app کے استعمال میں مدد لیں</div></button>
+    <button class="card" style="cursor:pointer;text-align:center;border:none;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.25)" onclick="navTo('pfr')"><div style="font-size:26px;margin-bottom:5px">&#x1F4AC;</div><div style="font-size:11px">PPP فورم</div><div style="font-size:8.5px;color:rgba(255,255,255,.45);margin-top:2px">موضوعات پر بحث کریں</div></button>
    </div>
   </div>
 
@@ -275,6 +283,38 @@ textarea.fi{resize:vertical;min-height:80px;}
    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:22px">&#x1F4E3;</span><div><div style="font-size:17px;font-weight:600">سوشل میڈیا مہم</div><div style="font-size:10px;color:rgba(255,255,255,.5)">قیادت کی فوری ہدایات — اپنے اکاؤنٹس پر پھیلائیں</div></div></div>
    <div style="background:rgba(0,180,255,.08);border:1px solid rgba(0,180,255,.25);border-radius:10px;padding:9px 12px;margin-bottom:14px;font-size:10px;color:rgba(150,220,255,.85)">&#x2139; جب بھی نیا ٹاسک آئے، نیچے دیے گئے بٹن سے سیدھا اپنے Twitter/Facebook/TikTok پر پوسٹ یا شیئر کریں۔</div>
    <div id="smcList"><div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">لوڈ ہو رہا ہے...</div></div>
+  </div>
+
+  <!-- FORUM (Topic-based discussions) -->
+  <div class="tp" id="pfr">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:22px">&#x1F4AC;</span><div><div style="font-size:17px;font-weight:600">PPP فورم</div><div style="font-size:10px;color:rgba(255,255,255,.5)">موضوعات پر بحث و مباحثہ</div></div></div>
+   <div id="forumTopicsList">
+    <div class="forum-topic" onclick="openForumTopic('strategy')">
+     <div class="forum-title">&#x1F3DB; پارٹی حکمت عملی</div>
+     <div class="forum-meta"><span>بحث میں شامل ہوں</span><span class="topic-badge">فعال</span></div>
+    </div>
+    <div class="forum-topic" onclick="openForumTopic('social')">
+     <div class="forum-title">&#x1F4E3; سوشل میڈیا مہم</div>
+     <div class="forum-meta"><span>بحث میں شامل ہوں</span><span class="topic-badge">گرم</span></div>
+    </div>
+    <div class="forum-topic" onclick="openForumTopic('issues')">
+     <div class="forum-title">&#x1F6A8; عوامی مسائل</div>
+     <div class="forum-meta"><span>بحث میں شامل ہوں</span><span class="topic-badge">نیا</span></div>
+    </div>
+    <div class="forum-topic" onclick="openForumTopic('ideas')">
+     <div class="forum-title">&#x1F4A1; تجاویز و آراء</div>
+     <div class="forum-meta"><span>بحث میں شامل ہوں</span><span class="topic-badge">خیال</span></div>
+    </div>
+   </div>
+   <div id="forumDiscussion" style="display:none;margin-top:14px">
+    <button class="bs2 bso" style="width:100%;margin-bottom:10px" onclick="closeForumTopic()">&#x2190; موضوعات کی فہرست پر واپس</button>
+    <div id="forumTopicTitle" style="font-size:13px;font-weight:600;margin-bottom:10px"></div>
+    <div id="forumMsgs" style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;margin-bottom:12px;min-height:250px;max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:8px"></div>
+    <div style="display:flex;gap:7px">
+     <input type="text" class="fi" id="forumInput" placeholder="اپنی رائے دیں..." style="flex:1" onkeypress="if(event.keyCode==13)sendForumMessage()">
+     <button class="bs2 bsr" onclick="sendForumMessage()" style="flex:0;padding:11px 16px">&#x1F4E4;</button>
+    </div>
+   </div>
   </div>
 
   <!-- REPS -->
@@ -467,7 +507,7 @@ textarea.fi{resize:vertical;min-height:80px;}
     <div class="pn" id="pfn">عبدالرحیم ساریو</div>
     <div class="pp">لیبر کونسلر — TMC سہراب گوٹھ</div>
     <div style="display:flex;gap:5px;justify-content:center;margin-top:9px;flex-wrap:wrap">
-     <span class="bdg br" id="prb">PPP ورکر</span><span class="bdg bo">تصدیق شدہ</span><span class="bdg bg">سرگرم</span>
+     <span class="bdg br" id="prb">PPP ورکر</span><span class="bdg bo" id="pvb">زیرِ تصدیق</span><span class="bdg bg">سرگرم</span>
     </div>
    </div>
    <div class="pig">
@@ -563,6 +603,8 @@ textarea.fi{resize:vertical;min-height:80px;}
   <div id="rg1">
    <div style="font-size:13px;color:#fff;margin-bottom:14px;font-weight:600">ذاتی معلومات</div>
    <div class="fg"><label class="fl">&#x1F464; پورا نام (لازمی)</label><input type="text" class="fi" id="rn" placeholder="محمد علی احمد"></div>
+   <div class="fg"><label class="fl">&#x1F4E7; ای میل (لازمی)</label><input type="email" class="fi" id="rem" placeholder="apkaemail@example.com" dir="ltr"></div>
+   <div class="fg"><label class="fl">&#x1F510; پاس ورڈ (کم از کم 6 حروف)</label><input type="password" class="fi" id="rpw" placeholder="******" dir="ltr"></div>
    <div class="fg"><label class="fl">&#x1F194; CNIC (لازمی)</label><input type="text" class="fi" id="rc" placeholder="42101-XXXXXXX-X" dir="ltr" maxlength="15"></div>
    <div class="fr">
     <div class="fg"><label class="fl">&#x1F4F1; موبائل</label><input type="tel" class="fi" id="rph" placeholder="03XX-XXXXXXX" dir="ltr"></div>
@@ -573,7 +615,9 @@ textarea.fi{resize:vertical;min-height:80px;}
   <div id="rg2" style="display:none">
    <div style="font-size:13px;color:#fff;margin-bottom:14px;font-weight:600">پارٹی معلومات</div>
    <div class="fg"><label class="fl">&#x1F5FA; ضلع</label><select class="fi" id="rd"><option value="">ضلع منتخب کریں</option></select></div>
+   <div class="fg"><label class="fl">&#x1F3DB; تعلقہ / PS</label><input type="text" class="fi" id="rtehsil" placeholder="مثلاً PS-128"></div>
    <div class="fg"><label class="fl">&#x1F3D8; یونین کونسل</label><input type="text" class="fi" id="ru" placeholder="UC نمبر یا نام"></div>
+   <div class="fg"><label class="fl">&#x1F465; ریفرنس ممبر (اگر کوئی آپ کو پارٹی میں لایا)</label><input type="text" class="fi" id="rref" placeholder="ریفرنس ممبر کا نام / ID (اختیاری)"></div>
    <div class="fg"><label class="fl">&#x1F396; پارٹی عہدہ</label>
     <select class="fi" id="rpo" onchange="toggleCustomPos('rpo','rpo-custom')">
      <optgroup label="UC سطح">
@@ -660,22 +704,24 @@ var firebaseConfig = {
 };
 var fbReady = false;
 var db = null;
+var auth = null;
 try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
+  auth = firebase.auth();
   fbReady = true;
 } catch (e) {
   fbReady = false;
 }
 
 // ═══ PASSWORDS ═══
-var WP = 'ppp786';
-var AP = 'tmc786';
+// (legacy shared passwords removed — Firebase Auth email/password used instead)
 
 // ═══ STATE ═══
 var cRole = 'ورکر';
 var isAdm = false;
 var cUser = '';
+var cUserId = '';
 var bcT = 'ایمرجنسی';
 var rTF = 'سب';
 var gLat = null;
@@ -907,60 +953,47 @@ function setRole(r, btn) {
 }
 
 function doLogin() {
-  var u = document.getElementById('lu').value.trim();
-  var p = document.getElementById('lp').value.trim();
-  if (!u) { SA('⚠️','نامکمل','یوزر نام درج کریں'); return; }
-  if (!p) { SA('⚠️','نامکمل','پاس ورڈ درج کریں'); return; }
+  var email = document.getElementById('lu').value.trim();
+  var password = document.getElementById('lp').value.trim();
+  if (!email) { SA('⚠️','نامکمل','ای میل درج کریں'); return; }
+  if (!password) { SA('⚠️','نامکمل','پاس ورڈ درج کریں'); return; }
 
-  // Check shared admin password first
-  if (p === AP) { completeLogin(u, true, null); return; }
+  if (!fbReady || !auth) { SA('❌','خرابی','سروس دستیاب نہیں، دوبارہ کوشش کریں'); return; }
 
-  // Check shared worker password (legacy/quick access)
-  if (p === WP) { completeLogin(u, false, null); return; }
-
-  // Check individual member password from Firestore
   var btn = document.getElementById('blb');
-  btn.innerHTML = '⏳ تصدیق ہو رہی ہے...';
+  btn.innerHTML = '⏳ لاگ ان ہو رہا ہے...';
   btn.disabled = true;
 
-  if (fbReady && db) {
-    db.collection('members').where('password', '==', p).limit(1).get().then(function(snap) {
-      btn.innerHTML = '🔑 داخل ہوں';
-      btn.disabled = false;
-      if (!snap.empty) {
-        var m = snap.docs[0].data();
-        if (m.status === 'منظور') {
-          completeLogin(m.name || u, !!m.isAdmin, m);
-        } else {
-          SA('⏳','منظوری باقی ہے','آپ کی درخواست ابھی ایڈمن کی منظوری کا انتظار کر رہی ہے');
-        }
-      } else {
-        checkLocalMemberPassword(u, p, btn);
-      }
-    }).catch(function() {
-      btn.innerHTML = '🔑 داخل ہوں';
-      btn.disabled = false;
-      checkLocalMemberPassword(u, p, btn);
-    });
-  } else {
-    checkLocalMemberPassword(u, p, btn);
-  }
+  auth.signInWithEmailAndPassword(email, password).then(function(userCredential) {
+    btn.innerHTML = '🔑 لاگ ان کریں';
+    btn.disabled = false;
+    cUserId = userCredential.user.uid;
+    loadUserData(email);
+  }).catch(function(error) {
+    btn.innerHTML = '🔑 لاگ ان کریں';
+    btn.disabled = false;
+    var msg = 'لاگ ان ناکام';
+    if (error.code === 'auth/user-not-found') msg = 'یہ ای میل رجسٹرڈ نہیں — پہلے رجسٹریشن کریں';
+    else if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') msg = 'پاس ورڈ غلط ہے';
+    else if (error.code === 'auth/invalid-email') msg = 'ای میل کا فارمیٹ غلط ہے';
+    else if (error.code === 'auth/too-many-requests') msg = 'بہت زیادہ کوششیں — کچھ دیر بعد آزمائیں';
+    SA('❌','خرابی',msg);
+  });
 }
 
-function checkLocalMemberPassword(u, p, btn) {
-  var local = JSON.parse(localStorage.getItem('ppp_members') || '[]');
-  for (var i = 0; i < local.length; i++) {
-    if (local[i].password === p) {
-      if (local[i].status === 'منظور') {
-        completeLogin(local[i].name || u, !!local[i].isAdmin, local[i]);
-        return;
-      } else {
-        SA('⏳','منظوری باقی ہے','آپ کی درخواست ابھی ایڈمن کی منظوری کا انتظار کر رہی ہے');
-        return;
-      }
+function loadUserData(email) {
+  db.collection('members').where('email', '==', email).limit(1).get().then(function(snap) {
+    if (!snap.empty) {
+      var data = snap.docs[0].data();
+      data._docId = snap.docs[0].id;
+      completeLogin(data.name || email.split('@')[0], !!data.isAdmin, data);
+    } else {
+      var fallbackName = email.split('@')[0];
+      completeLogin(fallbackName, false, {email: email});
     }
-  }
-  SA('❌','پاس ورڈ غلط','یہ پاس ورڈ درست نہیں۔ اگر آپ نے رجسٹریشن کی ہے، ایڈمن کی منظوری اور پاس ورڈ کا انتظار کریں۔');
+  }).catch(function() {
+    completeLogin(email.split('@')[0], false, {email: email});
+  });
 }
 
 function completeLogin(name, adminFlag, memberData) {
@@ -977,6 +1010,12 @@ function completeLogin(name, adminFlag, memberData) {
     if (memberData.uc) document.getElementById('cuc').textContent = memberData.uc;
     if (memberData.memberId) { document.getElementById('cmi').textContent = memberData.memberId; document.getElementById('pmid').textContent = memberData.memberId; }
     if (memberData.photo) document.getElementById('cardPhotoBox').innerHTML = '<img src="' + memberData.photo + '" style="width:100%;height:100%;object-fit:cover;border-radius:6px">';
+    var vb = document.getElementById('pvb');
+    if (vb) {
+      var isVerified = (memberData.status === 'تصدیق شدہ' || memberData.status === 'منظور' || memberData.status === 'فعال');
+      vb.textContent = isVerified ? '✓ تصدیق شدہ' : 'زیرِ تصدیق';
+      vb.className = isVerified ? 'bdg bg' : 'bdg bo';
+    }
   }
   if (isAdm) {
     document.getElementById('aab').style.display = 'block';
@@ -1187,64 +1226,62 @@ function regN(step) {
   }
   if (step === 4) {
     document.getElementById('pvn').textContent = document.getElementById('rn').value || 'آپ کا نام';
-    document.getElementById('pvc').textContent = 'CNIC: ' + (document.getElementById('rc').value || '———');
+    document.getElementById('pvc').textContent = 'ای میل: ' + (document.getElementById('rem').value || '———');
     document.getElementById('pvd').textContent = 'ضلع: ' + (document.getElementById('rd').value || '———');
   }
 }
 
 function compReg() {
   var name = document.getElementById('rn').value.trim();
+  var email = document.getElementById('rem').value.trim();
+  var password = document.getElementById('rpw').value.trim();
   var cnic = document.getElementById('rc').value.trim();
   var phone = document.getElementById('rph').value.trim();
-  if (!name || !cnic || !phone) { SA('⚠️','نامکمل','نام، CNIC اور موبائل لازمی ہیں'); return; }
-  var mid = 'PPP-' + Date.now().toString().slice(-5);
-  var memberData = {
-    memberId: mid, name: name, cnic: cnic, phone: phone,
-    age: document.getElementById('ra').value,
-    district: document.getElementById('rd').value,
-    uc: document.getElementById('ru').value,
-    position: getPosValue('rpo', 'rpo-custom'),
-    twitter: document.getElementById('rtw').value,
-    fb: document.getElementById('rfb').value,
-    photo: regPhotoData || null,
-    status: 'زیرِ کارروائی',
-    password: null,
-    time: new Date().toISOString()
-  };
+
+  if (!name || !email || !password) { SA('⚠️','نامکمل','نام، ای میل اور پاس ورڈ لازمی ہیں'); return; }
+  if (password.length < 6) { SA('⚠️','پاس ورڈ کمزور','پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے'); return; }
+  if (!cnic || !phone) { SA('⚠️','نامکمل','CNIC اور موبائل لازمی ہیں'); return; }
+
+  if (!fbReady || !auth) { SA('❌','خرابی','سروس دستیاب نہیں، دوبارہ کوشش کریں'); return; }
+
   var btn = document.getElementById('bcr');
-  btn.innerHTML = '⏳ بھیجا جا رہا ہے...';
+  btn.innerHTML = '⏳ رجسٹر ہو رہا ہے...';
   btn.disabled = true;
 
-  function afterSave() {
-    document.getElementById('cnm').textContent = name;
-    document.getElementById('cps').textContent = document.getElementById('rpo').value;
-    document.getElementById('car').textContent = document.getElementById('rd').value;
-    document.getElementById('cuc').textContent = document.getElementById('ru').value;
-    document.getElementById('cmi').textContent = mid;
-    if (regPhotoData) {
-      document.getElementById('cardPhotoBox').innerHTML = '<img src="' + regPhotoData + '" style="width:100%;height:100%;object-fit:cover;border-radius:6px">';
-    }
+  var mid = 'PPP-' + Date.now().toString().slice(-5);
+
+  auth.createUserWithEmailAndPassword(email, password).then(function(userCredential) {
+    cUserId = userCredential.user.uid;
+    var memberData = {
+      memberId: mid, name: name, email: email, cnic: cnic, phone: phone,
+      age: document.getElementById('ra').value,
+      district: document.getElementById('rd').value,
+      tehsil: document.getElementById('rtehsil').value,
+      uc: document.getElementById('ru').value,
+      referenceMember: document.getElementById('rref').value,
+      position: getPosValue('rpo', 'rpo-custom'),
+      twitter: document.getElementById('rtw').value,
+      fb: document.getElementById('rfb').value,
+      photo: regPhotoData || null,
+      status: 'زیرِ تصدیق',
+      isAdmin: false,
+      time: new Date().toISOString()
+    };
+    return db.collection('members').add(memberData);
+  }).then(function() {
     btn.innerHTML = 'رجسٹریشن مکمل کریں 🎉';
     btn.disabled = false;
-    SA('🎉','درخواست بھیج دی گئی','ایڈمن کی منظوری کے بعد آپ کو پاس ورڈ موصول ہوگا۔\nرکن ID: ' + mid);
-    setTimeout(function() { showScreen('sl'); }, 1800);
-  }
-
-  if (fbReady && db) {
-    db.collection('members').add(memberData).then(afterSave).catch(function(err) {
-      saveLocalMember(memberData);
-      afterSave();
-    });
-  } else {
-    saveLocalMember(memberData);
-    afterSave();
-  }
-}
-
-function saveLocalMember(memberData) {
-  var members = JSON.parse(localStorage.getItem('ppp_members') || '[]');
-  members.unshift(memberData);
-  localStorage.setItem('ppp_members', JSON.stringify(members));
+    SA('🎉','رجسٹریشن مکمل','آپ کا اکاؤنٹ بن گیا! آپ ابھی لاگ ان کر سکتے ہیں — ایڈمن کی تصدیق کے بعد آپ کا پروفائل مکمل تصدیق شدہ ہوگا۔\nرکن ID: ' + mid);
+    setTimeout(function() { showScreen('sl'); }, 2000);
+  }).catch(function(error) {
+    btn.innerHTML = 'رجسٹریشن مکمل کریں 🎉';
+    btn.disabled = false;
+    var msg = 'رجسٹریشن ناکام';
+    if (error.code === 'auth/email-already-in-use') msg = 'یہ ای میل پہلے سے رجسٹرڈ ہے — لاگ ان کریں';
+    else if (error.code === 'auth/weak-password') msg = 'پاس ورڈ کمزور ہے، مزید مضبوط بنائیں';
+    else if (error.code === 'auth/invalid-email') msg = 'ای میل کا فارمیٹ غلط ہے';
+    SA('❌','خرابی',msg);
+  });
 }
 
 // ═══ ADMIN ═══
@@ -1277,14 +1314,16 @@ function renderMembersList(members, isFirestore) {
     var row = document.createElement('div');
     row.className = 'ac';
     var statusBadge;
-    if (d.status === 'منظور') {
+    var verified = (d.status === 'تصدیق شدہ' || d.status === 'منظور' || d.status === 'فعال');
+    if (verified) {
       var adminBadge = d.isAdmin ? '<span class="bdg br" style="margin-top:4px;display:inline-block">🔐 ایڈمن</span>' : '';
       var adminBtn = d.isAdmin
         ? '<button style="font-size:9px;margin-top:4px;background:rgba(200,0,0,.2);border:1px solid rgba(220,0,0,.4);border-radius:8px;padding:4px 9px;color:#ff8888;cursor:pointer;display:block" onclick="toggleMemberAdmin(' + i + ',\'' + (isFirestore ? d._docId : '') + '\',' + (isFirestore ? 'true' : 'false') + ',false)">🚫 ایڈمن ہٹائیں</button>'
         : '<button style="font-size:9px;margin-top:4px;background:rgba(0,100,200,.2);border:1px solid rgba(0,120,220,.4);border-radius:8px;padding:4px 9px;color:#88bbff;cursor:pointer;display:block" onclick="toggleMemberAdmin(' + i + ',\'' + (isFirestore ? d._docId : '') + '\',' + (isFirestore ? 'true' : 'false') + ',true)">🔐 ایڈمن بنائیں</button>';
-      statusBadge = '<span class="bdg bg">منظور ✓</span><div style="font-size:8px;color:#ffd060;margin-top:3px;font-family:\'Orbitron\',sans-serif">پاس: ' + (d.password || '—') + '</div>' + adminBadge + adminBtn;
+      var verifyBtn = (d.status !== 'تصدیق شدہ') ? '<button style="font-size:9px;margin-top:4px;background:rgba(0,200,0,.2);border:1px solid rgba(0,200,0,.4);border-radius:8px;padding:4px 9px;color:#44ff88;cursor:pointer;display:block" onclick="verifyMember(' + i + ',\'' + (isFirestore ? d._docId : '') + '\',' + (isFirestore ? 'true' : 'false') + ')">✅ تصدیق کریں</button>' : '<span class="bdg bg" style="margin-top:4px;display:inline-block">✓ تصدیق شدہ</span>';
+      statusBadge = verifyBtn + adminBadge + adminBtn;
     } else {
-      statusBadge = '<button style="font-size:9px;margin-top:0;background:rgba(0,200,0,.2);border:1px solid rgba(0,200,0,.4);border-radius:8px;padding:5px 10px;color:#44ff88;cursor:pointer" onclick="approveMember(' + i + ',\'' + (isFirestore ? d._docId : '') + '\',' + (isFirestore ? 'true' : 'false') + ')">✅ منظور کریں</button>';
+      statusBadge = '<span class="bdg bo">زیرِ تصدیق</span>';
     }
     row.innerHTML = '<div class="aa">' + (d.photo ? '<img src="' + d.photo + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover">' : '👤') + '</div><div class="ai"><div class="an">' + (d.name || '') + '</div><div class="ap">' + (d.position || '') + '</div><div class="ad">' + (d.district || '') + ' | ' + (d.uc || '') + '</div><div class="aq">📱 ' + (d.phone || '') + ' | ID: ' + (d.memberId || d.id || '') + '</div></div><div style="text-align:center">' + statusBadge + '</div>';
     panel.appendChild(row);
@@ -1297,7 +1336,7 @@ function toggleMemberAdmin(idx, docId, isFirestore, makeAdmin) {
   var members = window._membersCache || [];
   var m = members[idx];
   if (!m) return;
-  var msg = makeAdmin ? (m.name + ' کو ایڈمن بنا دیا گیا — اب وہ ایڈمن پینل اپنے پاس ورڈ سے کھول سکیں گے۔') : (m.name + ' سے ایڈمن کا درجہ ہٹا دیا گیا۔');
+  var msg = makeAdmin ? (m.name + ' کو ایڈمن بنا دیا گیا۔') : (m.name + ' سے ایڈمن کا درجہ ہٹا دیا گیا۔');
   if (isFirestore && fbReady && db && docId) {
     db.collection('members').doc(docId).update({isAdmin: makeAdmin}).then(function() {
       SA(makeAdmin ? '🔐' : '✅', makeAdmin ? 'ایڈمن بنا دیا' : 'ایڈمن ہٹایا گیا', msg);
@@ -1314,36 +1353,26 @@ function toggleMemberAdmin(idx, docId, isFirestore, makeAdmin) {
   }
 }
 
-function approveMember(idx, docId, isFirestore) {
+function verifyMember(idx, docId, isFirestore) {
   var members = window._membersCache || [];
   var m = members[idx];
   if (!m) return;
-  var pass = generateMemberPassword(m);
   if (isFirestore && fbReady && db && docId) {
-    db.collection('members').doc(docId).update({status: 'منظور', password: pass}).then(function() {
-      SA('✅', 'ممبر منظور ہو گیا', 'پاس ورڈ: ' + pass + '\n\nیہ پاس ورڈ ممبر کو واٹس ایپ یا کال پر بھیجیں۔');
+    db.collection('members').doc(docId).update({status: 'تصدیق شدہ'}).then(function() {
+      SA('✅', 'تصدیق ہو گئی', m.name + ' کو تصدیق شدہ ممبر بنا دیا گیا');
       loadMembers();
       loadStats();
-    }).catch(function() {
-      SA('❌', 'خرابی', 'منظوری میں مسئلہ ہوا، دوبارہ کوشش کریں');
-    });
+    }).catch(function() { SA('❌', 'خرابی', 'تصدیق نہ ہو سکی'); });
   } else {
     var local = JSON.parse(localStorage.getItem('ppp_members') || '[]');
     for (var i = 0; i < local.length; i++) {
-      if (local[i].memberId === m.memberId) { local[i].status = 'منظور'; local[i].password = pass; break; }
+      if (local[i].memberId === m.memberId) { local[i].status = 'تصدیق شدہ'; break; }
     }
     localStorage.setItem('ppp_members', JSON.stringify(local));
-    SA('✅', 'ممبر منظور ہو گیا', 'پاس ورڈ: ' + pass + '\n\nیہ پاس ورڈ ممبر کو واٹس ایپ یا کال پر بھیجیں۔');
+    SA('✅', 'تصدیق ہو گئی', m.name + ' کو تصدیق شدہ ممبر بنا دیا گیا');
     loadMembers();
     loadStats();
   }
-}
-
-function generateMemberPassword(m) {
-  var phoneDigits = (m.phone || '').replace(/[^0-9]/g, '');
-  var last4 = phoneDigits.slice(-4) || Math.floor(1000 + Math.random() * 9000).toString();
-  var rand = Math.floor(10 + Math.random() * 90);
-  return 'ppp' + last4 + rand;
 }
 
 function updCS(idx, status) {
@@ -1757,6 +1786,97 @@ function escapeHtml(s) {
   return div.innerHTML;
 }
 
+// ═══ FORUM (topic-based discussions) ═══
+var currentForumTopic = '';
+var forumUnsub = null;
+var forumTopicNames = {
+  strategy: '🏛 پارٹی حکمت عملی',
+  social: '📣 سوشل میڈیا مہم',
+  issues: '🚨 عوامی مسائل',
+  ideas: '💡 تجاویز و آراء'
+};
+
+function openForumTopic(topicId) {
+  currentForumTopic = topicId;
+  document.getElementById('forumTopicsList').style.display = 'none';
+  document.getElementById('forumDiscussion').style.display = 'block';
+  document.getElementById('forumTopicTitle').textContent = forumTopicNames[topicId] || topicId;
+  loadForumMessages(topicId);
+}
+
+function closeForumTopic() {
+  if (forumUnsub) { forumUnsub(); forumUnsub = null; }
+  document.getElementById('forumTopicsList').style.display = 'block';
+  document.getElementById('forumDiscussion').style.display = 'none';
+}
+
+function loadForumMessages(topicId) {
+  var box = document.getElementById('forumMsgs');
+  box.innerHTML = '<div style="text-align:center;padding:20px"><div class="sp"></div></div>';
+  if (fbReady && db) {
+    if (forumUnsub) { forumUnsub(); forumUnsub = null; }
+    forumUnsub = db.collection('forum').where('topic', '==', topicId).orderBy('time', 'asc').limitToLast(100).onSnapshot(function(snap) {
+      var msgs = [];
+      snap.forEach(function(doc) { msgs.push(doc.data()); });
+      renderForumMsgs(msgs);
+    }, function() {
+      renderForumMsgsLocal(topicId);
+    });
+  } else {
+    renderForumMsgsLocal(topicId);
+  }
+}
+
+function renderForumMsgsLocal(topicId) {
+  var all = JSON.parse(localStorage.getItem('ppp_forum') || '[]');
+  var filtered = [];
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].topic === topicId) filtered.push(all[i]);
+  }
+  renderForumMsgs(filtered);
+}
+
+function renderForumMsgs(msgs) {
+  var box = document.getElementById('forumMsgs');
+  if (!msgs.length) {
+    box.innerHTML = '<div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,.4)">ابھی تک کوئی بحث نہیں — پہلا پیغام آپ کریں! 🌹</div>';
+    return;
+  }
+  box.innerHTML = '';
+  for (var i = 0; i < msgs.length; i++) {
+    var m = msgs[i];
+    var mine = m.userName === cUser;
+    var bubble = document.createElement('div');
+    bubble.style.cssText = 'max-width:85%;align-self:' + (mine ? 'flex-end' : 'flex-start') + ';background:' + (mine ? 'linear-gradient(135deg,#7a0000,#aa0000)' : 'rgba(255,255,255,.07)') + ';border-radius:12px;padding:9px 13px;';
+    bubble.innerHTML = (mine ? '' : '<div style="font-size:9px;color:#00dd00;margin-bottom:3px;font-weight:600">' + escapeHtml(m.userName || '') + '</div>') + '<div style="font-size:12px;color:#fff;line-height:1.7">' + escapeHtml(m.text || '') + '</div><div style="font-size:8px;color:rgba(255,255,255,.35);margin-top:4px;text-align:left">' + formatChatTime(m.time) + '</div>';
+    box.appendChild(bubble);
+  }
+  box.scrollTop = box.scrollHeight;
+}
+
+function sendForumMessage() {
+  var input = document.getElementById('forumInput');
+  var text = input.value.trim();
+  if (!text) return;
+  var entry = {topic: currentForumTopic, userName: cUser || 'کارکن', text: text, time: new Date().toISOString()};
+  input.value = '';
+  if (fbReady && db) {
+    db.collection('forum').add(entry).catch(function() {
+      saveForumLocal(entry);
+    });
+  } else {
+    saveForumLocal(entry);
+  }
+}
+
+function saveForumLocal(entry) {
+  var all = JSON.parse(localStorage.getItem('ppp_forum') || '[]');
+  all.push(entry);
+  if (all.length > 300) all = all.slice(all.length - 300);
+  localStorage.setItem('ppp_forum', JSON.stringify(all));
+  renderForumMsgsLocal(entry.topic);
+}
+
 
 function showScreen(id) {
   var ss = document.querySelectorAll('.screen');
@@ -1780,6 +1900,7 @@ function navTo(page) {
   if (page === 'pad' && isAdm) { loadMembers(); loadAdminComplaints(); loadActivistQueue(); }
   if (page === 'pc2') loadComplaints();
   if (page === 'pch') loadChat();
+  if (page === 'pfr') { document.getElementById('forumTopicsList').style.display = 'block'; document.getElementById('forumDiscussion').style.display = 'none'; if (forumUnsub) { forumUnsub(); forumUnsub = null; } }
   if (page === 'prp') renderReps(REPS);
   if (page === 'pd') loadStats();
   if (page === 'pkf') loadKarkanFeed();
@@ -1813,16 +1934,24 @@ function goBack() {
 // ═══ LOGOUT ═══
 function logout() {
   if (!confirm('کیا آپ واقعی لاگ آؤٹ کرنا چاہتے ہیں؟')) return;
-  isAdm = false;
-  cUser = '';
-  document.getElementById('aab').style.display = 'none';
-  document.getElementById('lu').value = '';
-  document.getElementById('lp').value = '';
-  var ts = document.querySelectorAll('.rt');
-  for (var i = 0; i < ts.length; i++) ts[i].classList.remove('active');
-  ts[0].classList.add('active');
-  cRole = 'ورکر';
-  showScreen('sl');
+  function afterSignOut() {
+    isAdm = false;
+    cUser = '';
+    cUserId = '';
+    document.getElementById('aab').style.display = 'none';
+    document.getElementById('lu').value = '';
+    document.getElementById('lp').value = '';
+    var ts = document.querySelectorAll('.rt');
+    for (var i = 0; i < ts.length; i++) ts[i].classList.remove('active');
+    ts[0].classList.add('active');
+    cRole = 'ورکر';
+    showScreen('sl');
+  }
+  if (fbReady && auth) {
+    auth.signOut().then(afterSignOut).catch(afterSignOut);
+  } else {
+    afterSignOut();
+  }
 }
 
 // ═══ SHARE ═══
